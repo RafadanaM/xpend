@@ -8,7 +8,7 @@ import validateEnv from './utils/validateEnv';
 validateEnv();
 (async () => {
   try {
-    const connection = await createConnection(config);
+    await createConnection(config);
     //await connection.runMigrations();
   } catch (error) {
     console.log('Error connecting to the database', error);
