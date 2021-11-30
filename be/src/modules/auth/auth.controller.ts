@@ -21,14 +21,25 @@ class AuthController implements Controller {
 
   private initRoutes() {
     this.router.post('/login', validationMiddleware(LoginDto, RequestTypes.BODY), this.login);
+    this.router.post('/logout', this.logout);
   }
 
   private login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const loginData: LoginDto = req.body;
       const tokenData = await this.authService.login(loginData);
+
       res.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
-      res.send({ message: 'Login Succes' });
+      res.send({ message: 'Login Success' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private logout = (_: Request, res: Response, next: NextFunction) => {
+    try {
+      res.clearCookie('Authorization');
+      res.send({ message: 'Logout Success' });
     } catch (error) {
       next(error);
     }
