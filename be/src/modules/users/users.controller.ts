@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { RequestTypes } from '../../enums/request.enum';
 import Controller from '../../interfaces/controller.interface';
+import authMiddleware from '../../middlewares/auth.middleware';
 import validationMiddleware from '../../middlewares/validation.middleware';
 import createUserDto from './users.dto';
 import UsersService from './users.service';
@@ -16,7 +17,7 @@ class UsersController implements Controller {
   }
 
   private initRoutes() {
-    this.router.get('', this.getUsers);
+    this.router.get('', authMiddleware, this.getUsers);
     this.router.post('', validationMiddleware(createUserDto, RequestTypes.BODY), this.createUser);
   }
 

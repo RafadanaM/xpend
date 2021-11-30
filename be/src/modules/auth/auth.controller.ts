@@ -24,7 +24,7 @@ class AuthController implements Controller {
       const loginData: LoginDto = req.body;
       const tokenData = await this.authService.login(loginData);
 
-      res.cookie('jwt', tokenData, {
+      res.cookie('access_token', tokenData.token, {
         httpOnly: true,
         maxAge: tokenData.expiresIn,
       });
@@ -36,7 +36,7 @@ class AuthController implements Controller {
 
   private logout = (_: Request, res: Response, next: NextFunction) => {
     try {
-      res.clearCookie('jwt');
+      res.clearCookie('access_token');
       res.send({ message: 'Logout Success' });
     } catch (error) {
       next(error);
