@@ -9,13 +9,13 @@ validateEnv();
 (async () => {
   try {
     const connection = await createConnection(config);
-    await connection.runMigrations();
+    //await connection.runMigrations();
   } catch (error) {
     console.log('Error connecting to the database', error);
     return error;
   }
 
-  const app = new App([new UsersController()], parseInt(process.env.port || '5000'));
+  const app = new App([new UsersController()], parseInt(process.env.PORT || '5000'));
 
   app.listen();
 })();

@@ -3,16 +3,19 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 @Entity()
 class Users {
   @PrimaryGeneratedColumn()
-  public id?: number;
+  public id: number;
 
   @Column()
-  public name: string;
+  public first_name: string;
+
+  @Column()
+  public last_name: string;
 
   @Column()
   public email: string;
 
   @Column()
-  public birth_date: Date;
+  public password: string;
 
   @CreateDateColumn()
   public created: Date;
