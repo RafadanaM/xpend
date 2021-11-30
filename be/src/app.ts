@@ -1,49 +1,58 @@
-import express from "express";
-import morgan from "morgan";
-import Controller from "./interfaces/controller.interface";
-import errorMiddleware from "./middlewares/error.middleware";
-import NotFoundMiddleware from "./middlewares/notfound.middleware";
-
+import express from 'express';
+import morgan from 'morgan';
+import Controller from './interfaces/controller.interface';
+import errorMiddleware from './middlewares/error.middleware';
+import NotFoundMiddleware from './middlewares/notfound.middleware';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 class App {
-	public app: express.Application;
+  public app: express.Application;
 
-	public port: number;
+  public port: number;
 
-	constructor(controllers: Controller[], port: number) {
-		this.app = express();
-		this.port = port;
+  constructor(controllers: Controller[], port: number) {
+    this.app = express();
+    this.port = port;
 
-		this.initMiddlewares();
-		this.initControllers(controllers);
-		this.initErrorHandling();
-		this.initRouteNotFound();
-	}
+    this.initMiddlewares();
+    this.initControllers(controllers);
+    this.initErrorHandling();
+    this.initRouteNotFound();
+  }
 
-	private initMiddlewares() {
-		this.app.use(express.json());
-		this.app.use(express.urlencoded({ extended: true }));
-		this.app.use(morgan(process.env.NODE_ENV === "dev" ? "dev" : "short"));
-	}
+  private initMiddlewares() {
+    this.app.use(
+      cors({
+        origin: [process.env.ORIGIN || 'localhost:3000'],
 
-	private initControllers(controllers: Controller[]) {
-		controllers.forEach((controller) => {
-			this.app.use(`/api${controller.path}`, controller.router);
-		});
-	}
+        credentials: true,
+      })
+    );
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cookieParser());
+    this.app.use(morgan(process.env.NODE_ENV === 'dev' ? 'dev' : 'short'));
+  }
 
-	private initErrorHandling() {
-		this.app.use(errorMiddleware);
-	}
+  private initControllers(controllers: Controller[]) {
+    controllers.forEach((controller) => {
+      this.app.use(`/api${controller.path}`, controller.router);
+    });
+  }
 
-	private initRouteNotFound() {
-		this.app.use(NotFoundMiddleware);
-	}
+  private initErrorHandling() {
+    this.app.use(errorMiddleware);
+  }
 
-	public listen() {
-		this.app.listen(this.port, () => {
-			console.log(`app is listening on port ${this.port}`);
-		});
-	}
+  private initRouteNotFound() {
+    this.app.use(NotFoundMiddleware);
+  }
+
+  public listen() {
+    this.app.listen(this.port, () => {
+      console.log(`app is listening on port ${this.port}`);
+    });
+  }
 }
 
 export default App;

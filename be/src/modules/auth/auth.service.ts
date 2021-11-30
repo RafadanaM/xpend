@@ -11,7 +11,7 @@ class AuthService {
   private userRepository = getRepository(Users);
 
   private createToken(user: Users): TokenData {
-    const expiresIn = 60 * 60 * 4;
+    const expiresIn = 60 * 60 * 60;
     const secret = process.env.JWT_SECRET || 'jwt_secret';
     const dataStoredInToken: DataTokenStored = {
       _id: user.id,
@@ -29,7 +29,6 @@ class AuthService {
       .where('users.email = :email', { email })
       .getOne();
     if (user) {
-      console.log(user);
       return user;
     }
     console.log('else');

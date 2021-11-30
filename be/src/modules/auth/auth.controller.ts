@@ -1,7 +1,6 @@
 import { NextFunction, Router, Request, Response } from 'express';
 import { RequestTypes } from '../../enums/request.enum';
 import Controller from '../../interfaces/controller.interface';
-import TokenData from '../../interfaces/tokendata.interface';
 import validationMiddleware from '../../middlewares/validation.middleware';
 import AuthService from './auth.service';
 import LoginDto from './login.dto';
@@ -15,20 +14,30 @@ class AuthController implements Controller {
     this.initRoutes();
   }
 
-  private createCookie(tokenData: TokenData) {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
-  }
-
   private initRoutes() {
     this.router.post('/login', validationMiddleware(LoginDto, RequestTypes.BODY), this.login);
+    this.router.post('/logout', this.logout);
   }
 
   private login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const loginData: LoginDto = req.body;
       const tokenData = await this.authService.login(loginData);
-      res.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
-      res.send({ message: 'Login Succes' });
+
+      res.cookie('access_token', tokenData.token, {
+        httpOnly: true,
+        maxAge: tokenData.expiresIn,
+      });
+      res.send({ message: 'Login Success' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private logout = (_: Request, res: Response, next: NextFunction) => {
+    try {
+      res.clearCookie('access_token');
+      res.send({ message: 'Logout Success' });
     } catch (error) {
       next(error);
     }
