@@ -4,6 +4,7 @@ import App from './app';
 import config from './ormconfig';
 import UsersController from './modules/users/users.controller';
 import validateEnv from './utils/validateEnv';
+import AuthController from './modules/auth/auth.controller';
 
 validateEnv();
 (async () => {
@@ -15,7 +16,7 @@ validateEnv();
     return error;
   }
 
-  const app = new App([new UsersController()], parseInt(process.env.PORT || '5000'));
+  const app = new App([new UsersController(), new AuthController()], parseInt(process.env.PORT || '5000'));
 
   app.listen();
 })();

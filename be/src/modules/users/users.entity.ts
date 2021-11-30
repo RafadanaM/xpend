@@ -11,10 +11,10 @@ class Users {
   @Column()
   public last_name: string;
 
-  @Column()
+  @Column({ unique: true })
   public email: string;
 
-  @Column()
+  @Column({ select: false })
   public password: string;
 
   @CreateDateColumn()
