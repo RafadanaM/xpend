@@ -26,7 +26,8 @@ class AuthController implements Controller {
 
       res.cookie('access_token', tokenData.token, {
         httpOnly: true,
-        maxAge: tokenData.expiresIn,
+        maxAge: tokenData.expiresIn * 1000,
+        path: '/api',
       });
       res.send({ message: 'Login Success' });
     } catch (error) {

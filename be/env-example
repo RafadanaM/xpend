@@ -7,3 +7,6 @@ DB_PASSWORD =
 DB_NAME = test
 
 NODE_ENV = dev
+
+JWT_SECRET_PUBLIC = somekey
+JWT_SECRET_Private = somekey
