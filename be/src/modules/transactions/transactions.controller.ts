@@ -9,7 +9,6 @@ import RequestWithUser from '../../interfaces/requestWithUser.interface';
 import NotFoundException from '../../exceptions/NotFoundException';
 import ParamDto from '../../shared/param.dto';
 
-
 class TransactionsController implements Controller {
   public path: string = '/transactions';
   public router: Router = Router();
