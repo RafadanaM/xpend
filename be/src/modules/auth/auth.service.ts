@@ -5,20 +5,28 @@ import LoginDto from './login.dto';
 import bcrypt from 'bcrypt';
 import TokenData from '../../interfaces/tokendata.interface';
 import DataTokenStored from '../../interfaces/datatokenstored.interface';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 
 class AuthService {
   private userRepository = getRepository(Users);
 
   private createToken(user: Users): TokenData {
+    const iss = 'Xpend Team';
+    const aud = 'http://localhost:5000';
     const expiresIn = 60 * 60;
-    const secret = process.env.JWT_SECRET || 'jwt_secret';
+    const signOptions: SignOptions = {
+      issuer: iss,
+      audience: aud,
+      expiresIn: expiresIn,
+      algorithm: 'RS256',
+    };
     const dataStoredInToken: DataTokenStored = {
       _id: user.id,
     };
+
     return {
       expiresIn,
-      token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
+      token: jwt.sign(dataStoredInToken, process.env.JWT_SECRET_PRIVATE || 'jwt_secret', signOptions),
     };
   }
 
