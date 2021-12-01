@@ -21,8 +21,18 @@ class TransactionsController implements Controller {
 
   private initRoutes() {
     this.router.get('', authMiddleware, this.getTransactionsByUser);
-    this.router.get('/:id', authMiddleware, validationMiddleware(ParamDto, RequestTypes.PARAMS), this.getTransactionsByTransactionId);
-    this.router.post('', authMiddleware, validationMiddleware(createTransactionDto, RequestTypes.BODY), this.createTransaction);
+    this.router.get(
+      '/:id',
+      authMiddleware,
+      validationMiddleware(ParamDto, RequestTypes.PARAMS),
+      this.getTransactionsByTransactionId
+    );
+    this.router.post(
+      '',
+      authMiddleware,
+      validationMiddleware(createTransactionDto, RequestTypes.BODY),
+      this.createTransaction
+    );
   }
 
   private createTransaction = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
@@ -56,7 +66,11 @@ class TransactionsController implements Controller {
     }
   };
 
-  private getTransactionsByTransactionId = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private getTransactionsByTransactionId = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user) {
         throw new NotFoundException();
