@@ -4,7 +4,6 @@ import Controller from '../../interfaces/controller.interface';
 import validationMiddleware from '../../middlewares/validation.middleware';
 import createTransactionDto from './transactions.dto';
 import TransactionsService from './transactions.service';
-import authMiddleware from '../../middlewares/auth.middleware';
 
 class TransactionsController implements Controller {
   public path: string = '/transactions';
@@ -17,7 +16,7 @@ class TransactionsController implements Controller {
   }
 
   private initRoutes() {
-    this.router.get('', authMiddleware, this.getTransactions);
+    this.router.get('', this.getTransactions);
     this.router.post('', validationMiddleware(createTransactionDto, RequestTypes.BODY), this.createTransaction);
   }
 
