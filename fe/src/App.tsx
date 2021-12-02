@@ -11,10 +11,10 @@ function App() {
     <div className="flex flex-col min-h-screen h-screen">
       <BrowserRouter>
         <Navbar />
-          <Routes>
-            <Route path="/" element={<Landing />}></Route>
-            <Route path="*" element={<NotFound />}></Route>
-          </Routes>
+        <Routes>
+          <Route path="/" element={<Landing />}></Route>
+          <Route path="*" element={<NotFound />}></Route>
+        </Routes>
         <Footer />
       </BrowserRouter>
     </div>

@@ -18,10 +18,6 @@
     font-size: 16px;
   }
 
-  footer {
-    @apply mt-auto;
-  }
-
   @screen xl {
     html,
     body {
