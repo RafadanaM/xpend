@@ -1,12 +1,15 @@
-import React from 'react'
-import { Route, RouteProps } from 'react-router-dom'
-import Container from './Container';
+import { Navigate, Outlet } from "react-router-dom";
+import Container from "./Container";
 
-const PrivateRoute = ({ element, ...rest }: RouteProps) => {
-    if (!element) return null;
-    return (
-        <Route {...rest} element={<Container>{element}</Container>}/>
-    )
-}
+const PrivateRoute = () => {
+  const auth = true;
+  return auth ? (
+    <Container className="h-full">
+      <Outlet />
+    </Container>
+  ) : (
+    <Navigate to="/" />
+  );
+};
 
-export default PrivateRoute
+export default PrivateRoute;

@@ -9,13 +9,13 @@ export const Landing = () => {
             <span className="text-accent-orange text-9xl">X</span>pend
           </p>
           <p className="mt-3">
-            Track your{" "}
+            Track your
             <span className="text-accent-orange text-lg font-semibold">
-              spending
-            </span>{" "}
-            and{" "}
+              {" spending "}
+            </span>
+            and
             <span className="text-accent-orange text-lg font-semibold">
-              earnings
+              {" earnings"}
             </span>
             !
           </p>
