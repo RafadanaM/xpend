@@ -2,7 +2,7 @@ import React from 'react'
 
 const LoginForm = () => {
     return (
-        <div className="my-auto">
+        <div className="my-auto mx-auto">
             <div className="w-full max-w-xs">
                 <form className="bg-primary shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="mb-4">
