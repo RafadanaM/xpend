@@ -14,8 +14,12 @@
 
   html,
   body {
-    @apply font-poppins m-0 leading-normal;
+    @apply font-poppins m-0 leading-normal h-screen;
     font-size: 16px;
+  }
+
+  footer {
+    @apply mt-auto;
   }
 
   @screen xl {

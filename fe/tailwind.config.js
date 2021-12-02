@@ -26,6 +26,10 @@ module.exports = {
           grey: colorWithOpacity('--accent-grey'),
         },
       },
+      fontSize: {
+        '2xs': ['0.65rem', '0.75rem'],
+       
+      },
     },
   },
   variants: {
