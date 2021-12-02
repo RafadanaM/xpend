@@ -1,6 +1,6 @@
 import { IsNumberString } from 'class-validator';
 
-class Param {
+class ParamDto {
   @IsNumberString()
   public id: number;
 }
