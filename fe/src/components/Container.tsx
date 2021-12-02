@@ -1,11 +1,12 @@
-import { ReactChild } from "react";
+import { ReactNode } from "react";
 
 interface IContainer {
-  children: ReactChild;
+  children: ReactNode;
+  className?: string;
 }
-const Container = ({ children }: IContainer) => {
+const Container = ({ children, className = '' }: IContainer) => {
   return (
-    <div className="w-full h-full md:w-11/12 max-w-screen-2xl mx-auto ">
+    <div className={`w-full md:w-11/12 max-w-screen-2xl mx-auto ${className}`}>
       {children}
     </div>
   );
