@@ -18,6 +18,10 @@ module.exports = {
         poppins: ['"Poppins"', ...defaultTheme.fontFamily.sans],
         nunito: ['"Nunito Sans"', ...defaultTheme.fontFamily.sans],
       },
+      width: {
+        110: '28rem',
+        124: '32rem',
+      },
       colors: {
         primary: colorWithOpacity('--primary'),
         secondary: colorWithOpacity('--secondary'),
