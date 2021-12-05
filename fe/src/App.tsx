@@ -12,11 +12,11 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/home" element={<PrivateRoute />}>
-            <Route element={<Home />} />
-          </Route>
           <Route path="*" element={<NotFound />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="" element={<PrivateRoute />}>
+            <Route path="/home" element={<Home />} />
+          </Route>
         </Routes>
         <Footer />
       </BrowserRouter>
