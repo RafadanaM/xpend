@@ -14,8 +14,8 @@ function App() {
         <Routes>
           <Route path="*" element={<NotFound />} />
           <Route path="/" element={<Landing />} />
-          <Route path="/home" element={<PrivateRoute />}>
-            <Route path="" element={<Home />} />
+          <Route path="" element={<PrivateRoute />}>
+            <Route path="/home" element={<Home />} />
           </Route>
         </Routes>
         <Footer />
