@@ -1,6 +1,6 @@
 import { SummaryCard } from "../components/Cards/SummaryCard";
 import { TaskCard } from "../components/Cards/TaskCard";
-import { Table } from "../components/Table/Table";
+import { Table } from "../components/Table";
 
 export const Home = () => {
   return (
