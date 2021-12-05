@@ -19,14 +19,14 @@ const MenuItem = ({
   return isButton ? (
     <button
       onClick={onClick}
-      className="w-full flex gap-x-3 items-center p-2 bg-opacity-100 transition-all duration-300 bg-accent-orange hover:bg-opacity-75"
+      className="w-full flex gap-x-3 text-sm md:text-base items-center p-2 bg-opacity-100 transition-all duration-300 bg-accent-orange hover:bg-opacity-75"
     >
       {icon}
       <span>{title}</span>
     </button>
   ) : (
     <Link
-      className={`w-full flex gap-x-3 items-center p-2 bg-opacity-100 transition-all duration-300 bg-accent-orange hover:bg-opacity-75 ${
+      className={`w-full flex gap-x-3 text-sm md:text-base items-center p-2 bg-opacity-100 transition-all duration-300 bg-accent-orange hover:bg-opacity-75 ${
         match ? "hidden" : ""
       }`}
       to={url}
