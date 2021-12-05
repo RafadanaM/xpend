@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Footer from "./components/Footer";
-import Navbar from "./components/Navbar";
+import Footer from "./components/Layouts/Footer";
+import Navbar from "./components/Layouts/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
 import { Home } from "./pages/Home";
 import { Landing } from "./pages/Landing";
