@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Checkbox from "./Checkbox";
 
 const TaskItem = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -12,11 +13,10 @@ const TaskItem = () => {
       <span className={`font-medium ${isChecked ? "line-through" : ""}`}>
         Pay Rent
       </span>
-      <input
-        type="checkbox"
+      <Checkbox
         checked={isChecked}
         onChange={handleCheckboxChange}
-        className="ml-auto mr-2 rounded-full focus:ring-0 focus:ring-offset-0 focus:text-primary"
+        className="ml-auto mr-2 rounded-full"
       />
     </div>
   );

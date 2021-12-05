@@ -1,6 +1,6 @@
 export const Table = () => {
   return (
-    <div className="overflow-x-auto col-span-2 md:mt-14">
+    <div className="overflow-x-auto col-span-2">
       <table className="table-fixed w-full border-collapse">
         <thead className="bg-accent-grey h-12 ">
           <tr className="text-xs md:text-base">
