@@ -14,7 +14,7 @@
 
   html,
   body {
-    @apply font-poppins m-0 leading-normal h-screen;
+    @apply font-poppins m-0 leading-normal min-h-screen h-screen;
     font-size: 16px;
   }
 
@@ -32,5 +32,9 @@
   h5,
   h6 {
     @apply leading-tight;
+  }
+
+  input:invalid ~ span {
+    display: block;
   }
 }

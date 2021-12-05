@@ -1,6 +1,10 @@
+import { useState } from "react";
 import LoginForm from "../components/LoginForm";
+import RegisterForm from "../components/RegisterForm";
 
 export const Landing = () => {
+  const [isLogin, setIsLogin] = useState(true);
+
   return (
     <div className="grid grid-cols-2 h-full bg-secondary">
       <div className="flex flex-col justify-center items-center">
@@ -22,7 +26,7 @@ export const Landing = () => {
         </div>
       </div>
       <div className="flex justify-center items-center">
-        <LoginForm />
+        {isLogin ? <LoginForm handleChangeForm={setIsLogin} /> : <RegisterForm handleChangeForm={setIsLogin} />}
       </div>
     </div>
   );
