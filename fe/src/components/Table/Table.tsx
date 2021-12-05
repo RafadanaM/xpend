@@ -12,6 +12,11 @@ export const Table = () => {
         </tr>
       </thead>
       <tbody className="bg-secondary text-sm">
+        {Array(15)
+          .fill(0)
+          .map((_) => (
+            <Row />
+          ))}
         <Row />
         <Row />
         <Row />

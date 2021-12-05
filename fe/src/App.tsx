@@ -8,19 +8,17 @@ import { NotFound } from "./pages/NotFound";
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen h-screen">
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="*" element={<NotFound />} />
-          <Route path="/" element={<Landing />} />
-          <Route path="" element={<PrivateRoute />}>
-            <Route path="/home" element={<Home />} />
-          </Route>
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="*" element={<NotFound />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="" element={<PrivateRoute />}>
+          <Route path="/home" element={<Home />} />
+        </Route>
+      </Routes>
+      <Footer />
+    </BrowserRouter>
   );
 }
 

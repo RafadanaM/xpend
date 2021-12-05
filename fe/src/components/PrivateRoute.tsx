@@ -4,7 +4,7 @@ import Container from "./Container";
 const PrivateRoute = () => {
   const auth = true;
   return auth ? (
-    <Container className="h-full">
+    <Container>
       <Outlet />
     </Container>
   ) : (
