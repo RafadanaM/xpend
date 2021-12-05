@@ -7,6 +7,8 @@ interface ColumnI {
 
 export const Column = ({ children, className = "" }: ColumnI) => {
   return (
-    <td className={`border p-3 border-accent-grey ${className}`}>{children}</td>
+    <td className={`border p-3 border-accent-grey truncate ${className}`}>
+      {children}
+    </td>
   );
 };

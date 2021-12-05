@@ -13,7 +13,7 @@ const MenuItems = ({ isOpen }: MenuItemsI) => {
   return (
     <div
       className={`absolute bg-white shadow-lg z-50 w-full left-0 top-full transform origin-top overflow-hidden transition-all duration-200 ${
-        isOpen ? "scale-y-100 translate-y-1 opacity-100" : "scale-y-0 opacity-0"
+        isOpen ? "scale-y-100" : "scale-y-0"
       }`}
     >
       <MenuItem
