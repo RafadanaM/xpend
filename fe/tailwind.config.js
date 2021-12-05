@@ -40,5 +40,14 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/line-clamp')],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/line-clamp'), function ({addUtilities}) {
+    const extendLineThrough = {
+        '.line-through': {
+            'textDecoration': 'line-through',
+            'text-decoration-color': '#3854a6',
+            'text-decoration-thickness': '2px'
+        },
+    }
+    addUtilities(extendLineThrough)
+}],
 }

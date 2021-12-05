@@ -20,7 +20,7 @@ const Menu = () => {
         {isOpen ? (
           <Up className="h-5 w-5 md:w-7 md:h-7 stroke-current stroke-1 mx-auto" />
         ) : (
-          <Down className="h-5 w-5 md:w-7 stroke-current stroke-1 mx-auto" />
+          <Down className="h-5 w-5 md:w-7 md:h-7 stroke-current stroke-1 mx-auto" />
         )}
       </button>
 

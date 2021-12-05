@@ -6,7 +6,7 @@ interface ISummaryCard {
   children?: ReactNode;
 }
 
-const SummaryCard = ({ className = "", title, children }: ISummaryCard) => {
+const BaseCard = ({ className = "", title, children }: ISummaryCard) => {
   return (
     <div
       className={`flex flex-col bg-secondary w-full xl:w-124 h-36 sm:h-52 md:h-64 mx-auto md:rounded-lg md:shadow-lg px-2.5 md:px-4 py-1.5 md:py-2.5 border-b border-accent-grey md:border-b-0 ${className}`}
@@ -19,4 +19,4 @@ const SummaryCard = ({ className = "", title, children }: ISummaryCard) => {
   );
 };
 
-export default SummaryCard;
+export default BaseCard;
