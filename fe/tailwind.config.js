@@ -32,6 +32,7 @@ module.exports = {
       },
       fontSize: {
         '2xs': ['0.65rem', '0.75rem'],
+        '3xs': ['0.50rem', '0.65rem'],
        
       },
     },
@@ -39,5 +40,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [require('@tailwindcss/forms'),],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/line-clamp')],
 }
