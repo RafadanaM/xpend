@@ -2,7 +2,7 @@ import LoginForm from "../components/LoginForm";
 
 export const Landing = () => {
   return (
-    <div className="grid grid-cols-2 h-full bg-secondary">
+    <div className="grid grid-cols-2 flex-1 bg-secondary">
       <div className="flex flex-col justify-center items-center">
         <div>
           <p className="font-bold text-8xl">
