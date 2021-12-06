@@ -26,7 +26,11 @@ export const Landing = () => {
         </div>
       </div>
       <div className="flex justify-center items-center">
-        {isLogin ? <LoginForm handleChangeForm={setIsLogin} /> : <RegisterForm handleChangeForm={setIsLogin} />}
+        {isLogin ? (
+          <LoginForm handleChangeForm={setIsLogin} />
+        ) : (
+          <RegisterForm handleChangeForm={setIsLogin} />
+        )}
       </div>
     </div>
   );

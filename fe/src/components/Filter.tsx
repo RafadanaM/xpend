@@ -5,7 +5,7 @@ import RadioInput from "./RadioInput";
 export const Filter = () => {
   const [selectedShow, setSelectedShow] = useState(sortEnum.THIS_MONTH);
   return (
-    <div className="col-span-2 bg-secondary mt-10 rounded px-2 py-1">
+    <div className="bg-secondary rounded px-2 py-1 md:mt-10">
       <div className="flex flex-col">
         <label className="font-medium">Show:</label>
         <div className="flex items-center gap-x-2">
