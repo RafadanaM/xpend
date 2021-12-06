@@ -60,7 +60,8 @@ export const registerInputs = [
     type: "text",
     placeholder: "First Name",
     label: "First Name",
-    errorMessage: "Please enter your first name!",
+    pattern: "^[a-zA-Z0-9]{2,}$",
+    errorMessage: "Should contain atleast 2 characters!",
   },
   {
     id: "1",
@@ -68,7 +69,8 @@ export const registerInputs = [
     type: "text",
     placeholder: "Last Name",
     label: "Last Name",
-    errorMessage: "Please enter your last name!",
+    pattern: "^[a-zA-Z0-9]{2,}$",
+    errorMessage: "Should contain atleast 2 characters!",
   },
   {
     id: "2",
@@ -84,7 +86,7 @@ export const registerInputs = [
     type: "password",
     placeholder: "******************",
     label: "Password",
-    pattern: "^[a-zA-Z0-9]{6,}$",
-    errorMessage: "Password should atleast be 6 letters!",
+    pattern: "^((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).{6,20}$",
+    errorMessage: "Password should contain 6-20 letters (atleast 1 upper case, 1 lower case, and 1 number or special character)!",
   },
 ];
