@@ -35,6 +35,9 @@ module.exports = {
         '3xs': ['0.50rem', '0.65rem'],
        
       },
+      backgroundImage: {
+        'money-pattern': "url('/src/assets/emilio-takas-_GNVwZJv-Jo-unsplash-lg.jpg')",
+      },
     },
   },
   variants: {

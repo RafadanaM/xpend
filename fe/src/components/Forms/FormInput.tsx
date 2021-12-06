@@ -7,8 +7,7 @@ interface FormInputI {
   pattern?: string;
   errorMessage: string;
   focused: boolean;
-  value: any;
-  labelStyle?: string;
+  value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onBlur?: React.ChangeEventHandler<HTMLInputElement>;
 }
@@ -23,13 +22,12 @@ const FormInput = ({
   errorMessage,
   focused,
   value,
-  labelStyle = "",
   onChange,
   onBlur,
 }: FormInputI) => {
   return (
     <div className="mb-4">
-      <label className={`block text-sm mb-2 ${labelStyle}`}>{label}</label>
+      <label className="block text-white text-sm font-bold mb-2">{label}</label>
       <input
         required
         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
