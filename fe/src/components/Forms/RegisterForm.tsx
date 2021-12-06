@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { registerInputs } from "../../utils/formInputs";
 import FormInput from "./FormInput";
 
 interface RegisterFormI {
@@ -28,42 +29,9 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
     password: "",
     confirmPassword: "",
   });
-  let valueKeys = Object.keys(values) as (keyof RegisterFormType)[];
 
   const inputs = [
-    {
-      id: "0",
-      name: "firstName",
-      type: "text",
-      placeholder: "First Name",
-      label: "First Name",
-      errorMessage: "Please enter your first name!",
-    },
-    {
-      id: "1",
-      name: "lastName",
-      type: "text",
-      placeholder: "Last Name",
-      label: "Last Name",
-      errorMessage: "Please enter your last name!",
-    },
-    {
-      id: "2",
-      name: "email",
-      type: "email",
-      placeholder: "example@mail.com",
-      label: "Email",
-      errorMessage: "It should be a valid email address!",
-    },
-    {
-      id: "3",
-      name: "password",
-      type: "password",
-      placeholder: "******************",
-      label: "Password",
-      pattern: "^[a-zA-Z0-9]{8,}$",
-      errorMessage: "Password should atleast be 8 letters!",
-    },
+    ...registerInputs,
     {
       id: "4",
       name: "confirmPassword",
@@ -74,6 +42,8 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
       errorMessage: "It has to be the same as your password!",
     },
   ];
+
+  let valueKeys = Object.keys(values) as (keyof RegisterFormType)[];
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -103,6 +73,7 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
               onChange={onChange}
               onBlur={() => handleFocus(index)}
               focused={focused[index]}
+              labelStyle="font-bold text-white"
             />
           ))}
           <div className="flex items-center justify-between mb-3">

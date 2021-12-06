@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { loginInputs } from "../../utils/formInputs";
 import FormInput from "./FormInput";
 
 interface LoginFormI {
@@ -17,26 +18,6 @@ const LoginForm = ({ handleChangeForm }: LoginFormI) => {
     password: "",
   });
   let valueKeys = Object.keys(values) as (keyof LoginFormType)[];
-
-  const inputs = [
-    {
-      id: "0",
-      name: "email",
-      type: "email",
-      placeholder: "example@mail.com",
-      label: "Email",
-      errorMessage: "It should be a valid email address!",
-    },
-    {
-      id: "1",
-      name: "password",
-      type: "password",
-      placeholder: "******************",
-      label: "Password",
-      pattern: "^[a-zA-Z0-9]{8,}$",
-      errorMessage: "Password should atleast be 8 letters!",
-    },
-  ];
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +39,7 @@ const LoginForm = ({ handleChangeForm }: LoginFormI) => {
           className="bg-primary shadow-md rounded px-8 pt-6 pb-8 mb-4 my-4"
           onSubmit={handleSubmit}
         >
-          {inputs.map((input, index) => (
+          {loginInputs.map((input, index) => (
             <FormInput
               key={input.id}
               {...input}
@@ -66,6 +47,7 @@ const LoginForm = ({ handleChangeForm }: LoginFormI) => {
               onChange={onChange}
               onBlur={() => handleFocus(index)}
               focused={focused[index]}
+              labelStyle="font-bold text-white"
             />
           ))}
           <div className="flex items-center justify-between mb-3">

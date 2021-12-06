@@ -1,8 +1,8 @@
 import { FormEvent, useRef, useState } from "react";
-import FormInput from "../FormInput";
 import { ReactComponent as CloseIcon } from "../../assets/close.svg";
 import { transactionInputs } from "../../utils/formInputs";
 import useOutsideAlerter from "../../utils/useOutsideAlerter";
+import FormInput from "../Forms/FormInput";
 
 type TransactionFormType = {
   title: string;
