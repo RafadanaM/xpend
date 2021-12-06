@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMatch } from "react-router-dom";
 import { ReactComponent as Down } from "../../assets/down.svg";
 import { ReactComponent as Up } from "../../assets/up.svg";
+import useOutsideAlerter from "../../utils/useOutsideAlerter";
 import MenuItems from "./MenuItems";
 
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const match = useMatch("/");
+  const menuRef = useRef(null);
+
+  useOutsideAlerter(menuRef, () => {
+    setIsOpen(false);
+  });
+
   const toggleOpenModal = () => {
     setIsOpen((prevState) => !prevState);
   };
   return (
     <div
+      ref={menuRef}
       className={`relative w-24 md:w-36 -mx-3 md:mx-0 h-full flex items-center justify-center ${
         match ? "hidden" : ""
       }`}
