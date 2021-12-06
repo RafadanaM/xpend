@@ -12,15 +12,15 @@ const Menu = () => {
   };
   return (
     <div
-      className={`relative w-36 h-full flex items-center justify-center ${
+      className={`relative w-24 md:w-36 -mx-3 md:mx-0 h-full flex items-center justify-center ${
         match ? "hidden" : ""
       }`}
     >
       <button onClick={toggleOpenModal} className="w-full">
         {isOpen ? (
-          <Up className="w-7 h-7 stroke-current stroke-1 mx-auto" />
+          <Up className="h-5 w-5 md:w-7 md:h-7 stroke-current stroke-1 mx-auto" />
         ) : (
-          <Down className="w-7 h-7  stroke-current stroke-1 mx-auto" />
+          <Down className="h-5 w-5 md:w-7 md:h-7 stroke-current stroke-1 mx-auto" />
         )}
       </button>
 

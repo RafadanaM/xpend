@@ -5,6 +5,9 @@
 @tailwind utilities;
 
 @layer base {
+  #root {
+    @apply min-h-screen flex flex-col;
+  }
   :root {
     --primary: 56, 84, 166;
     --secondary: 234, 234, 234;
@@ -14,8 +17,12 @@
 
   html,
   body {
-    @apply font-poppins m-0 leading-normal min-h-screen h-screen;
+    @apply font-poppins m-0 leading-normal;
     font-size: 16px;
+  }
+
+  footer {
+    @apply mt-auto;
   }
 
   @screen xl {
