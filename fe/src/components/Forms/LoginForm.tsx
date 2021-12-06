@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { AuthService } from "../../api/services/AuthService";
 import { loginInputs } from "../../utils/formInputs";
 import FormInput from "./FormInput";
 
@@ -21,6 +22,9 @@ const LoginForm = ({ handleChangeForm }: LoginFormI) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    AuthService.login(values.email, values.password).then((data) => {
+      console.log(data);
+    });
   };
 
   const handleFocus = (index: number) => {
