@@ -13,7 +13,7 @@ export const Home = () => {
         open={openTransactionModal}
         changeOpen={setOpenTransactionModal}
       />
-      <div className="grid grid-cols-2 md:px-0 md:py-8 gap-x-10 md:gap-y-2 bg-secondary">
+      <div className="grid grid-cols-2 md:px-0 md:py-8 gap-x-10 md:gap-y-2 bg-secondary md:bg-white">
         <SummaryCard />
         <TaskCard />
         <Filter />
