@@ -65,7 +65,7 @@ export function AuthProvider({
   );
 
   function logout() {
-    //   sessionsApi.logout().then(() => setUser(undefined));
+    AuthService.logout().then(() => setUser(undefined));
   }
 
   const memoedValue = useMemo(
