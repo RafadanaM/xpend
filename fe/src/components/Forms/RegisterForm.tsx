@@ -1,11 +1,11 @@
 import { FormEvent, useState } from "react";
 import { UserService } from "../../api/services/UserService";
 import { registerInputs } from "../../utils/formInputs";
-// import useAuth from "../../utils/useAuth";
 import FormInput from "./FormInput";
 
 interface RegisterFormI {
   handleChangeForm: Function;
+  handleOpenModal: Function;
 }
 
 type RegisterFormType = {
@@ -16,8 +16,7 @@ type RegisterFormType = {
   confirmPassword: string;
 };
 
-const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
-  // const { register } = useAuth();
+const RegisterForm = ({ handleChangeForm, handleOpenModal }: RegisterFormI) => {
   const [focused, setFocused] = useState<boolean[]>([
     false,
     false,
@@ -25,6 +24,7 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
     false,
     false,
   ]);
+  const [error, setError] = useState("");
   const [values, setValues] = useState<RegisterFormType>({
     firstName: "",
     lastName: "",
@@ -56,9 +56,25 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
       values.email,
       values.password,
       values.confirmPassword
-    ).catch((error) => {
-      console.log(error.response.data.message);
-    });
+    )
+      .then(() => {
+        setValues({
+          ...values,
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        focused.forEach((value, index) => {
+          focused[index] = false;
+        });
+        setFocused([...focused]);
+        handleOpenModal(true);
+      })
+      .catch((error) => {
+        setError(error.response.data.message);
+      });
   };
 
   const handleFocus = (index: number) => {
@@ -88,6 +104,7 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
               labelStyle="font-bold text-white"
             />
           ))}
+          <p className="text-red-500 text-xs italic mb-5">{error}</p>
           <div className="flex items-center justify-between mb-3">
             <button
               className="w-full bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

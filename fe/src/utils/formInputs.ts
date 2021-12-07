@@ -83,7 +83,7 @@ export const registerInputs = [
     type: "password",
     placeholder: "******************",
     label: "Password",
-    pattern: "^((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).{6,20}$",
+    pattern: "^((?=.*[0-9])|(?=.*[a-zA-Z0-9_]+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).{6,20}$",
     errorMessage: "Password should contain 6-20 letters (atleast 1 upper case, 1 lower case, and 1 number or special character)!",
   },
 ];

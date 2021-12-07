@@ -17,7 +17,6 @@ interface AuthContextType {
   loading: boolean;
   error?: any;
   login: (email: string, password: string) => Promise<any>;
-  register: (firstName: string, lastName: string, email: string, password: string, confirmPassword: string) => Promise<any>
   logout: () => void;
 }
 
@@ -65,20 +64,6 @@ export function AuthProvider({
     [navigate]
   );
 
-  const register = useCallback(
-    async (firstName, lastName, email, password, confirmPassword) => {
-      setLoading(true);
-      AuthService.register(firstName, lastName, email, password, confirmPassword)
-        .catch((error) => {
-          const msg = error?.response?.data?.message;
-          console.log(msg)
-          setError(msg);
-        })
-        .finally(() => setLoading(false));
-    },
-    [navigate]
-  );
-
   function logout() {
     //   sessionsApi.logout().then(() => setUser(undefined));
   }
@@ -89,10 +74,9 @@ export function AuthProvider({
       loading,
       error,
       login,
-      register,
       logout,
     }),
-    [user, loading, error, login, register]
+    [user, loading, error, login]
   );
 
   // We only want to render the underlying app after we
