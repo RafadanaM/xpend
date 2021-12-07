@@ -22,14 +22,13 @@ class AuthController implements Controller {
   private login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const loginData: LoginDto = req.body;
-      const tokenData = await this.authService.login(loginData);
-
-      res.cookie('access_token', tokenData.token, {
+      const response = await this.authService.login(loginData);
+      res.cookie('access_token', response.token.token, {
         httpOnly: true,
-        maxAge: tokenData.expiresIn * 1000,
+        maxAge: response.token.expiresIn * 1000,
         path: '/api',
       });
-      res.send({ message: 'Login Success' });
+      res.send(response.user);
     } catch (error) {
       next(error);
     }

@@ -36,18 +36,10 @@ export function AuthProvider({
   const navigate = useNavigate();
   const location = useLocation();
 
-  // If we change page, reset the error state.
   useEffect(() => {
     if (error) setError(null);
   }, [error, location.pathname]);
 
-  // Check if there is a currently active session
-  // when the provider is mounted for the first time.
-  //
-  // If there is an error, it means there is no session.
-  //
-  // Finally, just signal the component that the initial load
-  // is over.
   useEffect(() => {
     UserService.getUser()
       .then((user) => setUser(user))
@@ -55,23 +47,18 @@ export function AuthProvider({
       .finally(() => setLoadingInitial(false));
   }, []);
 
-  // Flags the component loading state and posts the login
-  // data to the server.
-  //
-  // An error means that the email/password combination is
-  // not valid.
-  //
-  // Finally, just signal the component that loading the
-  // loading state is over.
   const login = useCallback(
     async (email, password) => {
       setLoading(true);
-      return AuthService.login(email, password)
+      AuthService.login(email, password)
         .then((user) => {
           setUser(user);
           navigate("/home", { replace: true });
         })
-        .catch((error) => setError(error))
+        .catch((error) => {
+          const msg = error?.response?.data?.message;
+          setError(msg);
+        })
         .finally(() => setLoading(false));
     },
     [navigate]
@@ -81,15 +68,6 @@ export function AuthProvider({
     //   sessionsApi.logout().then(() => setUser(undefined));
   }
 
-  // Make the provider update only when it should.
-  // We only want to force re-renders if the user,
-  // loading or error states change.
-  //
-  // Whenever the `value` passed into a provider changes,
-  // the whole tree under the provider re-renders, and
-  // that can be very costly! Even in this case, where
-  // you only get re-renders when logging in and out
-  // we want to keep things very performant.
   const memoedValue = useMemo(
     () => ({
       user,

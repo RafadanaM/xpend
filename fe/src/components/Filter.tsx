@@ -11,6 +11,7 @@ export const Filter = () => {
         <div className="flex items-center gap-x-2">
           {Object.values(sortEnum).map((enumValue) => (
             <RadioInput
+              key={enumValue}
               value={enumValue}
               selected={selectedShow}
               onChange={setSelectedShow}

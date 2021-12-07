@@ -26,7 +26,6 @@ async function authMiddleware(request: RequestWithUser, _: Response, next: NextF
         process.env.JWT_SECRET_PUBLIC || 'jwt_secret',
         verifyOptions
       ) as DataTokenStored;
-      console.log(verificationResponse);
 
       const id = verificationResponse._id;
       const user = await userRepository.findOne(id);
