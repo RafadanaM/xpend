@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 import { loginInputs } from "../../utils/formInputs";
 import FormInput from "./FormInput";
-
+import useAuth from "../../utils/useAuth";
 interface LoginFormI {
   handleChangeForm: Function;
 }
@@ -12,6 +12,7 @@ type LoginFormType = {
 };
 
 const LoginForm = ({ handleChangeForm }: LoginFormI) => {
+  const { login } = useAuth();
   const [focused, setFocused] = useState<boolean[]>([false, false]);
   const [values, setValues] = useState<LoginFormType>({
     email: "",
@@ -21,6 +22,9 @@ const LoginForm = ({ handleChangeForm }: LoginFormI) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    login(values.email, values.password).then((res) => {
+      console.log(res);
+    });
   };
 
   const handleFocus = (index: number) => {

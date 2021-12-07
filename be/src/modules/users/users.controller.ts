@@ -1,6 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { RequestTypes } from '../../enums/request.enum';
+import NotFoundException from '../../exceptions/NotFoundException';
 import Controller from '../../interfaces/controller.interface';
+import RequestWithUser from '../../interfaces/requestWithUser.interface';
 import authMiddleware from '../../middlewares/auth.middleware';
 import validationMiddleware from '../../middlewares/validation.middleware';
 import createUserDto from './users.dto';
@@ -30,9 +32,12 @@ class UsersController implements Controller {
     }
   };
 
-  private getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  private getUsers = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
-      res.send(await this.usersService.getUsers());
+      if (!req.user) {
+        throw new NotFoundException();
+      }
+      res.send(await this.usersService.getUsers(req.user));
     } catch (error) {
       next(error);
     }
