@@ -1,11 +1,16 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import LoginForm from "../components/Forms/LoginForm";
 import RegisterForm from "../components/Forms/RegisterForm";
+import useAuth from "../utils/useAuth";
 
 export const Landing = () => {
+  const { user } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
 
-  return (
+  return user ? (
+    <Navigate to={"/home"} replace={true} />
+  ) : (
     <div className="grid md:grid-cols-2 flex-1 bg-money-pattern">
       <div className="flex flex-col justify-center items-center backdrop-filter backdrop-grayscale backdrop-brightness-50">
         <div>

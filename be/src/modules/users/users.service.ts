@@ -4,6 +4,7 @@ import createUserDto from './users.dto';
 import Users from './users.entity';
 import bcrypt from 'bcrypt';
 import PasswordDoesNotMatchException from '../../exceptions/PasswordDoesNotMatchException';
+import NotFoundException from '../../exceptions/NotFoundException';
 
 class UsersService {
   private usersRepository = getRepository(Users);
@@ -22,8 +23,12 @@ class UsersService {
     }
   }
 
-  public async getUsers(): Promise<Users[]> {
-    return await this.usersRepository.find();
+  public async getUsers(user: Users): Promise<Users> {
+    const currentUser = await this.usersRepository.findOne({ where: { id: user.id } });
+    if (!currentUser) {
+      throw new NotFoundException();
+    }
+    return currentUser;
   }
 }
 
