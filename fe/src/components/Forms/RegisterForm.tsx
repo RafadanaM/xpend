@@ -1,5 +1,7 @@
 import { FormEvent, useState } from "react";
+import { UserService } from "../../api/services/UserService";
 import { registerInputs } from "../../utils/formInputs";
+// import useAuth from "../../utils/useAuth";
 import FormInput from "./FormInput";
 
 interface RegisterFormI {
@@ -15,6 +17,7 @@ type RegisterFormType = {
 };
 
 const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
+  // const { register } = useAuth();
   const [focused, setFocused] = useState<boolean[]>([
     false,
     false,
@@ -47,6 +50,15 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    UserService.register(
+      values.firstName,
+      values.lastName,
+      values.email,
+      values.password,
+      values.confirmPassword
+    ).catch((error) => {
+      console.log(error.response.data.message);
+    });
   };
 
   const handleFocus = (index: number) => {
@@ -63,7 +75,7 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
       <div className="w-full max-w-xs">
         <form
           className="bg-primary shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4"
-          onSubmit={() => handleSubmit}
+          onSubmit={handleSubmit}
         >
           {inputs.map((input, index) => (
             <FormInput

@@ -40,7 +40,6 @@ export const loginInputs = [
     type: "email",
     placeholder: "example@mail.com",
     label: "Email",
-    errorMessage: "It should be a valid email address!",
   },
   {
     id: "1",
@@ -48,8 +47,6 @@ export const loginInputs = [
     type: "password",
     placeholder: "******************",
     label: "Password",
-    pattern: "^[a-zA-Z0-9]{8,}$",
-    errorMessage: "Password should atleast be 8 letters!",
   },
 ];
 

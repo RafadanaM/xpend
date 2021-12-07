@@ -5,7 +5,7 @@ interface FormInputI {
     placeholder: string;
     label: string;
     pattern?: string;
-    errorMessage: string;
+    errorMessage?: string;
     focused: boolean;
     value: any;
     labelStyle?: string;
@@ -42,7 +42,7 @@ interface FormInputI {
           onChange={onChange}
           onBlur={onBlur}
         />
-        {focused ? (
+        {focused && errorMessage ? (
           <span className="text-red-500 text-xs italic hidden my-1">
             {errorMessage}
           </span>
