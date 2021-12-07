@@ -2,13 +2,15 @@ import MenuItem from "./MenuItem";
 import { ReactComponent as ProfileIcon } from "../../assets/person.svg";
 import { ReactComponent as LogoutIcon } from "../../assets/logout.svg";
 import { ReactComponent as HomeIcon } from "../../assets/home.svg";
+import useAuth from "../../utils/useAuth";
 interface MenuItemsI {
   isOpen: boolean;
 }
 
 const MenuItems = ({ isOpen }: MenuItemsI) => {
+  const { logout } = useAuth();
   const handleLogout = () => {
-    console.log("logout is clicked");
+    logout();
   };
   return (
     <div
