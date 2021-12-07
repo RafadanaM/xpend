@@ -17,6 +17,7 @@ export const Home = () => {
         <SummaryCard />
         <TaskCard />
         <Filter />
+
         <button
           className="px-2 col-start-2 py-1.5 bg-accent-orange text-white text-xs rounded ml-auto my-auto mr-2 md:mr-0 md:mt-auto"
           onClick={() => setOpenTransactionModal(true)}

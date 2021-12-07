@@ -20,11 +20,10 @@ const LoginForm = ({ handleChangeForm }: LoginFormI) => {
   });
   let valueKeys = Object.keys(values) as (keyof LoginFormType)[];
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    login(values.email, values.password).then((res) => {
-      console.log(res);
-    });
+
+    login(values.email, values.password);
   };
 
   const handleFocus = (index: number) => {

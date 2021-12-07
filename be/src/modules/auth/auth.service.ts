@@ -39,16 +39,16 @@ class AuthService {
     if (user) {
       return user;
     }
-    console.log('else');
     throw new WrongCredentialsException();
   }
 
-  public async login(loginData: LoginDto): Promise<TokenData> {
+  public async login(loginData: LoginDto): Promise<{ user: Users; token: TokenData }> {
     const user = await this.getUserWithpassword(loginData.email);
 
     const isPasswordMatch = await bcrypt.compare(loginData.password, user.password);
     if (isPasswordMatch) {
-      return this.createToken(user);
+      const userWithoutPassword = await this.userRepository.findOneOrFail({ where: { email: loginData.email } });
+      return { user: userWithoutPassword, token: this.createToken(user) };
     }
     throw new WrongCredentialsException();
   }
