@@ -32,7 +32,7 @@ export const Table = ({ transactions, onRowClick }: TableI) => {
               onClick={() => onRowClick(transaction)}
             >
               <td className="px-2 border-r border-t border-gray-400">
-                Buy Groceries
+                {transaction.title}
               </td>
               <td className="truncate md:line-clamp-none px-2 border-r border-t border-gray-400">
                 {transaction.description}
@@ -41,7 +41,7 @@ export const Table = ({ transactions, onRowClick }: TableI) => {
                 {`Rp. ${transaction.amount}`}
               </td>
               <td className="text-3xs md:text-sm border-t border-gray-400 text-center px-2 ">
-                {formatDate(transaction.created, transactionDateFormat)}
+                {formatDate(transaction.date, transactionDateFormat)}
               </td>
             </tr>
           ))}

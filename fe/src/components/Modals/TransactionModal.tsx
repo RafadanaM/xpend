@@ -53,7 +53,7 @@ export const TransactionModal = ({
 
   useEffect(() => {
     setValues({
-      title: transaction ? "Title" : "",
+      title: transaction ? transaction.title : "",
       description: transaction ? transaction.description : "",
       amount: transaction ? transaction.amount : 0,
       date: transaction ? formatToInput(transaction.date) : "",
@@ -66,10 +66,37 @@ export const TransactionModal = ({
     setIsEdit(false);
   };
 
+  const handleDelete = () => {
+    if (transaction) {
+      TransactionService.deleteTransaction(transaction?.id)
+        .then(async (_) => {
+          const { data } = await TransactionService.getTransactions();
+          setTransactions(data);
+          changeOpen(false);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    }
+    return;
+  };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isEdit) {
-      console.log("SAVE EDIT");
+      if (transaction)
+        TransactionService.editTransaction(
+          values as Transaction,
+          transaction?.id
+        )
+          .then(async (_) => {
+            const { data } = await TransactionService.getTransactions();
+            setTransactions(data);
+            changeOpen(false);
+          })
+          .catch((err) => {
+            console.log(err.response);
+          });
     } else {
       TransactionService.createTransaction(
         values.title,
@@ -162,7 +189,7 @@ export const TransactionModal = ({
             <div className="px-8 py-4 flex flex-col">
               <span className="text-lg font-medium">Title</span>
               <span className="text-gray-700 break-words">
-                transaction title
+                {transaction.title}
               </span>
               <span className="text-lg font-medium mt-5">Description</span>
               <span className="text-gray-700 break-words">
@@ -177,7 +204,7 @@ export const TransactionModal = ({
               <div className="flex w-full mt-10 gap-x-4">
                 <button
                   className="bg-red-600 px-2 py-1 flex-1 text-white hover:bg-opacity-75"
-                  onClick={() => setIsEdit(true)}
+                  onClick={handleDelete}
                 >
                   Delete
                 </button>
