@@ -33,6 +33,19 @@ class TransactionsController implements Controller {
       validationMiddleware(createTransactionDto, RequestTypes.BODY),
       this.createTransaction
     );
+    this.router.patch(
+      '/:id',
+      authMiddleware,
+      validationMiddleware(ParamDto, RequestTypes.PARAMS),
+      validationMiddleware(createTransactionDto, RequestTypes.BODY, true),
+      this.editTransaction
+    );
+    this.router.delete(
+      '/:id',
+      authMiddleware,
+      validationMiddleware(ParamDto, RequestTypes.PARAMS),
+      this.deleteTransaction
+    )
   }
 
   private createTransaction = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
@@ -46,14 +59,6 @@ class TransactionsController implements Controller {
       next(error);
     }
   };
-
-  // private getTransactions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  // try {
-  //     res.send(await this.transactionsService.getTransactions());
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // };
 
   private getTransactionsByUser = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -81,6 +86,39 @@ class TransactionsController implements Controller {
       next(error);
     }
   };
+
+  private editTransaction = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      if (!req.user) {
+        throw new NotFoundException();
+      }
+      const transactionId = parseInt(req.params.id);
+      const data: createTransactionDto = req.body;
+      res.send(await this.transactionsService.editTransaction(transactionId, data, req.user));
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+  private deleteTransaction = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      if (!req.user) {
+        throw new NotFoundException();
+      }
+      const transactionId = parseInt(req.params.id);
+      res.send(await this.transactionsService.deleteTransaction(transactionId, req.user));
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default TransactionsController;
