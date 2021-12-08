@@ -56,7 +56,7 @@ export const TransactionModal = ({
       title: transaction ? "Title" : "",
       description: transaction ? transaction.description : "",
       amount: transaction ? transaction.amount : 0,
-      date: transaction ? formatToInput(transaction.created) : "",
+      date: transaction ? formatToInput(transaction.date) : "",
     });
   }, [isEdit, transaction]);
 
@@ -172,7 +172,7 @@ export const TransactionModal = ({
               <span className="text-gray-700">{`Rp. ${transaction.amount}`}</span>
               <span className="text-lg font-medium mt-5">Date</span>
               <span className="text-gray-700">
-                {formatDate(transaction.created, transactionDateFormat)}
+                {formatDate(transaction.date, transactionDateFormat)}
               </span>
               <div className="flex w-full mt-10 gap-x-4">
                 <button
