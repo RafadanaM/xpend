@@ -25,15 +25,37 @@ class TransactionsService {
   }
 
   public async getTransactionsByUser(id: number): Promise<Transactions[]> {
-    return await this.transactionsRepository.find({ relations: ["user"], where: { user: { id : id } } });
+    return await this.transactionsRepository.find({ relations: ['user'], where: { user: { id: id } } });
   }
 
   public async getTransactionsByTransactionId(id: number, user: Users): Promise<Transactions> {
-    const transaction = await this.transactionsRepository.findOne({ relations: ["user"], where: { id: id } });
+    const transaction = await this.transactionsRepository.findOne({ relations: ['user'], where: { id: id } });
     if (!transaction) {
       throw new NotFoundException();
     }
-    this.isOwned(transaction.user.id, user.id)
+    this.isOwned(transaction.user.id, user.id);
+    return transaction;
+  }
+
+  public async editTransaction(id: number, data: Partial<createTransactionDto>, user: Users): Promise<Transactions> {
+    let transaction = await this.transactionsRepository.findOne({ relations: ['user'], where: { id: id } });
+    if (!transaction) {
+      throw new NotFoundException();
+    }
+    this.isOwned(transaction.user.id, user.id);
+    const updatedData: Partial<createTransactionDto> = { ...data };
+    await this.transactionsRepository.update({ id }, { ...updatedData });
+    transaction = await this.transactionsRepository.findOneOrFail({ relations: ['user'], where: { id: id } });
+    return transaction;
+  }
+
+  public async deleteTransaction(id: number, user: Users): Promise<Transactions> {
+    const transaction = await this.transactionsRepository.findOne({ relations: ['user'], where: { id: id } });
+    if (!transaction) {
+      throw new NotFoundException();
+    }
+    this.isOwned(transaction.user.id, user.id);
+    await this.transactionsRepository.delete({ id });
     return transaction;
   }
 }
