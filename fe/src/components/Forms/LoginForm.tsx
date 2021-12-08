@@ -12,7 +12,7 @@ type LoginFormType = {
 };
 
 const LoginForm = ({ handleChangeForm }: LoginFormI) => {
-  const { login } = useAuth();
+  const { login, error } = useAuth();
   const [focused, setFocused] = useState<boolean[]>([false, false]);
   const [values, setValues] = useState<LoginFormType>({
     email: "",
@@ -22,7 +22,6 @@ const LoginForm = ({ handleChangeForm }: LoginFormI) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     login(values.email, values.password);
   };
 
@@ -53,6 +52,7 @@ const LoginForm = ({ handleChangeForm }: LoginFormI) => {
               labelStyle="font-bold text-white"
             />
           ))}
+          <p className="text-red-500 text-xs italic mb-5">{error}</p>
           <div className="flex items-center justify-between mb-3">
             <button
               className="w-full bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

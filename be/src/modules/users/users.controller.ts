@@ -25,6 +25,7 @@ class UsersController implements Controller {
 
   private createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      console.log("masuk");
       const userData: createUserDto = req.body;
       res.send({ message: await this.usersService.createUser(userData) });
     } catch (error) {

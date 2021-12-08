@@ -37,8 +37,8 @@ export function AuthProvider({
   const location = useLocation();
 
   useEffect(() => {
-    if (error) setError(null);
-  }, [error, location.pathname]);
+    setError(null);
+  }, [location.pathname]);
 
   useEffect(() => {
     UserService.getUser()

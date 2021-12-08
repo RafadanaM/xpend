@@ -1,9 +1,11 @@
 import { FormEvent, useState } from "react";
+import { UserService } from "../../api/services/UserService";
 import { registerInputs } from "../../utils/formInputs";
 import FormInput from "./FormInput";
 
 interface RegisterFormI {
   handleChangeForm: Function;
+  handleOpenModal: Function;
 }
 
 type RegisterFormType = {
@@ -14,7 +16,7 @@ type RegisterFormType = {
   confirmPassword: string;
 };
 
-const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
+const RegisterForm = ({ handleChangeForm, handleOpenModal }: RegisterFormI) => {
   const [focused, setFocused] = useState<boolean[]>([
     false,
     false,
@@ -22,6 +24,7 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
     false,
     false,
   ]);
+  const [error, setError] = useState("");
   const [values, setValues] = useState<RegisterFormType>({
     firstName: "",
     lastName: "",
@@ -47,6 +50,31 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    UserService.register(
+      values.firstName,
+      values.lastName,
+      values.email,
+      values.password,
+      values.confirmPassword
+    )
+      .then(() => {
+        setValues({
+          ...values,
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        focused.forEach((value, index) => {
+          focused[index] = false;
+        });
+        setFocused([...focused]);
+        handleOpenModal(true);
+      })
+      .catch((error) => {
+        setError(error.response.data.message);
+      });
   };
 
   const handleFocus = (index: number) => {
@@ -63,7 +91,7 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
       <div className="w-full max-w-xs">
         <form
           className="bg-primary shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4"
-          onSubmit={() => handleSubmit}
+          onSubmit={handleSubmit}
         >
           {inputs.map((input, index) => (
             <FormInput
@@ -76,6 +104,7 @@ const RegisterForm = ({ handleChangeForm }: RegisterFormI) => {
               labelStyle="font-bold text-white"
             />
           ))}
+          <p className="text-red-500 text-xs italic mb-5">{error}</p>
           <div className="flex items-center justify-between mb-3">
             <button
               className="w-full bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
