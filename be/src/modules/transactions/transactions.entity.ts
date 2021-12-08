@@ -7,10 +7,16 @@ class Transactions {
   public id: number;
 
   @Column()
+  public title: string;
+
+  @Column()
   public description: string;
 
   @Column()
   public amount: number;
+
+  @Column()
+  public date: Date;
 
   @CreateDateColumn()
   public created: Date;
