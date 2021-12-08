@@ -3,14 +3,14 @@ export const transactionInputs = [
     id: "0",
     name: "title",
     type: "text",
-    placeholder: "Transaction Title",
-    label: "Text",
+    placeholder: "Title",
+    label: "Title",
     errorMessage: "Title must not be empty!",
   },
   {
     id: "1",
     name: "description",
-    type: "text",
+    type: "textarea",
     placeholder: "Description",
     label: "Description",
     errorMessage: "Description must not be empty!",
@@ -83,7 +83,9 @@ export const registerInputs = [
     type: "password",
     placeholder: "******************",
     label: "Password",
-    pattern: "^((?=.*[0-9])|(?=.*[a-zA-Z0-9_]+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).{6,20}$",
-    errorMessage: "Password should contain 6-20 letters (atleast 1 upper case, 1 lower case, and 1 number or special character)!",
+    pattern:
+      "^((?=.*[0-9])|(?=.*[a-zA-Z0-9_]+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).{6,20}$",
+    errorMessage:
+      "Password should contain 6-20 letters (atleast 1 upper case, 1 lower case, and 1 number or special character)!",
   },
 ];
