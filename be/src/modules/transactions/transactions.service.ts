@@ -24,8 +24,8 @@ class TransactionsService {
     return await this.transactionsRepository.find();
   }
 
-  public async getTransactionsByUser(id: number): Promise<Transactions[]> {
-    return await this.transactionsRepository.find({ relations: ['user'], where: { user: { id: id } } });
+  public async getTransactionsByUser(user: Users): Promise<Transactions[]> {
+    return await this.transactionsRepository.find({ relations: ['user'], where: { user: { id: user.id } } });
   }
 
   public async getTransactionsByTransactionId(id: number, user: Users): Promise<Transactions> {

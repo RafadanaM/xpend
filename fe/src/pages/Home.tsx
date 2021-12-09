@@ -48,7 +48,7 @@ export const Home = () => {
         type="detail"
       /> */}
       <div className="grid grid-cols-2 md:px-0 md:py-8 gap-x-10 md:gap-y-2 bg-secondary md:bg-white">
-        <SummaryCard />
+        <SummaryCard transactions={transactions}/>
         <TaskCard />
         <Filter />
 
