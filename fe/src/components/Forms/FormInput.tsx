@@ -9,6 +9,7 @@ interface FormInputI {
   focused: boolean;
   value: any;
   labelStyle?: string;
+  notRequired?: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onBlur?: React.ChangeEventHandler<HTMLInputElement>;
 }
@@ -24,6 +25,7 @@ const FormInput = ({
   focused,
   value,
   labelStyle = "",
+  notRequired = false,
   onChange,
   onBlur,
 }: FormInputI) => {
@@ -47,18 +49,34 @@ const FormInput = ({
           }
         />
       ) : (
-        <input
-          required
-          className="appearance-none border rounded w-full py-2 px-3 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline"
-          id={id}
-          type={type}
-          name={name}
-          placeholder={placeholder}
-          pattern={pattern}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-        />
+        <>
+          {notRequired ? (
+            <input
+              className="appearance-none border rounded w-full py-2 px-3 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline"
+              id={id}
+              type={type}
+              name={name}
+              placeholder={placeholder}
+              pattern={pattern}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+            />
+          ) : (
+            <input
+              required
+              className="appearance-none border rounded w-full py-2 px-3 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline"
+              id={id}
+              type={type}
+              name={name}
+              placeholder={placeholder}
+              pattern={pattern}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+            />
+          )}
+        </>
       )}
 
       {focused && errorMessage ? (
