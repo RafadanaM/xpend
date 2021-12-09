@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import Transaction from "../../interfaces/transaction.interface";
+=======
+>>>>>>> ae84d383664c537ed2fda27b69ba77c3da2b8a6d
 import apiClient from "../ApiClient";
 
 const BASE_SERVICE_URL = "/transactions";
@@ -20,6 +23,7 @@ export const TransactionService = {
       date,
     });
   },
+<<<<<<< HEAD
 
   editTransaction: async (updatedData: Transaction, id: number) => {
     return await apiClient.patch(`${BASE_SERVICE_URL}/${id}`, {
@@ -30,4 +34,6 @@ export const TransactionService = {
   deleteTransaction: async (id: number) => {
     return await apiClient.delete(`${BASE_SERVICE_URL}/${id}`);
   },
+=======
+>>>>>>> ae84d383664c537ed2fda27b69ba77c3da2b8a6d
 };
