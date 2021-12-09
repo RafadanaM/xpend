@@ -30,6 +30,28 @@ class UsersService {
     }
     return currentUser;
   }
+
+  public async editProfile(data: Partial<createUserDto>, user: Users): Promise<Users> {
+    let currentUser = await this.getUsers(user);
+    const updatedProfile: Partial<createUserDto> = { ...data };
+    
+    const userUsingNewEmail = await this.usersRepository.findOne({ email: data.email })
+    if (userUsingNewEmail && userUsingNewEmail.id !== currentUser.id) {
+      throw new EmailAlreadyExistException(data.email);
+    }
+    if (data.password) {
+      if (data.password !== data.confirm_password) {
+        throw new PasswordDoesNotMatchException();
+      }
+      const hashedPassword: string = await bcrypt.hash(data.password, 10);
+      delete updatedProfile.confirm_password;
+      await this.usersRepository.update({ id: currentUser.id }, { ...updatedProfile, password: hashedPassword });
+    } else {
+      await this.usersRepository.update({ id: currentUser.id }, { ...updatedProfile });
+    }
+    currentUser = await this.usersRepository.findOneOrFail({ where: { id: currentUser.id } });
+    return currentUser;
+  }
 }
 
 export default UsersService;
