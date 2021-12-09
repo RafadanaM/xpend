@@ -5,6 +5,10 @@ export const SummaryCard = () => {
     <BaseCard
       title="Monthly Summary"
       className="col-span-2 md:col-span-1"
-    ></BaseCard>
+    >
+      <div className="mt-2 text-sm w-full">
+        <p className="font-medium" >Summary</p>
+      </div>
+    </BaseCard>
   );
 };
