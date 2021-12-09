@@ -20,7 +20,6 @@ export const TransactionService = {
       date,
     });
   },
-
   editTransaction: async (updatedData: Transaction, id: number) => {
     return await apiClient.patch(`${BASE_SERVICE_URL}/${id}`, {
       ...updatedData,
