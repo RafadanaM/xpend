@@ -40,8 +40,8 @@ export const Home = () => {
         setSelectedTransaction={setSelectedTransaction}
       />
       <div className="grid grid-cols-2 md:px-0 md:py-8 gap-x-10 md:gap-y-2 bg-secondary md:bg-white">
-        <SummaryCard />
-        <TaskCard setTransactions={setTransactions} />
+        <SummaryCard transactions={transactions}/>
+        <TaskCard />
         <Filter />
 
         <button

@@ -65,7 +65,7 @@ class TransactionsController implements Controller {
       if (!req.user) {
         throw new NotFoundException();
       }
-      res.send(await this.transactionsService.getTransactionsByUser(req.user.id));
+      res.send(await this.transactionsService.getTransactionsByUser(req.user));
     } catch (error) {
       next(error);
     }
