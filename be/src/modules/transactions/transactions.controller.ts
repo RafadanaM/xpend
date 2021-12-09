@@ -45,7 +45,7 @@ class TransactionsController implements Controller {
       authMiddleware,
       validationMiddleware(ParamDto, RequestTypes.PARAMS),
       this.deleteTransaction
-    )
+    );
   }
 
   private createTransaction = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
@@ -87,11 +87,7 @@ class TransactionsController implements Controller {
     }
   };
 
-  private editTransaction = async (
-    req: RequestWithUser,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  private editTransaction = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
       if (!req.user) {
         throw new NotFoundException();
@@ -102,13 +98,9 @@ class TransactionsController implements Controller {
     } catch (error) {
       next(error);
     }
-  }
-  
-  private deleteTransaction = async (
-    req: RequestWithUser,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  };
+
+  private deleteTransaction = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
       if (!req.user) {
         throw new NotFoundException();
@@ -118,7 +110,7 @@ class TransactionsController implements Controller {
     } catch (error) {
       next(error);
     }
-  }
+  };
 }
 
 export default TransactionsController;
