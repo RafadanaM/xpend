@@ -5,6 +5,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import { Home } from "./pages/Home";
 import { Landing } from "./pages/Landing";
 import { NotFound } from "./pages/NotFound";
+import { Profile } from "./pages/Profile";
 import { AuthProvider } from "./utils/useAuth";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="" element={<PrivateRoute />}>
             <Route path="/home" element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
         <Footer />
