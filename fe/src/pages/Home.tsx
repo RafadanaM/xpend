@@ -15,6 +15,7 @@ import Transaction from "../interfaces/transaction.interface";
 
 export const Home = () => {
   const [openTransactionModal, setOpenTransactionModal] = useState(false);
+  const [search, setSearch] = useState("");
   const [selectedTransaction, setSelectedTransaction] = useState<
     Transaction | undefined
   >();
@@ -23,7 +24,7 @@ export const Home = () => {
 
   useEffect(() => {
     Promise.all([
-      TransactionService.getTransactions()
+      TransactionService.getTransactions(search)
         .then(({ data }) => {
           setTransactions(data);
         })
@@ -151,7 +152,7 @@ export const Home = () => {
           tasks={tasks}
           setTasks={setTasks}
         />
-        <Filter />
+        <Filter setSearch={setSearch}/>
         <button
           className="h-8 w-28 col-start-2 bg-accent-orange text-white text-xs rounded ml-auto my-auto mr-1 md:mr-0 md:my-0 md:mt-auto"
           onClick={() => setOpenTransactionModal(true)}

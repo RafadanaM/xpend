@@ -8,6 +8,7 @@ import authMiddleware from '../../middlewares/auth.middleware';
 import RequestWithUser from '../../interfaces/requestWithUser.interface';
 import NotFoundException from '../../exceptions/NotFoundException';
 import ParamDto from '../../shared/param.dto';
+import SearchDto from '../../shared/search.dto';
 
 class TransactionsController implements Controller {
   public path: string = '/transactions';
@@ -21,6 +22,12 @@ class TransactionsController implements Controller {
 
   private initRoutes() {
     this.router.get('', authMiddleware, this.getTransactionsByUser);
+    this.router.get(
+      '/:search',
+      authMiddleware,
+      validationMiddleware(SearchDto, RequestTypes.PARAMS),
+      this.getTransactionsWithSearch
+    );
     this.router.get(
       '/:id',
       authMiddleware,
@@ -82,6 +89,22 @@ class TransactionsController implements Controller {
       }
       const transactionId = parseInt(req.params.id);
       res.send(await this.transactionsService.getTransactionsByTransactionId(transactionId, req.user));
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private getTransactionsWithSearch = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      if (!req.user) {
+        throw new NotFoundException();
+      }
+      const search = req.params.search;
+      res.send(await this.transactionsService.getTransactionsWithSearch(search,req.user));
     } catch (error) {
       next(error);
     }
