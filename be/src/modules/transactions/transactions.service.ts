@@ -60,14 +60,20 @@ class TransactionsService {
     // if transaction has task check if the task created and toggle update has the same month and year
     // if yes then toggle the task to false then delete the transaction
     // else just delete the transaction
+    console.log(transaction);
+
     if (transaction.task) {
+      console.log(transaction.task);
+
       const transactionCreated = new Date(transaction.created.getFullYear(), transaction.created.getMonth());
       const taskModified = new Date(transaction.task.updated.getFullYear(), transaction.task.updated.getMonth());
-      if (transactionCreated === taskModified) {
+      if (transactionCreated.getTime() === taskModified.getTime()) {
         await this.tasksRepository.update({ id: transaction.task.id }, { isComplete: false });
       }
+      transaction.task.isComplete = false;
     }
     await this.transactionsRepository.delete({ id });
+
     return transaction;
   }
 }

@@ -23,10 +23,10 @@ class AuthService {
     const dataStoredInToken: DataTokenStored = {
       _id: user.id,
     };
-
+    const privateKey = process.env.JWT_SECRET_PRIVATE as string;
     return {
       expiresIn,
-      token: jwt.sign(dataStoredInToken, process.env.JWT_SECRET_PRIVATE || 'jwt_secret', signOptions),
+      token: jwt.sign(dataStoredInToken, privateKey.replace(/\\n/gm, '\n') || 'jwt_secret', signOptions),
     };
   }
 

@@ -21,4 +21,8 @@ export const TaskService = {
       date,
     });
   },
+
+  undoTask: async (taskId: number) => {
+    return await apiClient.post(`${BASE_SERVICE_URL}/${taskId}/undo`);
+  },
 };

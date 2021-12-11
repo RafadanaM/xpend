@@ -26,7 +26,27 @@ class TasksService {
   }
 
   public async getTasksByUserId(user: Users): Promise<Tasks[]> {
-    return await this.taskRepository.find({ relations: ['user'], where: { user: { id: user.id } } });
+    const tasks = await this.taskRepository.find({
+      where: { user: { id: user.id } },
+      order: { created: 'ASC' },
+    });
+
+    return Promise.all(
+      tasks.map(async (task) => {
+        const transaction = await this.transactionsRepository.findOne({
+          relations: ['task'],
+          where: { task: { id: task.id } },
+          order: { created: 'DESC' },
+        });
+        if (!transaction) {
+          task.transactions = [];
+        } else {
+          task.transactions = [transaction];
+        }
+
+        return task;
+      })
+    );
   }
 
   public async getTaskById(taskId: number, user: Users): Promise<Tasks> {

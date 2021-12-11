@@ -1,3 +1,5 @@
+import Transaction from "./transaction.interface";
+
 interface Task {
   id: number;
   title: string;
@@ -6,5 +8,6 @@ interface Task {
   isComplete: boolean;
   created: string;
   updated: string;
+  transactions: Transaction[];
 }
 export default Task;

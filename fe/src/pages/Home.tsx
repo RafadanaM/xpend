@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
+import { TaskService } from "../api/services/TaskService";
 import { TransactionService } from "../api/services/TransactionService";
 import { SummaryCard } from "../components/Cards/SummaryCard";
 import { TaskCard } from "../components/Cards/TaskCard";
 import { Filter } from "../components/Filter";
-import { TransactionModal } from "../components/Modals/TransactionModal";
+import {
+  TransactionFormType,
+  TransactionModal,
+  TransactionModalType,
+} from "../components/Modals/TransactionModal";
 import { Table } from "../components/Table";
+import Task from "../interfaces/task.interface";
 import Transaction from "../interfaces/transaction.interface";
 
 export const Home = () => {
@@ -13,35 +19,130 @@ export const Home = () => {
     Transaction | undefined
   >();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    Promise.all([
+      TransactionService.getTransactions()
+        .then(({ data }) => {
+          setTransactions(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        }),
+      TaskService.getTasks()
+        .then(({ data }) => {
+          console.log(data);
+
+          setTasks(data);
+        })
+        .catch((err) => {
+          console.log(err?.reponse);
+        }),
+    ]);
+  }, []);
 
   const handleOpenDetailTransactionModal = (transaction: Transaction) => {
-    console.log(transaction);
     setSelectedTransaction(transaction);
     setOpenTransactionModal(true);
   };
 
-  useEffect(() => {
-    TransactionService.getTransactions()
-      .then(({ data }) => {
+  const handleDelete = (id: number) => {
+    TransactionService.deleteTransaction(id)
+      .then(async ({ data }) => {
         console.log(data);
-        setTransactions(data);
+
+        setTransactions((prevState: Transaction[]) => [
+          ...prevState.filter((transaction) => transaction.id !== data.id),
+        ]);
+        setSelectedTransaction(undefined);
+        setOpenTransactionModal(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       });
-  }, []);
+  };
+
+  const handleCancel = () => {
+    setSelectedTransaction(undefined);
+    setOpenTransactionModal(false);
+  };
+
+  const handleSave = (
+    type: TransactionModalType,
+    values: TransactionFormType
+  ) => {
+    switch (type) {
+      case "add":
+        TransactionService.createTransaction(
+          values.title,
+          +values.amount,
+          values.description,
+          values.date
+        )
+          .then(async (_) => {
+            const { data } = await TransactionService.getTransactions();
+            setTransactions(data);
+            setOpenTransactionModal(false);
+          })
+          .catch((err) => {
+            console.log(err.response);
+          });
+        return;
+
+      case "edit":
+        if (!values.id) {
+          return;
+        }
+        TransactionService.editTransaction(values as Transaction, values.id)
+          .then(async ({ data }) => {
+            setTransactions((prevState) => [
+              ...prevState.map((transaction) => {
+                if (transaction.id === data.id) {
+                  transaction = data;
+                }
+                return transaction;
+              }),
+            ]);
+            setOpenTransactionModal(false);
+          })
+          .catch((err) => {
+            console.log(err.response);
+          });
+        return;
+
+      default:
+        return;
+    }
+  };
+
   return (
     <>
-      <TransactionModal
-        open={openTransactionModal}
-        changeOpen={setOpenTransactionModal}
-        setTransactions={setTransactions}
-        transaction={selectedTransaction}
-        setSelectedTransaction={setSelectedTransaction}
-      />
+      {openTransactionModal ? (
+        <TransactionModal
+          defaultValue={
+            selectedTransaction && {
+              title: selectedTransaction.title,
+              description: selectedTransaction.description,
+              amount: selectedTransaction.amount,
+              date: selectedTransaction.date,
+              id: selectedTransaction.id,
+            }
+          }
+          defaultType={selectedTransaction ? "view" : "add"}
+          onSave={handleSave}
+          onDelete={handleDelete}
+          onCancel={handleCancel}
+        />
+      ) : null}
+
       <div className="grid grid-cols-2 md:px-0 md:py-8 gap-x-10 md:gap-y-2 bg-secondary md:bg-white">
-        <SummaryCard transactions={transactions}/>
-        <TaskCard />
+        <SummaryCard transactions={transactions} />
+        <TaskCard
+          setTransactions={setTransactions}
+          tasks={tasks}
+          setTasks={setTasks}
+        />
         <Filter />
 
         <button

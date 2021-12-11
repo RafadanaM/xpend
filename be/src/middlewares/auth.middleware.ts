@@ -21,9 +21,10 @@ async function authMiddleware(request: RequestWithUser, _: Response, next: NextF
         maxAge: expiresIn,
         algorithms: ['RS256'],
       };
+      const publicKey = process.env.JWT_SECRET_PUBLIC as string;
       const verificationResponse = jwt.verify(
         cookies.access_token,
-        process.env.JWT_SECRET_PUBLIC || 'jwt_secret',
+        publicKey.replace(/\\n/gm, '\n') || 'jwt_secret',
         verifyOptions
       ) as DataTokenStored;
 
