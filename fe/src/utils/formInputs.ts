@@ -131,4 +131,19 @@ export const editProfileInputs = [
   },
 ];
 
-  
+export const searchInputs = [
+  {
+    id: "0",
+    name: "searchText",
+    type: "text",
+    placeholder: "Search",
+    notRequired: true,
+  },
+  {
+    id: "1",
+    name: "searchDate",
+    type: "month",
+    placeholder: "",
+    notRequired: true,
+  },
+];

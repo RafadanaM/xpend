@@ -39,16 +39,23 @@ class TransactionsService {
     return transaction;
   }
 
-  public async getTransactionsWithSearch(search: string, user: Users): Promise<Transactions[]> {
-    const transactions = await this.transactionsRepository.find({
+  public async getTransactionsWithSearch(search: any, date: any, user: Users): Promise<Transactions[]> {
+    let transactions = await this.transactionsRepository.find({
       relations: ['user'],
       where: { user: { id: user.id } },
     });
-    console.log(transactions);
-    return transactions.filter((transaction) => {
-      console.log(transaction.title.includes(search), transaction.description.includes(search));
-      return transaction.title.includes(search) || transaction.description.includes(search);
-    });
+    if (search !== "") {
+      transactions = transactions.filter((transaction) => {
+        return transaction.title.includes(search) || transaction.description.includes(search);
+      });
+    }
+    if (date !== "") {
+      transactions = transactions.filter((transaction) => {
+        const transactionDate = transaction.date.toISOString().substring(0,7)
+        return transactionDate === date;
+      });
+    }
+    return transactions;
   }
 
   public async editTransaction(id: number, data: Partial<createTransactionDto>, user: Users): Promise<Transactions> {

@@ -3,10 +3,10 @@ interface FormInputI {
   name: string;
   type: string;
   placeholder: string;
-  label: string;
+  label?: string;
   pattern?: string;
   errorMessage?: string;
-  focused: boolean;
+  focused?: boolean;
   value: any;
   labelStyle?: string;
   notRequired?: boolean;

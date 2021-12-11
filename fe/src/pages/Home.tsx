@@ -13,9 +13,17 @@ import { Table } from "../components/Table";
 import Task from "../interfaces/task.interface";
 import Transaction from "../interfaces/transaction.interface";
 
+export type SearchFormType = {
+  searchText: string;
+  searchDate: string;
+};
+
 export const Home = () => {
   const [openTransactionModal, setOpenTransactionModal] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<SearchFormType>({
+    searchText: "",
+    searchDate: "",
+  });
   const [selectedTransaction, setSelectedTransaction] = useState<
     Transaction | undefined
   >();
@@ -66,6 +74,18 @@ export const Home = () => {
         ]);
         setSelectedTransaction(undefined);
         setOpenTransactionModal(false);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
+  const getTransactions = (
+    search: SearchFormType = { searchText: "", searchDate: "" }
+  ) => {
+    TransactionService.getTransactions(search)
+      .then(({ data }) => {
+        setTransactions(data);
       })
       .catch((err) => {
         console.log(err.response);
@@ -125,6 +145,10 @@ export const Home = () => {
     }
   };
 
+  useEffect(() => {
+    getTransactions(search);
+  }, [search]);
+
   return (
     <>
       {openTransactionModal ? (
@@ -152,7 +176,7 @@ export const Home = () => {
           tasks={tasks}
           setTasks={setTasks}
         />
-        <Filter setSearch={setSearch}/>
+        <Filter setSearch={setSearch} />
         <button
           className="h-8 w-28 col-start-2 bg-accent-orange text-white text-xs rounded ml-auto my-auto mr-1 md:mr-0 md:my-0 md:mt-auto"
           onClick={() => setOpenTransactionModal(true)}
