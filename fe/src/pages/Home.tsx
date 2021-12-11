@@ -9,35 +9,37 @@ import Transaction from "../interfaces/transaction.interface";
 
 export const Home = () => {
   const [openTransactionModal, setOpenTransactionModal] = useState(false);
+  const [search, setSearch] = useState("");
   const [selectedTransaction, setSelectedTransaction] = useState<
     Transaction | undefined
   >();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const handleOpenDetailTransactionModal = (transaction: Transaction) => {
-    console.log(transaction);
     setSelectedTransaction(transaction);
     setOpenTransactionModal(true);
   };
 
-  useEffect(() => {
-    TransactionService.getTransactions()
+  const getTransactions = (search: string = "") => {
+    TransactionService.getTransactions(search)
       .then(({ data }) => {
-        console.log(data);
         setTransactions(data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  };
+  useEffect(() => {
+    getTransactions(search);
+  }, [search]);
   return (
     <>
       <TransactionModal
         open={openTransactionModal}
         changeOpen={setOpenTransactionModal}
-        setTransactions={setTransactions}
         transaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
+        getTransactions={getTransactions}
         // type="create"
       />
       {/* <TransactionModal
@@ -48,10 +50,9 @@ export const Home = () => {
         type="detail"
       /> */}
       <div className="grid grid-cols-2 md:px-0 md:py-8 gap-x-10 md:gap-y-2 bg-secondary md:bg-white">
-        <SummaryCard transactions={transactions}/>
+        <SummaryCard transactions={transactions} />
         <TaskCard />
-        <Filter />
-
+        <Filter setSearch={setSearch} />
         <button
           className="h-8 w-28 col-start-2 bg-accent-orange text-white text-xs rounded ml-auto my-auto mr-1 md:mr-0 md:my-0 md:mt-auto"
           onClick={() => setOpenTransactionModal(true)}

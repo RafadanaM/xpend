@@ -21,17 +21,17 @@ type TransactionFormType = {
 interface AddTransactionModalI {
   open: boolean;
   changeOpen: Function;
-  setTransactions: Function;
   transaction?: Transaction;
   setSelectedTransaction: Function;
+  getTransactions: Function;
 }
 
 export const TransactionModal = ({
   open,
   changeOpen,
-  setTransactions,
   transaction,
   setSelectedTransaction,
+  getTransactions
 }: AddTransactionModalI) => {
   const modalRef = useRef(null);
   useOutsideAlerter(modalRef, () => {
@@ -70,9 +70,11 @@ export const TransactionModal = ({
     if (transaction) {
       TransactionService.deleteTransaction(transaction?.id)
         .then(async (_) => {
-          const { data } = await TransactionService.getTransactions();
-          setTransactions(data);
+          getTransactions();
           changeOpen(false);
+          // const { data } = await TransactionService.getTransactions();
+          // setTransactions(data);
+          // changeOpen(false);
         })
         .catch((err) => {
           console.log(err.response);
@@ -90,9 +92,11 @@ export const TransactionModal = ({
           transaction?.id
         )
           .then(async (_) => {
-            const { data } = await TransactionService.getTransactions();
-            setTransactions(data);
+            getTransactions();
             changeOpen(false);
+            // const { data } = await TransactionService.getTransactions();
+            // setTransactions(data);
+            // changeOpen(false);
           })
           .catch((err) => {
             console.log(err.response);
@@ -105,8 +109,9 @@ export const TransactionModal = ({
         values.date
       )
         .then(async (_) => {
-          const { data } = await TransactionService.getTransactions();
-          setTransactions(data);
+          getTransactions();
+          // const { data } = await TransactionService.getTransactions();
+          // setTransactions(data);
           changeOpen(false);
         })
         .catch((err) => {

@@ -3,8 +3,12 @@ import apiClient from "../ApiClient";
 
 const BASE_SERVICE_URL = "/transactions";
 export const TransactionService = {
-  getTransactions: async () => {
-    return await apiClient.get(`${BASE_SERVICE_URL}`);
+  getTransactions: async (search: string = "") => {
+    if (search === "") {
+      return await apiClient.get(`${BASE_SERVICE_URL}`);
+    } else {
+      return await apiClient.get(`${BASE_SERVICE_URL}/${search}`);
+    }
   },
 
   createTransaction: async (
@@ -20,7 +24,7 @@ export const TransactionService = {
       date,
     });
   },
-  
+
   editTransaction: async (updatedData: Transaction, id: number) => {
     return await apiClient.patch(`${BASE_SERVICE_URL}/${id}`, {
       ...updatedData,
