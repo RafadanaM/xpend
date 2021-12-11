@@ -1,22 +1,25 @@
-import { useState } from "react";
+import Task from "../interfaces/task.interface";
 import Checkbox from "./Checkbox";
 
-const TaskItem = () => {
-  const [isChecked, setIsChecked] = useState(false);
-
+interface TaskItemI {
+  task: Task;
+  onCheckboxClick: Function;
+}
+const TaskItem = ({ task, onCheckboxClick }: TaskItemI) => {
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsChecked(e.target.checked);
+    console.log(e.target.checked);
+    onCheckboxClick(task);
   };
   return (
     <div className="flex items-center ">
       <span className="font-bold mr-2">-</span>
-      <span className={`font-medium ${isChecked ? "line-through" : ""}`}>
-        Pay Rent
+      <span className={` ${task.isComplete ? "line-through" : ""}`}>
+        {task.title}
       </span>
       <Checkbox
-        checked={isChecked}
+        checked={task.isComplete}
         onChange={handleCheckboxChange}
-        className="ml-auto mr-2 rounded-full"
+        className="ml-auto mr-2 rounded-full cursor-pointer"
       />
     </div>
   );

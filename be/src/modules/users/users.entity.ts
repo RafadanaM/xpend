@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import Tasks from '../tasks/tasks.entity';
 import Transactions from '../transactions/transactions.entity';
 
 @Entity()
@@ -26,6 +27,9 @@ class Users {
 
   @OneToMany(() => Transactions, (transaction: Transactions) => transaction.user)
   public transactions: Transactions[];
+
+  @OneToMany(() => Tasks, (task: Tasks) => task.user)
+  public tasks: Tasks[];
 }
 
 export default Users;

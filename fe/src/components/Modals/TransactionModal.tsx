@@ -1,6 +1,8 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { TaskService } from "../../api/services/TaskService";
 import { TransactionService } from "../../api/services/TransactionService";
 import { ReactComponent as CloseIcon } from "../../assets/close.svg";
+import Task from "../../interfaces/task.interface";
 import Transaction from "../../interfaces/transaction.interface";
 import {
   formatDate,
@@ -22,8 +24,10 @@ interface AddTransactionModalI {
   open: boolean;
   changeOpen: Function;
   setTransactions: Function;
+  task?: Task;
+  setTasks?: Function;
   transaction?: Transaction;
-  setSelectedTransaction: Function;
+  setSelectedTransaction?: Function;
 }
 
 export const TransactionModal = ({
@@ -31,6 +35,8 @@ export const TransactionModal = ({
   changeOpen,
   setTransactions,
   transaction,
+  task,
+  setTasks,
   setSelectedTransaction,
 }: AddTransactionModalI) => {
   const modalRef = useRef(null);
@@ -52,17 +58,25 @@ export const TransactionModal = ({
   });
 
   useEffect(() => {
+    console.log(task);
+
     setValues({
-      title: transaction ? transaction.title : "",
-      description: transaction ? transaction.description : "",
-      amount: transaction ? transaction.amount : 0,
+      title: transaction ? transaction.title : task ? task.title : "",
+      description: transaction
+        ? transaction.description
+        : task
+        ? task.description
+        : "",
+      amount: transaction ? transaction.amount : task ? task.amount : 0,
       date: transaction ? formatToInput(transaction.date) : "",
     });
-  }, [isEdit, transaction]);
+  }, [isEdit, transaction, task]);
 
   const handleClose = () => {
     changeOpen(false);
-    setSelectedTransaction(false);
+    if (setSelectedTransaction) {
+      setSelectedTransaction(false);
+    }
     setIsEdit(false);
   };
 
@@ -72,7 +86,7 @@ export const TransactionModal = ({
         .then(async (_) => {
           const { data } = await TransactionService.getTransactions();
           setTransactions(data);
-          changeOpen(false);
+          handleClose();
         })
         .catch((err) => {
           console.log(err.response);
@@ -83,6 +97,31 @@ export const TransactionModal = ({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (task && setTasks) {
+      TaskService.completeTask(
+        task.id,
+        values.title,
+        +values.amount,
+        values.description,
+        values.date
+      ).then(async ({ data }) => {
+        setTasks((prevState: Task[]) => [
+          ...prevState.map((currentTask) => {
+            if (currentTask.id === task.id) {
+              currentTask.isComplete = data?.task?.isComplete || true;
+              return currentTask;
+            }
+            return currentTask;
+          }),
+        ]);
+        const response = await TransactionService.getTransactions();
+        setTransactions(response.data);
+        handleClose();
+      });
+
+      return;
+    }
     if (isEdit) {
       if (transaction)
         TransactionService.editTransaction(
@@ -92,7 +131,7 @@ export const TransactionModal = ({
           .then(async (_) => {
             const { data } = await TransactionService.getTransactions();
             setTransactions(data);
-            changeOpen(false);
+            handleClose();
           })
           .catch((err) => {
             console.log(err.response);
@@ -107,7 +146,7 @@ export const TransactionModal = ({
         .then(async (_) => {
           const { data } = await TransactionService.getTransactions();
           setTransactions(data);
-          changeOpen(false);
+          handleClose();
         })
         .catch((err) => {
           console.log(err.response);

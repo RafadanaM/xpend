@@ -38,18 +38,10 @@ export const Home = () => {
         setTransactions={setTransactions}
         transaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
-        // type="create"
       />
-      {/* <TransactionModal
-        open={openDetailTransactionModal}
-        changeOpen={setOpenDetailTransactionModal}
-        setTransactions={setTransactions}
-        transaction={selectedTransaction}
-        type="detail"
-      /> */}
       <div className="grid grid-cols-2 md:px-0 md:py-8 gap-x-10 md:gap-y-2 bg-secondary md:bg-white">
         <SummaryCard />
-        <TaskCard />
+        <TaskCard setTransactions={setTransactions} />
         <Filter />
 
         <button
