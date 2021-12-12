@@ -6,6 +6,7 @@ import UsersController from './modules/users/users.controller';
 import validateEnv from './utils/validateEnv';
 import AuthController from './modules/auth/auth.controller';
 import TransactionsController from './modules/transactions/transactions.controller';
+import TasksController from './modules/tasks/tasks.controller';
 
 validateEnv();
 (async () => {
@@ -17,7 +18,10 @@ validateEnv();
     return error;
   }
 
-  const app = new App([new UsersController(), new AuthController(), new TransactionsController()], parseInt(process.env.PORT || '5000'));
+  const app = new App(
+    [new UsersController(), new AuthController(), new TransactionsController(), new TasksController()],
+    parseInt(process.env.PORT || '5000')
+  );
 
   app.listen();
 })();

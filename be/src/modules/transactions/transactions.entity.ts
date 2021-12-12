@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import Tasks from '../tasks/tasks.entity';
 import Users from '../users/users.entity';
 
 @Entity()
@@ -26,6 +27,9 @@ class Transactions {
 
   @ManyToOne(() => Users, (user: Users) => user.transactions)
   public user: Users;
+
+  @ManyToOne(() => Tasks, (task: Tasks) => task.transactions, { nullable: true, onDelete: 'SET NULL' })
+  public task?: Tasks;
 }
 
 export default Transactions;

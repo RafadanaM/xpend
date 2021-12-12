@@ -14,7 +14,7 @@ const BaseCard = ({ className = "", title, children }: ISummaryCard) => {
       <div className="border-b border-primary py-1 md:py-2">
         <h2 className="md:text-2xl font-semibold">{title}</h2>
       </div>
-      <div className="overflow-y-auto w-full">{children}</div>
+      <div className="overflow-y-auto w-full h-full">{children}</div>
     </div>
   );
 };
