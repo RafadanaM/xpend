@@ -152,7 +152,6 @@ export const Home = () => {
           setTasks={setTasks}
         />
         <Filter />
-
         <button
           className="h-8 w-28 col-start-2 bg-accent-orange text-white text-xs rounded ml-auto my-auto mr-1 md:mr-0 md:my-0 md:mt-auto"
           onClick={() => setOpenTransactionModal(true)}
