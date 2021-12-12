@@ -49,7 +49,7 @@ export const Home = () => {
           console.log(err?.reponse);
         }),
     ]);
-  }, []);
+  }, [search]);
 
   const handleOpenDetailTransactionModal = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
@@ -74,18 +74,6 @@ export const Home = () => {
         ]);
         setSelectedTransaction(undefined);
         setOpenTransactionModal(false);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
-  const getTransactions = (
-    search: SearchFormType = { searchText: "", searchDate: "" }
-  ) => {
-    TransactionService.getTransactions(search)
-      .then(({ data }) => {
-        setTransactions(data);
       })
       .catch((err) => {
         console.log(err.response);
@@ -145,6 +133,18 @@ export const Home = () => {
     }
   };
 
+  const getTransactions = (
+    search: SearchFormType = { searchText: "", searchDate: "" }
+  ) => {
+    TransactionService.getTransactions(search)
+      .then(({ data }) => {
+        setTransactions(data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
   useEffect(() => {
     getTransactions(search);
   }, [search]);
@@ -176,13 +176,16 @@ export const Home = () => {
           tasks={tasks}
           setTasks={setTasks}
         />
-        <Filter setSearch={setSearch} />
+        <div className="py-1 w-full col-span-2 bg-white flex justify-end">
         <button
-          className="h-8 w-28 col-start-2 bg-accent-orange text-white text-xs rounded ml-auto my-auto mr-1 md:mr-0 md:my-0 md:mt-auto"
+          className="h-8 w-28 col-start-2 bg-accent-orange text-white text-xs rounded ml-auto my-auto mr-1 md:mr-0 md:my-0 md:mt-10 hover:bg-opacity-75"
           onClick={() => setOpenTransactionModal(true)}
         >
           Add Transaction
         </button>
+        </div>
+        <Filter setSearch={setSearch} />
+        
         <Table
           transactions={transactions}
           onRowClick={handleOpenDetailTransactionModal}

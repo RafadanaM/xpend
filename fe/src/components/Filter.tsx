@@ -1,16 +1,16 @@
 import { FormEvent, useState } from "react";
-import { sortEnum } from "../enums";
+// import { sortEnum } from "../enums";
 import { SearchFormType } from "../pages/Home";
 import { searchInputs } from "../utils/formInputs";
 import FormInput from "./Forms/FormInput";
-import RadioInput from "./RadioInput";
+// import RadioInput from "./RadioInput";
 
 interface FilterI {
   setSearch: Function;
 }
 
 export const Filter = ({ setSearch }: FilterI) => {
-  const [selectedShow, setSelectedShow] = useState(sortEnum.THIS_MONTH);
+  // const [selectedShow, setSelectedShow] = useState(sortEnum.THIS_MONTH);
   const [searchValues, setSearchValues] = useState<SearchFormType>({
     searchText: "",
     searchDate: "",
@@ -32,10 +32,32 @@ export const Filter = ({ setSearch }: FilterI) => {
 
   let searchKeys = Object.keys(searchValues) as (keyof SearchFormType)[];
   return (
-    <div className="bg-secondary rounded px-2 py-1 md:mt-10">
-      <div className="flex flex-col">
-        <form className="flex-col" onSubmit={(e) => handleSubmitSearch(e)}>
-          <label className="font-medium">Search: </label>
+    <div className="bg-secondary rounded px-2 py-1 col-span-2 w-full">
+      <form
+        className="flex-1 md:flex flex-wrap items-center w-full gap-1"
+        onSubmit={(e) => handleSubmitSearch(e)}
+      >
+        <div className="flex">
+          <label className="mt-2 text-xs font-medium md:mt-0 md:text-base">
+            Search:{" "}
+          </label>
+          <div className="flex flex-grow justify-end md:hidden">
+            <button
+              className="py-1 px-2 bg-accent-orange text-xs text-white rounded my-auto hover:bg-opacity-75"
+              type="submit"
+            >
+              Search
+            </button>
+            <button
+              className="ml-1 py-1 px-2 bg-accent-orange text-xs text-white rounded my-auto hover:bg-opacity-75"
+              type="button"
+              onClick={handleCancel}
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 md:flex gap-1">
           {searchInputs.map((input, index) => {
             return (
               <FormInput
@@ -46,32 +68,23 @@ export const Filter = ({ setSearch }: FilterI) => {
               />
             );
           })}
-          {/* <input
-            id="0"
-            name="search"
-            type="text"
-            placeholder="Search"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          ></input>
-          <input id="1" name="date" type="month" placeholder=""></input> */}
-          <button type="submit">Search</button>
-          <button type="button" onClick={handleCancel}>
-            Cancel
-          </button>
-        </form>
-        <div className="flex items-center gap-x-2">
-          {Object.values(sortEnum).map((enumValue) => (
-            <RadioInput
-              key={enumValue}
-              value={enumValue}
-              selected={selectedShow}
-              onChange={setSelectedShow}
-              label={enumValue}
-            />
-          ))}
         </div>
-      </div>
+        <div className="hidden md:flex flex-grow md:flex-grow-0 justify-end ">
+          <button
+            className="p-2 bg-accent-orange text-xs md:text-base text-white rounded my-auto hover:bg-opacity-75"
+            type="submit"
+          >
+            Search
+          </button>
+          <button
+            className="ml-2 p-2 bg-accent-orange text-xs md:text-base text-white rounded my-auto hover:bg-opacity-75"
+            type="button"
+            onClick={handleCancel}
+          >
+            Reset
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

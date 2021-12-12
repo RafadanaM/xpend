@@ -136,8 +136,11 @@ export const searchInputs = [
     id: "0",
     name: "searchText",
     type: "text",
-    placeholder: "Search",
+    placeholder: "Title or description",
     notRequired: true,
+    inputStyle:
+      "appearance-none border rounded w-full px-3 py-2 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline text-xs md:text-base",
+    divStyle: "mb-2 md:flex-grow",
   },
   {
     id: "1",
@@ -145,5 +148,8 @@ export const searchInputs = [
     type: "month",
     placeholder: "",
     notRequired: true,
+    inputStyle:
+      "appearance-none border rounded w-full px-3 py-2 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline text-xs md:text-base",
+    divStyle: "mb-2",
   },
 ];
