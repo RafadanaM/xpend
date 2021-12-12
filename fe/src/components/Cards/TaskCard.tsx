@@ -118,6 +118,7 @@ export const TaskCard = ({ setTransactions, setTasks, tasks }: TaskCardI) => {
           ...prevState.map((currentTask) => {
             if (currentTask.id === response.data.task.id) {
               currentTask.isComplete = response.data.task.isComplete || false;
+              currentTask.transactions = [];
               return currentTask;
             }
             return currentTask;

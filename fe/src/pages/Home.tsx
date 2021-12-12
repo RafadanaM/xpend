@@ -50,8 +50,16 @@ export const Home = () => {
   const handleDelete = (id: number) => {
     TransactionService.deleteTransaction(id)
       .then(async ({ data }) => {
-        console.log(data);
-
+        setTasks((prevState: Task[]) => [
+          ...prevState.map((currentTask) => {
+            if (currentTask.id === data.task.id) {
+              currentTask.isComplete = data.task.isComplete || false;
+              currentTask.transactions = [];
+              return currentTask;
+            }
+            return currentTask;
+          }),
+        ]);
         setTransactions((prevState: Transaction[]) => [
           ...prevState.filter((transaction) => transaction.id !== data.id),
         ]);

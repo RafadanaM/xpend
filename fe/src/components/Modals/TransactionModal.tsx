@@ -60,8 +60,6 @@ export const TransactionModal = ({
     values: TransactionFormType
   ) => {
     e.preventDefault();
-    console.log(e);
-
     onSave(type, values);
 
     // if (task && setTasks) {
