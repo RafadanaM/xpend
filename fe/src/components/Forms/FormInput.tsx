@@ -3,12 +3,14 @@ interface FormInputI {
   name: string;
   type: string;
   placeholder: string;
-  label: string;
+  label?: string;
   pattern?: string;
   errorMessage?: string;
-  focused: boolean;
+  focused?: boolean;
   value: any;
   labelStyle?: string;
+  inputStyle?: string;
+  divStyle?: string;
   notRequired?: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onBlur?: React.ChangeEventHandler<HTMLInputElement>;
@@ -25,17 +27,19 @@ const FormInput = ({
   focused,
   value,
   labelStyle = "",
+  inputStyle = "appearance-none border rounded w-full py-2 px-3 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline",
+  divStyle = "mb-4 w-full ",
   notRequired = false,
   onChange,
   onBlur,
 }: FormInputI) => {
   return (
-    <div className="mb-4">
+    <div className={`${divStyle}`}>
       <label className={`block text-sm mb-2 ${labelStyle}`}>{label}</label>
       {type === "textarea" ? (
         <textarea
           required
-          className="appearance-none border rounded w-full py-2 px-3 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline"
+          className={inputStyle}
           id={id}
           name={name}
           placeholder={placeholder}
@@ -52,7 +56,7 @@ const FormInput = ({
         <>
           {notRequired ? (
             <input
-              className="appearance-none border rounded w-full py-2 px-3 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline"
+              className={inputStyle}
               id={id}
               type={type}
               name={name}
@@ -65,7 +69,7 @@ const FormInput = ({
           ) : (
             <input
               required
-              className="appearance-none border rounded w-full py-2 px-3 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline"
+              className={inputStyle}
               id={id}
               type={type}
               name={name}

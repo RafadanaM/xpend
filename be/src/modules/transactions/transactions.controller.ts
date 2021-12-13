@@ -22,6 +22,11 @@ class TransactionsController implements Controller {
   private initRoutes() {
     this.router.get('', authMiddleware, this.getTransactionsByUser);
     this.router.get(
+      '/search',
+      authMiddleware,
+      this.getTransactionsWithSearch
+    );
+    this.router.get(
       '/:id',
       authMiddleware,
       validationMiddleware(ParamDto, RequestTypes.PARAMS),
@@ -82,6 +87,26 @@ class TransactionsController implements Controller {
       }
       const transactionId = parseInt(req.params.id);
       res.send(await this.transactionsService.getTransactionsByTransactionId(transactionId, req.user));
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private getTransactionsWithSearch = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      if (!req.user) {
+        throw new NotFoundException();
+      }
+      // const search = req.params.search;
+      const search = req.query.search || "";
+      const date = req.query.date || "";
+      console.log(search);
+      console.log(date);
+      res.send(await this.transactionsService.getTransactionsWithSearch(search, date, req.user));
     } catch (error) {
       next(error);
     }
