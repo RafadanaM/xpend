@@ -8,11 +8,6 @@ import authMiddleware from '../../middlewares/auth.middleware';
 import RequestWithUser from '../../interfaces/requestWithUser.interface';
 import NotFoundException from '../../exceptions/NotFoundException';
 import ParamDto from '../../shared/param.dto';
-<<<<<<< HEAD
-// import SearchDto from '../../shared/search.dto';
-=======
-import SearchDto from '../../shared/search.dto';
->>>>>>> 75f28135a1b0b8c000be6d9e5cfb2f9b10c10740
 
 class TransactionsController implements Controller {
   public path: string = '/transactions';
@@ -27,15 +22,8 @@ class TransactionsController implements Controller {
   private initRoutes() {
     this.router.get('', authMiddleware, this.getTransactionsByUser);
     this.router.get(
-<<<<<<< HEAD
       '/search',
       authMiddleware,
-      // validationMiddleware(SearchDto, RequestTypes.PARAMS, true),
-=======
-      '/:search',
-      authMiddleware,
-      validationMiddleware(SearchDto, RequestTypes.PARAMS),
->>>>>>> 75f28135a1b0b8c000be6d9e5cfb2f9b10c10740
       this.getTransactionsWithSearch
     );
     this.router.get(
@@ -113,17 +101,12 @@ class TransactionsController implements Controller {
       if (!req.user) {
         throw new NotFoundException();
       }
-<<<<<<< HEAD
       // const search = req.params.search;
       const search = req.query.search || "";
       const date = req.query.date || "";
       console.log(search);
       console.log(date);
       res.send(await this.transactionsService.getTransactionsWithSearch(search, date, req.user));
-=======
-      const search = req.params.search;
-      res.send(await this.transactionsService.getTransactionsWithSearch(search,req.user));
->>>>>>> 75f28135a1b0b8c000be6d9e5cfb2f9b10c10740
     } catch (error) {
       next(error);
     }
