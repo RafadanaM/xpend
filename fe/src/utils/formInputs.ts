@@ -19,7 +19,7 @@ export const transactionInputs = [
     id: "2",
     name: "amount",
     type: "number",
-    placeholder: "100000 / -100000",
+    placeholder: "1000",
     label: "Amount",
     errorMessage: "Amount must be a number!",
   },
@@ -130,6 +130,32 @@ export const editProfileInputs = [
     notRequired: true,
   },
 ];
+
+
+export const taskInputs = [
+  {
+    id: "0",
+    name: "title",
+    type: "text",
+    placeholder: "Title",
+    label: "Title",
+    errorMessage: "Title must not be empty!",
+  },
+  {
+    id: "1",
+    name: "description",
+    type: "textarea",
+    placeholder: "Description",
+    label: "Description",
+    errorMessage: "Description must not be empty!",
+  },
+  {
+    id: "2",
+    name: "amount",
+    type: "number",
+    placeholder: "1000",
+    label: "Amount",
+    errorMessage: "Amount must be a number!",
 
 export const searchInputs = [
   {

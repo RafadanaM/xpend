@@ -67,7 +67,7 @@ class TasksService {
 
   public async completeTask(taskId: number, user: Users, transactionData: createTransactionDto): Promise<any> {
     let task = await this.taskRepository.findOne({
-      relations: ['user', 'transactions'],
+      relations: ['user'],
       where: { id: taskId, user: { id: user.id } },
     });
     if (!task) {
@@ -93,7 +93,7 @@ class TasksService {
 
   public async undoTask(taskId: number, user: Users): Promise<any> {
     let task = await this.taskRepository.findOne({
-      relations: ['user', 'transactions'],
+      relations: ['user'],
       where: { id: taskId, user: { id: user.id } },
     });
     if (!task) {
@@ -138,6 +138,17 @@ class TasksService {
 
     await this.taskRepository.delete({ id: taskId });
     return task;
+  }
+
+  public async editTask(id: number, data: Partial<taskDto>, user: Users): Promise<Tasks> {
+    let task = await this.taskRepository.findOne({ relations: ['user'], where: { id: id } });
+    if (!task) {
+      throw new NotFoundException();
+    }
+    this.isOwned(task.user.id, user.id);
+    const updatedData: Partial<taskDto> = { ...data };
+    await this.taskRepository.update({ id }, { ...updatedData });
+    return await this.taskRepository.findOneOrFail({ where: { id: id } });
   }
 }
 

@@ -162,7 +162,7 @@ export const Home = () => {
         />
         <div className="py-1 w-full col-span-2 bg-white flex justify-end">
         <button
-          className="h-8 w-28 col-start-2 bg-accent-orange text-white text-xs rounded ml-auto my-auto mr-1 md:mr-0 md:my-0 md:mt-10 hover:bg-opacity-75"
+          className="h-8 w-28 col-start-2 bg-accent-orange text-white text-xs rounded ml-auto my-auto mr-1 md:mr-0 md:my-0 md:mt-auto hover:bg-opacity-75"
           onClick={() => setOpenTransactionModal(true)}
         >
           Add Transaction

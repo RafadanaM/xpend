@@ -1,7 +1,9 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Footer from "./components/Layouts/Footer";
 import Navbar from "./components/Layouts/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
+import CustomRouter from "./CustomRouter";
+import history from "./history";
 import { Home } from "./pages/Home";
 import { Landing } from "./pages/Landing";
 import { NotFound } from "./pages/NotFound";
@@ -10,7 +12,7 @@ import { AuthProvider } from "./utils/useAuth";
 
 function App() {
   return (
-    <BrowserRouter>
+    <CustomRouter history={history}>
       <AuthProvider>
         <Navbar />
         <Routes>
@@ -23,7 +25,7 @@ function App() {
         </Routes>
         <Footer />
       </AuthProvider>
-    </BrowserRouter>
+    </CustomRouter>
   );
 }
 

@@ -61,61 +61,6 @@ export const TransactionModal = ({
   ) => {
     e.preventDefault();
     onSave(type, values);
-
-    // if (task && setTasks) {
-    // TaskService.completeTask(
-    //   task.id,
-    //   values.title,
-    //   +values.amount,
-    //   values.description,
-    //   values.date
-    // ).then(async ({ data }) => {
-    //   setTasks((prevState: Task[]) => [
-    //     ...prevState.map((currentTask) => {
-    //       if (currentTask.id === task.id) {
-    //         currentTask.isComplete = data?.task?.isComplete || true;
-    //         return currentTask;
-    //       }
-    //       return currentTask;
-    //     }),
-    //   ]);
-    //   const response = await TransactionService.getTransactions();
-    //   setTransactions(response.data);
-    //   handleClose();
-    // });
-
-    //   return;
-    // }
-    // if (isEdit) {
-    //   if (transaction)
-    // TransactionService.editTransaction(
-    //   values as Transaction,
-    //   transaction?.id
-    // )
-    //   .then(async (_) => {
-    //     const { data } = await TransactionService.getTransactions();
-    //     setTransactions(data);
-    //     handleClose();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err.response);
-    //   });
-    // } else {
-    // TransactionService.createTransaction(
-    //   values.title,
-    //   +values.amount,
-    //   values.description,
-    //   values.date
-    // )
-    //   .then(async (_) => {
-    //     const { data } = await TransactionService.getTransactions();
-    //     setTransactions(data);
-    //     handleClose();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err.response);
-    //   });
-    // }
   };
 
   const handleFocus = (index: number) => {
@@ -129,7 +74,7 @@ export const TransactionModal = ({
 
   let valueKeys = Object.keys(values) as (keyof TransactionFormType)[];
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-60 z-20 flex justify-center items-center">
+    <div className="fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-60 z-50 flex justify-center items-center">
       <div
         className="bg-white md:w-11/12 md:max-w-lg w-full h-full md:h-auto z-50 py-2 flex flex-col"
         ref={modalRef}
