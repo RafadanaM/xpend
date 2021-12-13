@@ -1,8 +1,7 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { UserService } from "../../api/services/UserService";
 import User from "../../interfaces/user.interface";
 import { editProfileInputs } from "../../utils/formInputs";
-// import useAuth from "../../utils/useAuth";
 import useOutsideAlerter from "../../utils/useOutsideAlerter";
 import FormInput from "../Forms/FormInput";
 
@@ -15,13 +14,11 @@ type EditProfileModalType = {
 };
 
 interface EditProfileModalI {
-  open: boolean;
   changeOpen: Function;
   user: User | undefined;
 }
 
-const EditProfileModal = ({ open, changeOpen, user }: EditProfileModalI) => {
-  //   const { user } = useAuth();
+const EditProfileModal = ({ changeOpen, user }: EditProfileModalI) => {
   const currentUser = user;
   const [focused, setFocused] = useState<boolean[]>([
     false,
@@ -31,9 +28,6 @@ const EditProfileModal = ({ open, changeOpen, user }: EditProfileModalI) => {
     false,
   ]);
   const [values, setValues] = useState<EditProfileModalType>({
-    // first_name: user?.first_name,
-    // last_name: user?.last_name,
-    // email: user?.email,
     first_name: currentUser?.first_name,
     last_name: currentUser?.last_name,
     email: currentUser?.email,
@@ -71,10 +65,6 @@ const EditProfileModal = ({ open, changeOpen, user }: EditProfileModalI) => {
     });
     setFocused([...focused]);
   };
-
-  useEffect(() => {
-    resetModalValue();
-  }, [currentUser]);
 
   const modalRef = useRef(null);
   useOutsideAlerter(modalRef, () => {
@@ -122,8 +112,8 @@ const EditProfileModal = ({ open, changeOpen, user }: EditProfileModalI) => {
     resetModalValue();
   };
 
-  return open ? (
-    <div className="fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-60 z-50 flex justify-center items-center">
+  return (
+    <div className="fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-60 z-20 flex justify-center items-center">
       <div
         className="bg-white md:w-11/12 md:max-w-lg w-full h-full md:h-auto z-50 py-2 flex flex-col"
         ref={modalRef}
@@ -163,7 +153,7 @@ const EditProfileModal = ({ open, changeOpen, user }: EditProfileModalI) => {
         </div>
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export default EditProfileModal;

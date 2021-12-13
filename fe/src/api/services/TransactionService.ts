@@ -1,10 +1,26 @@
 import Transaction from "../../interfaces/transaction.interface";
+import { SearchFormType } from "../../pages/Home";
 import apiClient from "../ApiClient";
 
 const BASE_SERVICE_URL = "/transactions";
 export const TransactionService = {
-  getTransactions: async () => {
-    return await apiClient.get(`${BASE_SERVICE_URL}`);
+  getTransactions: async (
+    search: SearchFormType = { searchText: "", searchDate: "" }
+  ) => {
+    if (search.searchText !== "") {
+      if (search.searchDate !== "") {
+        return await apiClient.get(
+          `${BASE_SERVICE_URL}/search?search=${search.searchText}&date=${search.searchDate}`
+        );
+      } else {
+        return await apiClient.get(`${BASE_SERVICE_URL}/search?search=${search.searchText}`);
+      }
+    } else {
+      if (search.searchDate !== "") {
+        return await apiClient.get(`${BASE_SERVICE_URL}/search?date=${search.searchDate}`);
+      }
+      return await apiClient.get(`${BASE_SERVICE_URL}`);
+    }
   },
 
   createTransaction: async (

@@ -13,8 +13,17 @@ import { Table } from "../components/Table";
 import Task from "../interfaces/task.interface";
 import Transaction from "../interfaces/transaction.interface";
 
+export type SearchFormType = {
+  searchText: string;
+  searchDate: string;
+};
+
 export const Home = () => {
   const [openTransactionModal, setOpenTransactionModal] = useState(false);
+  const [search, setSearch] = useState<SearchFormType>({
+    searchText: "",
+    searchDate: "",
+  });
   const [selectedTransaction, setSelectedTransaction] = useState<
     Transaction | undefined
   >();
@@ -23,7 +32,7 @@ export const Home = () => {
 
   useEffect(() => {
     Promise.all([
-      TransactionService.getTransactions()
+      TransactionService.getTransactions(search)
         .then(({ data }) => {
           setTransactions(data);
         })
@@ -40,7 +49,7 @@ export const Home = () => {
           console.log(err?.reponse);
         }),
     ]);
-  }, []);
+  }, [search]);
 
   const handleOpenDetailTransactionModal = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
@@ -151,13 +160,16 @@ export const Home = () => {
           tasks={tasks}
           setTasks={setTasks}
         />
-        <Filter />
+        <div className="py-1 w-full col-span-2 bg-white flex justify-end">
         <button
           className="h-8 w-28 col-start-2 bg-accent-orange text-white text-xs rounded ml-auto my-auto mr-1 md:mr-0 md:my-0 md:mt-auto hover:bg-opacity-75"
           onClick={() => setOpenTransactionModal(true)}
         >
           Add Transaction
         </button>
+        </div>
+        <Filter setSearch={setSearch} />
+        
         <Table
           transactions={transactions}
           onRowClick={handleOpenDetailTransactionModal}
