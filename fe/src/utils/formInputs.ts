@@ -156,6 +156,8 @@ export const taskInputs = [
     placeholder: "1000",
     label: "Amount",
     errorMessage: "Amount must be a number!",
+  }
+];
 
 export const searchInputs = [
   {
