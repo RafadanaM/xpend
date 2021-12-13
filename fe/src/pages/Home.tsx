@@ -133,22 +133,6 @@ export const Home = () => {
     }
   };
 
-  const getTransactions = (
-    search: SearchFormType = { searchText: "", searchDate: "" }
-  ) => {
-    TransactionService.getTransactions(search)
-      .then(({ data }) => {
-        setTransactions(data);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
-  useEffect(() => {
-    getTransactions(search);
-  }, [search]);
-
   return (
     <>
       {openTransactionModal ? (
