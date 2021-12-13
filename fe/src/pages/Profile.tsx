@@ -26,9 +26,9 @@ export const Profile = () => {
       ) : null}
       <div className="flex-col h-full justify-center items-center m-auto py-5 px-6 md:px-10">
         <div className="w-full h-full p-6 rounded-lg md:shadow-2xl">
-          <p className=" text-3xl font-semibold mb-3 mx-auto h-full text-center">
+          {/* <p className=" text-3xl font-semibold mb-3 mx-auto h-full text-center">
             Your Profile
-          </p>
+          </p> */}
           <div className=" mt-8 w-full ">
             <div className="bg-gray-500 w-36 h-36 rounded-full mx-auto mb-6"></div>
             <div className="flex-col">
