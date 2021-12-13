@@ -23,6 +23,14 @@ class TasksController implements Controller {
   private initRoutes() {
     this.router.get('', authMiddleware, this.getTask);
     this.router.post('', authMiddleware, validationMiddleware(taskDto, RequestTypes.BODY), this.createTask);
+    this.router.delete('/:id', authMiddleware, validationMiddleware(ParamDto, RequestTypes.PARAMS), this.deleteTask);
+    this.router.patch(
+      '/:id',
+      authMiddleware,
+      validationMiddleware(ParamDto, RequestTypes.PARAMS),
+      validationMiddleware(taskDto, RequestTypes.BODY, true),
+      this.updateTask
+    );
     this.router.post(
       '/:id/complete',
       authMiddleware,
@@ -51,6 +59,31 @@ class TasksController implements Controller {
         throw new NotFoundException();
       }
       res.send(await this.taskService.createTask(taskData, req.user));
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private deleteTask = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      if (!req.user) {
+        throw new NotFoundException();
+      }
+      const { id } = req.params;
+      res.send(await this.taskService.deleteTask(+id, req.user));
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private updateTask = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const taskData: Partial<taskDto> = req.body;
+      if (!req.user) {
+        throw new NotFoundException();
+      }
+      const { id } = req.params;
+      res.send(await this.taskService.editTask(+id, taskData, req.user));
     } catch (error) {
       next(error);
     }
