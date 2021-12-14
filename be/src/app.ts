@@ -1,10 +1,11 @@
-import express from 'express';
+import express, { Response } from 'express';
 import morgan from 'morgan';
 import Controller from './interfaces/controller.interface';
 import errorMiddleware from './middlewares/error.middleware';
 import NotFoundMiddleware from './middlewares/notfound.middleware';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import path from 'path';
 class App {
   public app: express.Application;
 
@@ -17,6 +18,7 @@ class App {
     this.initMiddlewares();
     this.initControllers(controllers);
     this.initErrorHandling();
+    this.initReact();
     this.initRouteNotFound();
   }
 
@@ -32,6 +34,15 @@ class App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
     this.app.use(morgan(process.env.NODE_ENV === 'dev' ? 'dev' : 'short'));
+  }
+
+  private initReact() {
+    if (process.env.NODE_ENV === 'dev') {
+      this.app.use(express.static(path.join(__dirname, '../../fe/build')));
+      this.app.get('*', (_, res: Response) => {
+        res.sendFile(path.join(__dirname + '../../../fe/build/index.html'));
+      });
+    }
   }
 
   private initControllers(controllers: Controller[]) {
