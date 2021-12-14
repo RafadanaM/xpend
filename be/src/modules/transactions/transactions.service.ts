@@ -44,17 +44,31 @@ class TransactionsService {
       relations: ['user'],
       where: { user: { id: user.id } },
     });
-    if (search !== "") {
+    if (search !== '') {
       transactions = transactions.filter((transaction) => {
         return transaction.title.includes(search) || transaction.description.includes(search);
       });
     }
-    if (date !== "") {
+    if (date !== '') {
       transactions = transactions.filter((transaction) => {
-        const transactionDate = transaction.date.toISOString().substring(0,7)
+        const transactionDate = transaction.date.toISOString().substring(0, 7);
         return transactionDate === date;
       });
     }
+    return transactions;
+  }
+
+  public async getThisMonthTransactions(thisMonth: string, user: Users): Promise<Transactions[]> {
+    let transactions = await this.transactionsRepository.find({
+      relations: ['user'],
+      where: { user: { id: user.id } },
+    });
+    transactions = transactions.filter((transaction) => {
+      const transactionDate = transaction.date;
+      transactionDate.setHours(transactionDate.getHours() + 7);
+      const transactionMonth = transactionDate.toISOString().substring(0, 7);
+      return transactionMonth === thisMonth;
+    });
     return transactions;
   }
 

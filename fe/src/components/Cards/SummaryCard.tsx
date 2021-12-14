@@ -16,16 +16,11 @@ export const SummaryCard = ({ transactions }: SummaryCardI) => {
 
   useEffect(() => {
     Promise.all([
-      TransactionService.getTransactions()
+      TransactionService.getThisMonthTransactions()
         .then(({ data }) => {
-          let newGain = values.gain;
-          let newSpending = values.spending;
-          let newTotal = values.total;
-          if (values.total !== 0) {
-            newGain = 0;
-            newSpending = 0;
-            newTotal = 0;
-          }
+          let newGain = 0;
+          let newSpending = 0;
+          let newTotal = 0;
           data.forEach((transaction: Transaction) => {
             if (transaction.amount > 0) {
               newGain += transaction.amount;
@@ -33,11 +28,13 @@ export const SummaryCard = ({ transactions }: SummaryCardI) => {
               newSpending -= transaction.amount;
             }
             newTotal = newGain - newSpending;
-            setValues({
-              ...values,
-              gain: newGain,
-              spending: newSpending,
-              total: newTotal,
+            setValues((prevValues) => {
+              return {
+                ...prevValues,
+                gain: newGain,
+                spending: newSpending,
+                total: newTotal,
+              };
             });
           });
         })
@@ -46,7 +43,6 @@ export const SummaryCard = ({ transactions }: SummaryCardI) => {
         }),
     ]);
   }, [transactions]);
-  // TransactionService.getTransactions().then().catch((err)=>{console.log(err.response)});
 
   return (
     <BaseCard title="Monthly Summary" className="col-span-2 md:col-span-1">

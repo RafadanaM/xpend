@@ -23,6 +23,10 @@ export const TransactionService = {
     }
   },
 
+  getThisMonthTransactions: async () => {
+    return await apiClient.get(`${BASE_SERVICE_URL}/summary`);
+  },
+
   createTransaction: async (
     title: string,
     amount: number,
