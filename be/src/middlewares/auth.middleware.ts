@@ -13,13 +13,12 @@ async function authMiddleware(request: RequestWithUser, _: Response, next: NextF
   if (cookies && cookies.access_token) {
     try {
       const iss = 'Xpend Team';
-      const aud = 'http://localhost:5000';
+      const aud = 'http://localhost:3000';
       const expiresIn = 60 * 60;
       const verifyOptions: VerifyOptions = {
         issuer: iss,
         audience: aud,
         maxAge: expiresIn,
-        algorithms: ['RS256'],
       };
       const publicKey = process.env.JWT_SECRET_PUBLIC as string;
       const verificationResponse = jwt.verify(
