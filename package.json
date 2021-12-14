@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1", 
-    "build": "cd be && tsc",
-    "start": "node ./be/build/server.js"
+    "tsc": "tsc",
+    "build": "cd be && npm install && npm run tsc",
+    "heroku-postbuild": "cd be && npm install && npm run build",
+    "start": "cd be && npm install && npm start"
   },
   "repository": {
     "type": "git",
