@@ -41,5 +41,5 @@ jobs:
           heroku_app_name: ${{secrets.HEROKU_APP_NAME_CLIENT}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
         env:
-          HD_APP_BASE: "/client"
+          HD_APP_BASE: "/fe"
           HD_REACT_APP_BASE_URL: ${{secrets.REACT_APP_BASE_URL}}
