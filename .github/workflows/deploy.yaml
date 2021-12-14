@@ -15,7 +15,7 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{secrets.HEROKU_APP_NAME_SERVER}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME_CLIENT}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
         appdir: be
         env:

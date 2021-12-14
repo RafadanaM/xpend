@@ -37,7 +37,7 @@ class App {
   }
 
   private initReact() {
-    if (process.env.NODE_ENV === 'dev') {
+    if (process.env.NODE_ENV === 'prod') {
       this.app.use(express.static(path.join(__dirname, '../../fe/build')));
       this.app.get('*', (_, res: Response) => {
         res.sendFile(path.join(__dirname + '../../../fe/build/index.html'));
