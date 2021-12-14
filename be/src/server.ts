@@ -11,8 +11,8 @@ import TasksController from './modules/tasks/tasks.controller';
 validateEnv();
 (async () => {
   try {
-    await createConnection(config);
-    //await connection.runMigrations();
+    const connection = await createConnection(config);
+    await connection.runMigrations();
   } catch (error) {
     console.log('Error connecting to the database', error);
     return error;
