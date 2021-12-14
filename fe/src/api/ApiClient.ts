@@ -2,9 +2,6 @@ import axios, { AxiosInstance } from "axios";
 import history from "../history";
 const apiClient: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
-  headers: {
-    "Content-type": "application/json",
-  },
   responseType: "json",
   withCredentials: true,
 });
