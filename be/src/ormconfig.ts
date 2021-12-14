@@ -7,7 +7,8 @@ const config: ConnectionOptions = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  synchronize: true,
+  synchronize: false,
+  ssl: process.env.NODE_ENV === 'dev' ? undefined : { rejectUnauthorized: false },
   entities: [__dirname + '/modules/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/db/migrations/*{.ts,.js}'],
   cli: {
