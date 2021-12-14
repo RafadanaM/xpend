@@ -23,7 +23,7 @@ const BaseCard = ({
         <h2 className="md:text-2xl font-semibold">{title}</h2>
         {withButton ? button : null}
       </div>
-      <div className="w-full h-full overflow-y-hidden">{children}</div>
+      <div className="w-full h-full ">{children}</div>
     </div>
   );
 };
