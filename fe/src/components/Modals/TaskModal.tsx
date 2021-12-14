@@ -80,7 +80,7 @@ export const TaskModal = ({ onCancel, setTasks, task }: TaskModalI) => {
         ref={modalRef}
       >
         <div className="py-2 w-full border-b-2 px-8 font-semibold text-xl border-accent-grey flex justify-between">
-          <span>New Task</span>
+          <span>{task ? "Edit Task" : "New Task"}</span>
           <CloseIcon
             className="-mx-4 w-4 h-4 cursor-pointer"
             onClick={() => onCancel(false)}
