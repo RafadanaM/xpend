@@ -37,6 +37,7 @@ async function authMiddleware(request: RequestWithUser, _: Response, next: NextF
         next(new InvalidTokenException());
       }
     } catch (error) {
+      console.log('masuk error')
       next(new InvalidTokenException());
     }
   } else {
