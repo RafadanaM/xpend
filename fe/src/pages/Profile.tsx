@@ -13,6 +13,12 @@ interface UserWithDate {
 export const Profile = () => {
   const [user, setUser] = useState<UserWithDate>();
   const [openEditProfileModal, setopenEditProfileModal] = useState(false);
+  const [page, setPage] = useState("profile");
+
+  const handleOpenModal = (page: string) => {
+    setopenEditProfileModal(true)
+    setPage(page);
+  };
 
   useEffect(() => {
     UserService.getUser().then((data) => {
@@ -21,14 +27,13 @@ export const Profile = () => {
   }, [openEditProfileModal]);
   return (
     <>
-      {openEditProfileModal ? (
-        <EditProfileModal changeOpen={setopenEditProfileModal} user={user} />
+      {openEditProfileModal && page === "profile" ? (
+        <EditProfileModal page={"profile"} changeOpen={setopenEditProfileModal} user={user} />
+      ) : openEditProfileModal && page === "password" ? (
+        <EditProfileModal page={"password"} changeOpen={setopenEditProfileModal} user={user} />
       ) : null}
       <div className="flex-col h-full justify-center items-center m-auto py-5 px-6 md:px-10">
         <div className="w-full h-full p-6 rounded-lg md:shadow-2xl">
-          {/* <p className=" text-3xl font-semibold mb-3 mx-auto h-full text-center">
-            Your Profile
-          </p> */}
           <div className=" mt-8 w-full ">
             <div className="bg-gray-500 w-36 h-36 rounded-full mx-auto mb-6"></div>
             <div className="flex-col">
@@ -58,9 +63,15 @@ export const Profile = () => {
               <div className="flex justify-center">
                 <button
                   className="w-full m-auto max-w-xs bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  onClick={() => setopenEditProfileModal(true)}
+                  onClick={() => handleOpenModal("profile")}
                 >
                   Edit
+                </button>
+                <button
+                  className="w-full m-auto max-w-xs bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  onClick={() => handleOpenModal("password")}
+                >
+                  Change Password
                 </button>
               </div>
             </div>
