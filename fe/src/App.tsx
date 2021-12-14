@@ -16,12 +16,12 @@ function App() {
       <AuthProvider>
         <Navbar />
         <Routes>
-          <Route path="*" element={<NotFound />} />
           <Route path="/" element={<Landing />} />
           <Route path="" element={<PrivateRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </AuthProvider>

@@ -12,12 +12,13 @@ class AuthService {
 
   private createToken(user: Users): TokenData {
     const iss = 'Xpend Team';
-    const aud = 'http://localhost:3000';
+    const aud = 'http://localhost:5000';
     const expiresIn = 60 * 60;
     const signOptions: SignOptions = {
       issuer: iss,
       audience: aud,
       expiresIn: expiresIn,
+      algorithm: 'RS256',
     };
     const dataStoredInToken: DataTokenStored = {
       _id: user.id,

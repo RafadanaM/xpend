@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  buildBackEnd:
+  buildAndDeploy:
     runs-on: ubuntu-latest
     steps:
       - name: checkout source code
@@ -15,8 +15,9 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{secrets.HEROKU_APP_NAME_SERVER}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME_CLIENT}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
+        appdir: be
         env:
           HD_ORIGIN: ${{secrets.ORIGIN}}
           HD_DB_HOST: ${{secrets.DB_HOST}}
@@ -27,19 +28,3 @@ jobs:
           HD_NODE_ENV: ${{secrets.NODE_ENV}}
           HD_JWT_SECRET_PRIVATE: ${{secrets.JWT_SECRET_PRIVATE}}
           HD_JWT_SECRET_PUBLIC: ${{secrets.JWT_SECRET_PUBLIC}}
-          HD_APP_BASE: "/be"
-
-  buildFrontEnd:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout source code
-        uses: actions/checkout@v2
-      - name: Deploy frontend
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{secrets.HEROKU_APP_NAME_CLIENT}}
-          heroku_email: ${{secrets.HEROKU_EMAIL}}
-        env:
-          HD_APP_BASE: "/fe"
-          HD_REACT_APP_BASE_URL: ${{secrets.REACT_APP_BASE_URL}}
