@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1", 
-    "build": "cd be && tsc",
+    "build": "cd be && npm install && tsc",
     "start": "node ./be/build/server.js"
   },
   "repository": {
