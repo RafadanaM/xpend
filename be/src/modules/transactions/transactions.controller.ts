@@ -27,6 +27,11 @@ class TransactionsController implements Controller {
       this.getTransactionsWithSearch
     );
     this.router.get(
+      '/summary',
+      authMiddleware,
+      this.getThisMonthTransactions,
+    );
+    this.router.get(
       '/:id',
       authMiddleware,
       validationMiddleware(ParamDto, RequestTypes.PARAMS),
@@ -104,9 +109,25 @@ class TransactionsController implements Controller {
       // const search = req.params.search;
       const search = req.query.search || "";
       const date = req.query.date || "";
-      console.log(search);
-      console.log(date);
       res.send(await this.transactionsService.getTransactionsWithSearch(search, date, req.user));
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private getThisMonthTransactions = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      if (!req.user) {
+        throw new NotFoundException();
+      }
+      const now = new Date();
+      now.setHours(now.getHours() + 7);
+      const thisMonth = now.toISOString().substring(0, 7);
+      res.send(await this.transactionsService.getThisMonthTransactions(thisMonth, req.user));
     } catch (error) {
       next(error);
     }
