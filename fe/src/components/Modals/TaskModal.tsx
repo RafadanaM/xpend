@@ -74,9 +74,9 @@ export const TaskModal = ({ onCancel, setTasks, task }: TaskModalI) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full md:max-h-screen lg:overflow-auto md:overflow-scroll bg-gray-700 bg-opacity-60 z-50 flex justify-center items-center">
+    <div className="fixed top-0 left-0 w-full h-full lg:overflow-auto md:overflow-scroll bg-gray-700 bg-opacity-60 z-50 flex justify-center items-center">
       <div
-        className="bg-white md:w-10/12 md:mt-auto lg:mt-0 lg:w-11/12 lg:max-w-lg w-full h-full md:h-auto z-50 py-2 flex flex-col"
+        className="bg-white lg:h-auto lg:w-11/12 lg:max-w-lg w-full h-full z-50 py-2 flex flex-col"
         ref={modalRef}
       >
         <div className="py-2 w-full border-b-2 px-8 font-semibold text-xl border-accent-grey flex justify-between">
@@ -86,7 +86,7 @@ export const TaskModal = ({ onCancel, setTasks, task }: TaskModalI) => {
             onClick={() => onCancel(false)}
           />
         </div>
-        <div className="px-8 py-4">
+        <div className="bg-white px-8 py-4">
           <form onSubmit={handleSubmit}>
             {taskInputs.map((input, index) => (
               <FormInput
