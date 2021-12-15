@@ -3,7 +3,7 @@ import Checkbox from "./Checkbox";
 import { ReactComponent as TrashIcon } from "../assets/trash.svg";
 import { ReactComponent as EditIcon } from "../assets/edit.svg";
 import { ReactComponent as DownIcon } from "../assets/down.svg";
-import { ReactComponent as UpIcon } from "../assets/up.svg";
+
 import { useRef, useState } from "react";
 import useOutsideAlerter from "../utils/useOutsideAlerter";
 
@@ -43,18 +43,12 @@ const TaskItem = ({
       </div>
       <div className="flex gap-x-1">
         <div ref={dropDownRef} className="relative md:hidden">
-          {isOpen ? (
-            <UpIcon
-              className="cursor-pointer"
-              onClick={() => setIsOpen((prevState) => !prevState)}
-            />
-          ) : (
-            <DownIcon
-              className="cursor-pointer"
-              onClick={() => setIsOpen((prevState) => !prevState)}
-            />
-          )}
-
+          <DownIcon
+            onClick={() => setIsOpen((prevState) => !prevState)}
+            className={`cursor-pointer transform transition-all duration-200 ${
+              isOpen ? "rotate-180" : "rotate-0"
+            }`}
+          />
           <div
             className={`absolute bg-secondary -left-2 shadow-md border border-accent-grey rounded z-10 flex p-1 gap-x-1.5 ${
               isOpen ? "" : "hidden"

@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { useMatch } from "react-router-dom";
 import { ReactComponent as Down } from "../../assets/down.svg";
-import { ReactComponent as Up } from "../../assets/up.svg";
 import useOutsideAlerter from "../../utils/useOutsideAlerter";
 import MenuItems from "./MenuItems";
 
@@ -25,11 +24,11 @@ const Menu = () => {
       }`}
     >
       <button onClick={toggleOpenModal} className="w-full">
-        {isOpen ? (
-          <Up className="h-5 w-5 md:w-7 md:h-7 stroke-current stroke-1 mx-auto" />
-        ) : (
-          <Down className="h-5 w-5 md:w-7 md:h-7 stroke-current stroke-1 mx-auto" />
-        )}
+        <Down
+          className={`h-5 w-5 md:w-7 md:h-7 stroke-current stroke-1 mx-auto transition-all duration-200 transform ${
+            isOpen ? "rotate-180" : "rotate-0"
+          }`}
+        />
       </button>
 
       <MenuItems isOpen={isOpen} />
