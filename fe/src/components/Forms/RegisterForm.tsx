@@ -71,6 +71,7 @@ const RegisterForm = ({ handleChangeForm, handleOpenModal }: RegisterFormI) => {
         });
         setFocused([...focused]);
         handleOpenModal(true);
+        handleChangeForm(true);
       })
       .catch((error) => {
         setError(error.response.data.message);

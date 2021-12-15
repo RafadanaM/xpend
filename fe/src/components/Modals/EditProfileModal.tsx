@@ -56,21 +56,6 @@ const EditProfileModal = ({ page, changeOpen, user }: EditProfileModalI) => {
     },
   ];
 
-  const resetModalValue = () => {
-    setValues({
-      ...values,
-      first_name: user?.first_name,
-      last_name: user?.last_name,
-      email: user?.email,
-      new_password: "",
-      confirm_password: "",
-    });
-    focused.forEach((value, index) => {
-      focused[index] = false;
-    });
-    setFocused([...focused]);
-  };
-
   const modalRef = useRef(null);
   useOutsideAlerter(modalRef, () => {
     handleClose();
@@ -95,7 +80,6 @@ const EditProfileModal = ({ page, changeOpen, user }: EditProfileModalI) => {
       } as User)
         .then(async (_) => {
           changeOpen(false);
-          resetModalValue();
         })
         .catch((err) => {
           console.log(err.response.data.message);
@@ -105,7 +89,6 @@ const EditProfileModal = ({ page, changeOpen, user }: EditProfileModalI) => {
       UserService.editProfile(values as User)
         .then(async (_) => {
           changeOpen(false);
-          resetModalValue();
         })
         .catch((err) => {
           console.log(err.response.data.message);
@@ -116,7 +99,7 @@ const EditProfileModal = ({ page, changeOpen, user }: EditProfileModalI) => {
 
   const handleClose = () => {
     changeOpen(false);
-    resetModalValue();
+    // resetModalValue();
   };
 
   return (

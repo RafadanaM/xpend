@@ -37,7 +37,7 @@ export const Profile = () => {
           <div className=" mt-8 w-full ">
             <div className="bg-gray-500 w-36 h-36 rounded-full mx-auto mb-6"></div>
             <div className="flex-col">
-              <div className="py-6 flex gap-x-10 justify-center">
+              <div className="py-6 md:pb-2 flex gap-x-10 justify-center">
                 <div>
                   <p className=" text-xl font-semibold mb-5">
                     First name:{" "}
@@ -60,15 +60,15 @@ export const Profile = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex justify-center">
+              <div className="flex flex-col md:mb-4 lg:flex-row justify-center lg:justify-between gap-y-5 gap-x-2">
                 <button
-                  className="w-full m-auto max-w-xs bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="w-full lg:w-3/12 m-auto lg:m-0 lg:ml-auto max-w-xs bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   onClick={() => handleOpenModal("profile")}
                 >
                   Edit
                 </button>
                 <button
-                  className="w-full m-auto max-w-xs bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="w-full lg:w-3/12 m-auto lg:m-0 lg:mr-auto max-w-xs bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   onClick={() => handleOpenModal("password")}
                 >
                   Change Password

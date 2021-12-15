@@ -123,6 +123,7 @@ export const editProfileInputs = [
     type: "password",
     placeholder: "******************",
     label: "Previous Password",
+    errorMessage: "Please enter your previous password!",
   },
   {
     id: "4",
