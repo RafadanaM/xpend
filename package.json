@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1", 
     "tsc": "tsc",
     "build": "cd be && npm install && npm run tsc",
-    "heroku-postbuild": "cd be && npm install && npm run build",
-    "start": "cd be && npm install && npm start"
+    "heroku-postbuild": "cd fe && npm install && npm build && cd ../be && npm install && npm run build",
+    "start": "cd be && npm start"
   },
   "repository": {
     "type": "git",
