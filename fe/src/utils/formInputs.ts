@@ -119,15 +119,22 @@ export const editProfileInputs = [
   },
   {
     id: "3",
-    name: "password",
+    name: "previous_password",
     type: "password",
     placeholder: "******************",
-    label: "Password",
+    label: "Previous Password",
+    errorMessage: "Please enter your previous password!",
+  },
+  {
+    id: "4",
+    name: "new_password",
+    type: "password",
+    placeholder: "******************",
+    label: "New Password",
     pattern:
       "^((?=.*[0-9])|(?=.*[a-zA-Z0-9_]+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).{6,20}$",
     errorMessage:
       "Password should contain 6-20 letters (atleast 1 upper case, 1 lower case, and 1 number or special character)!",
-    notRequired: true,
   },
 ];
 

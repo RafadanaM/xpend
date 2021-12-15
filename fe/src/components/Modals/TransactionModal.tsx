@@ -74,9 +74,9 @@ export const TransactionModal = ({
 
   let valueKeys = Object.keys(values) as (keyof TransactionFormType)[];
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-60 z-50 flex justify-center items-center">
+    <div className="fixed top-0 left-0 w-full h-full md:max-h-screen lg:overflow-auto md:overflow-scroll bg-gray-700 bg-opacity-60 z-50 flex justify-center items-center">
       <div
-        className="bg-white md:w-11/12 md:max-w-lg w-full h-full md:h-auto z-50 py-2 flex flex-col"
+        className="bg-white md:w-10/12 md:mt-auto lg:mt-0 lg:w-11/12 lg:max-w-lg w-full h-full md:h-auto z-50 py-2 flex flex-col"
         ref={modalRef}
       >
         {type === "add" || type === "edit" ? (

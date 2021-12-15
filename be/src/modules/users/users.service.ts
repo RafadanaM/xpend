@@ -5,6 +5,9 @@ import Users from './users.entity';
 import bcrypt from 'bcrypt';
 import PasswordDoesNotMatchException from '../../exceptions/PasswordDoesNotMatchException';
 import NotFoundException from '../../exceptions/NotFoundException';
+import editUserDto from './editUser.dto';
+import WrongCredentialsException from '../../exceptions/WrongCredentialsException';
+import PreviousPasswordDoesNotMatchException from '../../exceptions/PreviousPasswordDoesNotMatch';
 
 class UsersService {
   private usersRepository = getRepository(Users);
@@ -31,25 +34,40 @@ class UsersService {
     return currentUser;
   }
 
-  public async editProfile(data: Partial<createUserDto>, user: Users): Promise<Users> {
-    let currentUser = await this.getUsers(user);
-    const updatedProfile: Partial<createUserDto> = { ...data };
-    
-    const userUsingNewEmail = await this.usersRepository.findOne({ email: data.email })
-    if (userUsingNewEmail && userUsingNewEmail.id !== currentUser.id) {
+  private async getUserWithpassword(email: string) {
+    const user = await this.usersRepository
+      .createQueryBuilder('users')
+      .addSelect('users.password')
+      .where('users.email = :email', { email })
+      .getOne();
+    if (user) {
+      return user;
+    }
+    throw new WrongCredentialsException();
+  }
+
+  public async editProfile(data: editUserDto, user: Users): Promise<Users> {
+    let currentUser = await this.getUserWithpassword(user.email);
+    const updatedProfile: Partial<editUserDto> = { ...data };
+    const userUsingNewEmail = await this.usersRepository.findOne({ email: data.email });
+    if (userUsingNewEmail && userUsingNewEmail.id !== currentUser?.id) {
       throw new EmailAlreadyExistException(data.email);
     }
-    if (data.password) {
-      if (data.password !== data.confirm_password) {
-        throw new PasswordDoesNotMatchException();
+    if (data.new_password) {
+      const isPasswordMatch = await bcrypt.compare(data.previous_password, currentUser.password);
+      if (!isPasswordMatch) {
+        throw new PreviousPasswordDoesNotMatchException();
       }
-      const hashedPassword: string = await bcrypt.hash(data.password, 10);
+      const hashedPassword: string = await bcrypt.hash(data.new_password, 10);
       delete updatedProfile.confirm_password;
-      await this.usersRepository.update({ id: currentUser.id }, { ...updatedProfile, password: hashedPassword });
+      delete updatedProfile.previous_password;
+      delete updatedProfile.new_password;
+      await this.usersRepository.update({ id: currentUser?.id }, { ...updatedProfile, password: hashedPassword });
     } else {
-      await this.usersRepository.update({ id: currentUser.id }, { ...updatedProfile });
+      await this.usersRepository.update({ id: currentUser?.id }, { ...updatedProfile });
     }
-    currentUser = await this.usersRepository.findOneOrFail({ where: { id: currentUser.id } });
+    currentUser = await this.usersRepository.findOneOrFail({ where: { id: currentUser?.id } });
+
     return currentUser;
   }
 }
