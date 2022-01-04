@@ -43,7 +43,11 @@ module.exports = {
   },
   variants: {
     extend: {
-      display: ['group-hover']
+      display: ['group-hover'],
+      boxShadow: ['disabled'],
+      padding: ['disabled'],
+      borderColor: ['disabled'],
+      textColor: ['disabled']
     },
   },
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/line-clamp'), function ({addUtilities}) {

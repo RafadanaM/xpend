@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ReactComponent as CloseIcon } from "../../assets/close.svg";
 import Transaction from "../../interfaces/transaction.interface";
 import {
@@ -7,6 +7,7 @@ import {
   // transactionDateFormat,
 } from "../../utils/formatDate";
 import { transactionInputs } from "../../utils/formInputs";
+import useForm from "../../utils/useForm";
 import useOutsideAlerter from "../../utils/useOutsideAlerter";
 import ModalButton from "../Buttons/ModalButton";
 import FormInput from "../Forms/FormInput";
@@ -18,66 +19,43 @@ export type TransactionFormType = {
   amount: number;
   date: string;
 };
-export type TransactionModalType = "add" | "view" | "edit";
 interface AddTransactionModalI {
   transaction?: Transaction;
-  defaultValue?: TransactionFormType;
-  defaultType?: TransactionModalType;
-  onSave: Function;
-  onDelete: Function;
   onCancel: Function;
 }
 
 export const TransactionModal = ({
-  onSave,
-  onDelete,
   onCancel,
-  defaultValue,
   transaction,
-  defaultType = "add",
 }: AddTransactionModalI) => {
   const modalRef = useRef(null);
   useOutsideAlerter(modalRef, () => {
     onCancel();
   });
-  const [type, setType] = useState(defaultType);
   const [isEdit, setIsEdit] = useState(false);
 
-  const [focused, setFocused] = useState<boolean[]>([
-    false,
-    false,
-    false,
-    false,
-  ]);
-  const [values, setValues] = useState<TransactionFormType>({
-    title: transaction ? transaction.title : "",
-    description: transaction ? transaction.description : "",
-    amount: transaction ? transaction.amount : 0,
-    date: formatToInput(
-      transaction ? transaction.date : new Date().toDateString()
-    ),
-    id: transaction?.id,
-  });
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleCallback = () => {
     console.log("run");
 
-    onSave(type, values);
-    setType("add");
+    //onSave(type, formData);
   };
 
-  const handleFocus = (index: number) => {
-    focused[index] = true;
-    setFocused([...focused]);
-  };
+  const { formData, focused, handleFocus, handleChange, onSubmit } = useForm(
+    {
+      title: transaction ? transaction.title : "",
+      description: transaction ? transaction.description : "",
+      amount: transaction ? transaction.amount : 0,
+      date: formatToInput(
+        transaction ? transaction.date : new Date().toDateString()
+      ),
+      id: transaction?.id,
+    } as TransactionFormType,
+    handleCallback
+  );
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
+  const handleDelete = (id: number) => {};
 
-  let valueKeys = Object.keys(values) as (keyof TransactionFormType)[];
-  console.log(isEdit);
+  let valueKeys = Object.keys(formData) as (keyof TransactionFormType)[];
 
   return (
     <div className="fixed top-0 left-0 w-full h-full md:max-h-screen lg:overflow-auto md:overflow-scroll bg-gray-700 bg-opacity-60 z-50 flex justify-center items-center">
@@ -88,7 +66,11 @@ export const TransactionModal = ({
         <>
           <div className="py-2 w-full border-b-2 px-8 font-semibold text-xl border-accent-grey flex justify-between">
             <span>
-              {type === "edit" ? "Edit Transaction" : "New Transaction"}
+              {transaction
+                ? isEdit
+                  ? "Edit Transaction"
+                  : "Transaction"
+                : "New Transaction"}
             </span>
             <CloseIcon
               className="-mx-4 w-4 h-4 cursor-pointer"
@@ -96,17 +78,18 @@ export const TransactionModal = ({
             />
           </div>
           <div className="px-8 py-4">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={onSubmit}>
               {transactionInputs.map((input, index) => {
                 return (
                   <FormInput
                     key={input.id}
                     {...input}
-                    value={values[valueKeys[index]]}
-                    onChange={onChange}
+                    value={formData[valueKeys[index]]}
+                    onChange={handleChange}
                     onBlur={() => handleFocus(index)}
                     focused={focused[index]}
                     labelStyle="font-medium"
+                    disabled={!isEdit}
                   />
                 );
               })}
@@ -118,7 +101,7 @@ export const TransactionModal = ({
                       type="button"
                       color="cancel"
                       onClick={() =>
-                        isEdit ? setIsEdit(false) : onDelete(transaction.id)
+                        isEdit ? setIsEdit(false) : handleDelete(transaction.id)
                       }
                     >
                       {isEdit ? "Cancel" : "Delete"}

@@ -7,11 +7,12 @@ interface FormInputI {
   pattern?: string;
   errorMessage?: string;
   focused?: boolean;
+  disabled?: boolean;
   value: any;
   labelStyle?: string;
   inputStyle?: string;
   divStyle?: string;
-  notRequired?: boolean;
+  required?: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onBlur?: React.ChangeEventHandler<HTMLInputElement>;
 }
@@ -27,19 +28,26 @@ const FormInput = ({
   focused,
   value,
   labelStyle = "",
-  inputStyle = "appearance-none border rounded w-full py-2 px-3 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline",
+  inputStyle = "appearance-none border rounded w-full py-2 px-3 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline disabled:text-black disabled:p-0 disabled:border-transparent disabled:shadow-none ",
   divStyle = "mb-4 w-full ",
-  notRequired = false,
+  required = true,
+  disabled = false,
   onChange,
   onBlur,
 }: FormInputI) => {
   return (
     <div className={`${divStyle}`}>
-      <label className={`block text-sm mb-2 ${labelStyle}`}>{label}</label>
+      <label
+        className={`block text-sm mb-2 ${
+          disabled ? "border-b-2 py-1 border-secondary" : ""
+        } ${labelStyle}`}
+      >
+        {label}
+      </label>
       {type === "textarea" ? (
         <textarea
-          required
-          className={inputStyle}
+          disabled={disabled}
+          className={`${inputStyle} resize-none`}
           id={id}
           name={name}
           placeholder={placeholder}
@@ -53,34 +61,19 @@ const FormInput = ({
           }
         />
       ) : (
-        <>
-          {notRequired ? (
-            <input
-              className={inputStyle}
-              id={id}
-              type={type}
-              name={name}
-              placeholder={placeholder}
-              pattern={pattern}
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur}
-            />
-          ) : (
-            <input
-              required
-              className={inputStyle}
-              id={id}
-              type={type}
-              name={name}
-              placeholder={placeholder}
-              pattern={pattern}
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur}
-            />
-          )}
-        </>
+        <input
+          disabled={disabled}
+          required={required}
+          className={inputStyle}
+          id={id}
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          pattern={pattern}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+        />
       )}
 
       {focused && errorMessage ? (

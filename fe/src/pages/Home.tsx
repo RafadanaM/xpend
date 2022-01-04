@@ -4,11 +4,7 @@ import { TransactionService } from "../api/services/TransactionService";
 import { SummaryCard } from "../components/Cards/SummaryCard";
 import { TaskCard } from "../components/Cards/TaskCard";
 import { Filter } from "../components/Filter";
-import {
-  TransactionFormType,
-  TransactionModal,
-  TransactionModalType,
-} from "../components/Modals/TransactionModal";
+import { TransactionModal } from "../components/Modals/TransactionModal";
 import { Table } from "../components/Table";
 import Task from "../interfaces/task.interface";
 import Transaction from "../interfaces/transaction.interface";
@@ -56,102 +52,90 @@ export const Home = () => {
     setOpenTransactionModal(true);
   };
 
-  const handleDelete = (id: number) => {
-    TransactionService.deleteTransaction(id)
-      .then(async ({ data }) => {
-        setTasks((prevState: Task[]) => [
-          ...prevState.map((currentTask) => {
-            if (currentTask.id === data.task.id) {
-              currentTask.isComplete = data.task.isComplete || false;
-              currentTask.transactions = [];
-              return currentTask;
-            }
-            return currentTask;
-          }),
-        ]);
-        setTransactions((prevState: Transaction[]) => [
-          ...prevState.filter((transaction) => transaction.id !== data.id),
-        ]);
-        setSelectedTransaction(undefined);
-        setOpenTransactionModal(false);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
+  // const handleDelete = (id: number) => {
+  //   TransactionService.deleteTransaction(id)
+  //     .then(async ({ data }) => {
+  //       setTasks((prevState: Task[]) => [
+  //         ...prevState.map((currentTask) => {
+  //           if (currentTask.id === data.task.id) {
+  //             currentTask.isComplete = data.task.isComplete || false;
+  //             currentTask.transactions = [];
+  //             return currentTask;
+  //           }
+  //           return currentTask;
+  //         }),
+  //       ]);
+  //       setTransactions((prevState: Transaction[]) => [
+  //         ...prevState.filter((transaction) => transaction.id !== data.id),
+  //       ]);
+  //       setSelectedTransaction(undefined);
+  //       setOpenTransactionModal(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.response);
+  //     });
+  // };
 
   const handleCancel = () => {
     setSelectedTransaction(undefined);
     setOpenTransactionModal(false);
   };
 
-  const handleSave = (
-    type: TransactionModalType,
-    values: TransactionFormType
-  ) => {
-    console.log(type);
+  // const handleSave = (
+  //   type: TransactionModalType,
+  //   values: TransactionFormType
+  // ) => {
+  //   console.log(type);
 
-    switch (type) {
-      case "add":
-        TransactionService.createTransaction(
-          values.title,
-          +values.amount,
-          values.description,
-          values.date
-        )
-          .then(async (_) => {
-            const { data } = await TransactionService.getTransactions();
-            setTransactions(data);
-            setOpenTransactionModal(false);
-          })
-          .catch((err) => {
-            console.log(err.response);
-          });
-        return;
+  //   switch (type) {
+  //     case "add":
+  //       TransactionService.createTransaction(
+  //         values.title,
+  //         +values.amount,
+  //         values.description,
+  //         values.date
+  //       )
+  //         .then(async (_) => {
+  //           const { data } = await TransactionService.getTransactions();
+  //           setTransactions(data);
+  //           setOpenTransactionModal(false);
+  //         })
+  //         .catch((err) => {
+  //           console.log(err.response);
+  //         });
+  //       return;
 
-      case "edit":
-        if (!values.id) {
-          return;
-        }
-        TransactionService.editTransaction(values as Transaction, values.id)
-          .then(async ({ data }) => {
-            setTransactions((prevState) => [
-              ...prevState.map((transaction) => {
-                if (transaction.id === data.id) {
-                  transaction = data;
-                }
-                return transaction;
-              }),
-            ]);
-            setOpenTransactionModal(false);
-          })
-          .catch((err) => {
-            console.log(err.response);
-          });
-        return;
+  //     case "edit":
+  //       if (!values.id) {
+  //         return;
+  //       }
+  //       TransactionService.editTransaction(values as Transaction, values.id)
+  //         .then(async ({ data }) => {
+  //           setTransactions((prevState) => [
+  //             ...prevState.map((transaction) => {
+  //               if (transaction.id === data.id) {
+  //                 transaction = data;
+  //               }
+  //               return transaction;
+  //             }),
+  //           ]);
+  //           setOpenTransactionModal(false);
+  //         })
+  //         .catch((err) => {
+  //           console.log(err.response);
+  //         });
+  //       return;
 
-      default:
-        return;
-    }
-  };
+  //     default:
+  //       return;
+  //   }
+  // };
 
   return (
     <>
       {openTransactionModal ? (
         <TransactionModal
           transaction={selectedTransaction}
-          defaultValue={
-            selectedTransaction && {
-              title: selectedTransaction.title,
-              description: selectedTransaction.description,
-              amount: selectedTransaction.amount,
-              date: selectedTransaction.date,
-              id: selectedTransaction.id,
-            }
-          }
-          defaultType={selectedTransaction ? "view" : "add"}
-          onSave={handleSave}
-          onDelete={handleDelete}
           onCancel={handleCancel}
         />
       ) : null}

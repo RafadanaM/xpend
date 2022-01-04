@@ -2,13 +2,8 @@ import { useState } from "react";
 import { TaskService } from "../../api/services/TaskService";
 import { TransactionService } from "../../api/services/TransactionService";
 import Task from "../../interfaces/task.interface";
-import Transaction from "../../interfaces/transaction.interface";
 import { TaskModal } from "../Modals/TaskModal";
-import {
-  TransactionFormType,
-  TransactionModal,
-  TransactionModalType,
-} from "../Modals/TransactionModal";
+import { TransactionModal } from "../Modals/TransactionModal";
 import ConfirmModal from "../Modals/ConfirmModal";
 import TaskItem from "../TaskItem";
 import BaseCard from "./BaseCard";
@@ -78,88 +73,88 @@ export const TaskCard = ({ setTransactions, setTasks, tasks }: TaskCardI) => {
       });
   };
 
-  const handleSave = (
-    type: TransactionModalType,
-    values: TransactionFormType
-  ) => {
-    switch (type) {
-      case "add":
-        if (!values.id) {
-          return;
-        }
-        TaskService.completeTask(
-          values.id,
-          values.title,
-          +values.amount,
-          values.description,
-          values.date
-        ).then(async ({ data }) => {
-          setSelectedTask(undefined);
-          setTasks((prevState: Task[]) => [
-            ...prevState.map((currentTask) => {
-              if (currentTask.id === values.id) {
-                currentTask.isComplete = data?.task?.isComplete || true;
-                currentTask.transactions = [data?.transaction];
-                return currentTask;
-              }
-              return currentTask;
-            }),
-          ]);
-          const response = await TransactionService.getTransactions();
-          setTransactions(response.data);
-          setOpenTransactionModal(false);
-        });
+  // const handleSave = (
+  //   type: TransactionModalType,
+  //   values: TransactionFormType
+  // ) => {
+  //   switch (type) {
+  //     case "add":
+  //       if (!values.id) {
+  //         return;
+  //       }
+  //       TaskService.completeTask(
+  //         values.id,
+  //         values.title,
+  //         +values.amount,
+  //         values.description,
+  //         values.date
+  //       ).then(async ({ data }) => {
+  //         setSelectedTask(undefined);
+  //         setTasks((prevState: Task[]) => [
+  //           ...prevState.map((currentTask) => {
+  //             if (currentTask.id === values.id) {
+  //               currentTask.isComplete = data?.task?.isComplete || true;
+  //               currentTask.transactions = [data?.transaction];
+  //               return currentTask;
+  //             }
+  //             return currentTask;
+  //           }),
+  //         ]);
+  //         const response = await TransactionService.getTransactions();
+  //         setTransactions(response.data);
+  //         setOpenTransactionModal(false);
+  //       });
 
-        return;
+  //       return;
 
-      case "edit":
-        if (!values.id) {
-          return;
-        }
-        TransactionService.editTransaction(values as Transaction, values.id)
-          .then(async (_) => {
-            setSelectedTask(undefined);
-            const { data } = await TransactionService.getTransactions();
-            setTransactions(data);
-            setOpenTransactionModal(false);
-          })
-          .catch((err) => {
-            console.log(err.response);
-          });
-        return;
+  //     case "edit":
+  //       if (!values.id) {
+  //         return;
+  //       }
+  //       TransactionService.editTransaction(values as Transaction, values.id)
+  //         .then(async (_) => {
+  //           setSelectedTask(undefined);
+  //           const { data } = await TransactionService.getTransactions();
+  //           setTransactions(data);
+  //           setOpenTransactionModal(false);
+  //         })
+  //         .catch((err) => {
+  //           console.log(err.response);
+  //         });
+  //       return;
 
-      default:
-        break;
-    }
-  };
+  //     default:
+  //       break;
+  //   }
+  // };
 
   const handleCancel = () => {
     setSelectedTask(undefined);
     setOpenTransactionModal(false);
   };
 
-  const handleDelete = (id: number) => {
-    TransactionService.deleteTransaction(id)
-      .then(async (response) => {
-        setTasks((prevState: Task[]) => [
-          ...prevState.map((currentTask) => {
-            if (currentTask.id === response.data.task.id) {
-              currentTask.isComplete = response.data.task.isComplete || false;
-              currentTask.transactions = [];
-              return currentTask;
-            }
-            return currentTask;
-          }),
-        ]);
-        const { data } = await TransactionService.getTransactions();
+  // const handleDelete = (id: number) => {
+  //   TransactionService.deleteTransaction(id)
+  //     .then(async (response) => {
+  //       setTasks((prevState: Task[]) => [
+  //         ...prevState.map((currentTask) => {
+  //           if (currentTask.id === response.data.task.id) {
+  //             currentTask.isComplete = response.data.task.isComplete || false;
+  //             currentTask.transactions = [];
+  //             return currentTask;
+  //           }
+  //           return currentTask;
+  //         }),
+  //       ]);
+  //       const { data } = await TransactionService.getTransactions();
 
-        setTransactions(data);
-        setOpenTransactionModal(false);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
+  //       setTransactions(data);
+  //       setOpenTransactionModal(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.response);
+  //     });
+  // };
 
   const handleTextClick = (task: Task) => {
     setSelectedTask(task);
@@ -201,25 +196,7 @@ export const TaskCard = ({ setTransactions, setTasks, tasks }: TaskCardI) => {
         />
       ) : null}
       {openTransactionModal ? (
-        <TransactionModal
-          defaultType={selectedTask?.isComplete ? "view" : "add"}
-          defaultValue={
-            selectedTask
-              ? {
-                  id: selectedTask.isComplete
-                    ? selectedTask.transactions[0]?.id
-                    : selectedTask.id,
-                  title: selectedTask.title,
-                  description: selectedTask.description,
-                  amount: selectedTask.amount,
-                  date: new Date().toLocaleString(),
-                }
-              : undefined
-          }
-          onSave={handleSave}
-          onDelete={handleDelete}
-          onCancel={handleCancel}
-        />
+        <TransactionModal onCancel={handleCancel} />
       ) : null}
 
       <BaseCard
