@@ -21,16 +21,8 @@ class TransactionsController implements Controller {
 
   private initRoutes() {
     this.router.get('', authMiddleware, this.getTransactionsByUser);
-    this.router.get(
-      '/search',
-      authMiddleware,
-      this.getTransactionsWithSearch
-    );
-    this.router.get(
-      '/summary',
-      authMiddleware,
-      this.getThisMonthTransactions,
-    );
+    this.router.get('/search', authMiddleware, this.getTransactionsWithSearch);
+    this.router.get('/summary', authMiddleware, this.getThisMonthTransactions);
     this.router.get(
       '/:id',
       authMiddleware,
@@ -61,6 +53,8 @@ class TransactionsController implements Controller {
   private createTransaction = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
       const transactionData: createTransactionDto = req.body;
+      console.log(transactionData);
+
       if (!req.user) {
         throw new NotFoundException();
       }
@@ -107,19 +101,15 @@ class TransactionsController implements Controller {
         throw new NotFoundException();
       }
       // const search = req.params.search;
-      const search = req.query.search || "";
-      const date = req.query.date || "";
+      const search = req.query.search || '';
+      const date = req.query.date || '';
       res.send(await this.transactionsService.getTransactionsWithSearch(search, date, req.user));
     } catch (error) {
       next(error);
     }
   };
 
-  private getThisMonthTransactions = async (
-    req: RequestWithUser,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  private getThisMonthTransactions = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
       if (!req.user) {
         throw new NotFoundException();

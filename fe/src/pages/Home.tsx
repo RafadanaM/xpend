@@ -89,6 +89,8 @@ export const Home = () => {
     type: TransactionModalType,
     values: TransactionFormType
   ) => {
+    console.log(type);
+
     switch (type) {
       case "add":
         TransactionService.createTransaction(
@@ -137,6 +139,7 @@ export const Home = () => {
     <>
       {openTransactionModal ? (
         <TransactionModal
+          transaction={selectedTransaction}
           defaultValue={
             selectedTransaction && {
               title: selectedTransaction.title,

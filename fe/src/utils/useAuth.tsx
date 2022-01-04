@@ -14,6 +14,7 @@ import User from "../interfaces/user.interface";
 
 interface AuthContextType {
   user?: User;
+  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   loading: boolean;
   error?: any;
   login: (email: string, password: string) => Promise<any>;
@@ -71,6 +72,7 @@ export function AuthProvider({
   const memoedValue = useMemo(
     () => ({
       user,
+      setUser,
       loading,
       error,
       login,

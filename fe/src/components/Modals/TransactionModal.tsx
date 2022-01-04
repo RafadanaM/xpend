@@ -1,12 +1,14 @@
 import { FormEvent, useRef, useState } from "react";
 import { ReactComponent as CloseIcon } from "../../assets/close.svg";
+import Transaction from "../../interfaces/transaction.interface";
 import {
-  formatDate,
+  // formatDate,
   formatToInput,
-  transactionDateFormat,
+  // transactionDateFormat,
 } from "../../utils/formatDate";
 import { transactionInputs } from "../../utils/formInputs";
 import useOutsideAlerter from "../../utils/useOutsideAlerter";
+import ModalButton from "../Buttons/ModalButton";
 import FormInput from "../Forms/FormInput";
 
 export type TransactionFormType = {
@@ -18,6 +20,7 @@ export type TransactionFormType = {
 };
 export type TransactionModalType = "add" | "view" | "edit";
 interface AddTransactionModalI {
+  transaction?: Transaction;
   defaultValue?: TransactionFormType;
   defaultType?: TransactionModalType;
   onSave: Function;
@@ -30,6 +33,7 @@ export const TransactionModal = ({
   onDelete,
   onCancel,
   defaultValue,
+  transaction,
   defaultType = "add",
 }: AddTransactionModalI) => {
   const modalRef = useRef(null);
@@ -37,6 +41,7 @@ export const TransactionModal = ({
     onCancel();
   });
   const [type, setType] = useState(defaultType);
+  const [isEdit, setIsEdit] = useState(false);
 
   const [focused, setFocused] = useState<boolean[]>([
     false,
@@ -45,22 +50,21 @@ export const TransactionModal = ({
     false,
   ]);
   const [values, setValues] = useState<TransactionFormType>({
-    title: defaultValue ? defaultValue.title : "",
-    description: defaultValue ? defaultValue.description : "",
-    amount: defaultValue ? defaultValue.amount : 0,
+    title: transaction ? transaction.title : "",
+    description: transaction ? transaction.description : "",
+    amount: transaction ? transaction.amount : 0,
     date: formatToInput(
-      defaultValue ? defaultValue.date : new Date().toDateString()
+      transaction ? transaction.date : new Date().toDateString()
     ),
-    id: defaultValue?.id,
+    id: transaction?.id,
   });
 
-  const handleSubmit = (
-    e: FormEvent<HTMLFormElement>,
-    type: TransactionModalType,
-    values: TransactionFormType
-  ) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("run");
+
     onSave(type, values);
+    setType("add");
   };
 
   const handleFocus = (index: number) => {
@@ -73,101 +77,75 @@ export const TransactionModal = ({
   };
 
   let valueKeys = Object.keys(values) as (keyof TransactionFormType)[];
+  console.log(isEdit);
+
   return (
     <div className="fixed top-0 left-0 w-full h-full md:max-h-screen lg:overflow-auto md:overflow-scroll bg-gray-700 bg-opacity-60 z-50 flex justify-center items-center">
       <div
-        className="bg-white md:w-10/12 md:mt-auto lg:mt-0 lg:w-11/12 lg:max-w-lg w-full h-full md:h-auto z-50 py-2 flex flex-col"
+        className="bg-white lg:w-11/12 lg:max-w-lg w-full h-full md:h-auto z-50 py-2 flex flex-col"
         ref={modalRef}
       >
-        {type === "add" || type === "edit" ? (
-          <>
-            <div className="py-2 w-full border-b-2 px-8 font-semibold text-xl border-accent-grey flex justify-between">
-              <span>
-                {type === "edit" ? "Edit Transaction" : "New Transaction"}
-              </span>
-              <CloseIcon
-                className="-mx-4 w-4 h-4 cursor-pointer"
-                onClick={() => onCancel()}
-              />
-            </div>
-            <div className="px-8 py-4">
-              <form onSubmit={(e) => handleSubmit(e, type, values)}>
-                {transactionInputs.map((input, index) => {
-                  return (
-                    <FormInput
-                      key={input.id}
-                      {...input}
-                      value={values[valueKeys[index]]}
-                      onChange={onChange}
-                      onBlur={() => handleFocus(index)}
-                      focused={focused[index]}
-                      labelStyle="font-medium"
-                    />
-                  );
-                })}
+        <>
+          <div className="py-2 w-full border-b-2 px-8 font-semibold text-xl border-accent-grey flex justify-between">
+            <span>
+              {type === "edit" ? "Edit Transaction" : "New Transaction"}
+            </span>
+            <CloseIcon
+              className="-mx-4 w-4 h-4 cursor-pointer"
+              onClick={() => onCancel()}
+            />
+          </div>
+          <div className="px-8 py-4">
+            <form onSubmit={handleSubmit}>
+              {transactionInputs.map((input, index) => {
+                return (
+                  <FormInput
+                    key={input.id}
+                    {...input}
+                    value={values[valueKeys[index]]}
+                    onChange={onChange}
+                    onBlur={() => handleFocus(index)}
+                    focused={focused[index]}
+                    labelStyle="font-medium"
+                  />
+                );
+              })}
 
-                <div className="flex items-center gap-x-4 justify-between mt-8">
-                  {type === "edit" && (
-                    <button
-                      className="bg-red-600 px-2 py-1 font-medium flex-1 text-white hover:bg-opacity-75"
-                      onClick={() => setType("view")}
+              <div className="flex items-center gap-x-4 justify-between mt-8">
+                {transaction ? (
+                  <>
+                    <ModalButton
                       type="button"
+                      color="cancel"
+                      onClick={() =>
+                        isEdit ? setIsEdit(false) : onDelete(transaction.id)
+                      }
                     >
-                      Cancel
-                    </button>
-                  )}
-
-                  <button
-                    className="flex-1 bg-accent-orange hover:bg-opacity-75 text-white font-medium py-1 px-4 focus:outline-none focus:shadow-outline"
-                    type="submit"
-                  >
-                    {type === "edit" ? "Save" : "Create"}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </>
-        ) : defaultValue ? (
-          <>
-            <div className="py-2 w-full border-b-2 px-8 font-semibold text-xl border-accent-grey flex justify-between">
-              <span>Transaction Detail</span>
-              <CloseIcon
-                className="-mx-4 w-4 h-4 cursor-pointer"
-                onClick={() => onCancel()}
-              />
-            </div>
-            <div className="px-8 py-4 flex flex-col">
-              <span className="text-lg font-medium">Title</span>
-              <span className="text-gray-700 break-words">
-                {defaultValue.title}
-              </span>
-              <span className="text-lg font-medium mt-5">Description</span>
-              <span className="text-gray-700 break-words">
-                {defaultValue.description}
-              </span>
-              <span className="text-lg font-medium mt-5">Amount</span>
-              <span className="text-gray-700">{`Rp. ${defaultValue.amount}`}</span>
-              <span className="text-lg font-medium mt-5">Date</span>
-              <span className="text-gray-700">
-                {formatDate(defaultValue.date, transactionDateFormat)}
-              </span>
-              <div className="flex w-full mt-10 gap-x-4">
-                <button
-                  className="bg-red-600 px-2 py-1 flex-1 text-white hover:bg-opacity-75"
-                  onClick={() => onDelete(defaultValue.id)}
-                >
-                  Delete
-                </button>
-                <button
-                  className="bg-accent-orange flex-1 px-2 py-1 text-white hover:bg-opacity-75"
-                  onClick={() => setType("edit")}
-                >
-                  Edit
-                </button>
+                      {isEdit ? "Cancel" : "Delete"}
+                    </ModalButton>
+                    {isEdit ? (
+                      <ModalButton>Save</ModalButton>
+                    ) : (
+                      <ModalButton
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setIsEdit(true);
+                        }}
+                      >
+                        Edit
+                      </ModalButton>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <ModalButton>Create</ModalButton>
+                  </>
+                )}
               </div>
-            </div>
-          </>
-        ) : null}
+            </form>
+          </div>
+        </>
       </div>
     </div>
   );
