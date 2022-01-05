@@ -36,18 +36,19 @@ export const TransactionModal = ({
     //onSave(type, formData);
   };
 
-  const { formData, focused, handleFocus, handleChange, onSubmit } = useForm(
-    {
-      title: transaction ? transaction.title : "",
-      description: transaction ? transaction.description : "",
-      amount: transaction ? transaction.amount : 0,
-      date: formatToInput(
-        transaction ? transaction.date : new Date().toDateString()
-      ),
-      id: transaction?.id,
-    } as TransactionFormType,
-    handleCallback
-  );
+  const { formData, focused, handleFocus, handleChange, onSubmit } =
+    useForm<TransactionFormType>(
+      {
+        title: transaction ? transaction.title : "",
+        description: transaction ? transaction.description : "",
+        amount: transaction ? transaction.amount : 0,
+        date: formatToInput(
+          transaction ? transaction.date : new Date().toDateString()
+        ),
+        id: transaction?.id,
+      },
+      handleCallback
+    );
 
   const handleDelete = (id: number) => {};
 

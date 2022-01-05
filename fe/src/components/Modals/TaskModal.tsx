@@ -5,6 +5,7 @@ import { taskInputs } from "../../utils/formInputs";
 import { TaskService } from "../../api/services/TaskService";
 import Task from "../../interfaces/task.interface";
 import BaseModal from "./BaseModal";
+import useForm from "../../utils/useForm";
 
 interface TaskModalI {
   onCancel: Function;
@@ -19,32 +20,12 @@ type TaskModalType = {
 };
 
 export const TaskModal = ({ onCancel, setTasks, task }: TaskModalI) => {
-  const [focused, setFocused] = useState<boolean[]>([false, false, false]);
-
-  const [values, setValues] = useState<TaskModalType>({
-    title: task ? task.title : "",
-    description: task ? task.description : "",
-    amount: task ? task.amount : 0,
-  });
-
-  let valueKeys = Object.keys(values) as (keyof TaskModalType)[];
-
-  const handleFocus = (index: number) => {
-    focused[index] = true;
-    setFocused([...focused]);
-  };
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleCallback = () => {
     if (task) {
       TaskService.editTask(
-        values.title,
-        values.description,
-        +values.amount,
+        formData.title,
+        formData.description,
+        +formData.amount,
         task.id
       ).then(({ data }) => {
         setTasks((prevState: Task[]) =>
@@ -57,7 +38,11 @@ export const TaskModal = ({ onCancel, setTasks, task }: TaskModalI) => {
         );
       });
     } else {
-      TaskService.createTask(values.title, values.description, +values.amount)
+      TaskService.createTask(
+        formData.title,
+        formData.description,
+        +formData.amount
+      )
         .then(({ data }) => {
           setTasks((prevState: Task[]) => [...prevState, data]);
         })
@@ -67,6 +52,18 @@ export const TaskModal = ({ onCancel, setTasks, task }: TaskModalI) => {
     }
     onCancel(false);
   };
+
+  const { formData, focused, handleFocus, handleChange, onSubmit } =
+    useForm<TaskModalType>(
+      {
+        title: task ? task.title : "",
+        description: task ? task.description : "",
+        amount: task ? task.amount : 0,
+      },
+      handleCallback
+    );
+
+  let valueKeys = Object.keys(formData) as (keyof TaskModalType)[];
 
   return (
     <BaseModal onCancel={() => onCancel}>
@@ -78,13 +75,13 @@ export const TaskModal = ({ onCancel, setTasks, task }: TaskModalI) => {
         />
       </div>
       <div className="px-8 py-4">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
           {taskInputs.map((input, index) => (
             <FormInput
               key={input.id}
               {...input}
-              value={values[valueKeys[index]]}
-              onChange={onChange}
+              value={formData[valueKeys[index]]}
+              onChange={handleChange}
               onBlur={() => handleFocus(index)}
               focused={focused[index]}
               labelStyle="font-medium"
