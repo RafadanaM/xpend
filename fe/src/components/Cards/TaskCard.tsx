@@ -1,19 +1,26 @@
-import { useState } from "react";
-import { TaskService } from "../../api/services/TaskService";
-import { TransactionService } from "../../api/services/TransactionService";
-import Task from "../../interfaces/task.interface";
+import { useEffect, useState } from "react";
 import { TaskModal } from "../Modals/TaskModal";
 import { TransactionModal } from "../Modals/TransactionModal";
 import ConfirmModal from "../Modals/ConfirmModal";
-import TaskItem from "../TaskItem";
+
 import BaseCard from "./BaseCard";
-interface TaskCardI {
-  setTransactions: Function;
-  setTasks: Function;
-  tasks: Task[];
-}
-export const TaskCard = ({ setTransactions, setTasks, tasks }: TaskCardI) => {
-  const [selectedTask, setSelectedTask] = useState<Task | undefined>();
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  deleteTask,
+  fetchTasks,
+  getSelectedTaskId,
+  getTasksStatus,
+  selectTasksIdsByCompleteness,
+  taskSelected,
+  undoTask,
+} from "../../features/tasksSlice";
+import Tasks from "../Tasks";
+import {
+  getSelectedTransaction,
+  transactionSelected,
+} from "../../features/transactionsSlice";
+import Transaction from "../../interfaces/transaction.interface";
+export const TaskCard = () => {
   const [openTransactionModal, setOpenTransactionModal] =
     useState<boolean>(false);
   const [openUndoTaskModal, setOpenUndoTaskModal] = useState<boolean>(false);
@@ -21,9 +28,30 @@ export const TaskCard = ({ setTransactions, setTasks, tasks }: TaskCardI) => {
     useState<boolean>(false);
   const [openTaskModal, setOpenTaskModal] = useState(false);
 
-  const handleCheckboxClick = (task: Task) => {
-    setSelectedTask(task);
-    if (task.isComplete) {
+  const dispatch = useAppDispatch();
+  const taskStatus = useAppSelector(getTasksStatus);
+  const selectedTransactionId = useAppSelector(getSelectedTransaction);
+  const completedTaskIds = useAppSelector((state) =>
+    selectTasksIdsByCompleteness(state, true)
+  );
+  const incompleteTaskIds = useAppSelector((state) =>
+    selectTasksIdsByCompleteness(state, false)
+  );
+  const selectedTaskId = useAppSelector(getSelectedTaskId);
+
+  useEffect(() => {
+    if (taskStatus === "idle") {
+      dispatch(fetchTasks());
+    }
+  }, [taskStatus, dispatch]);
+
+  const handleCheckboxClick = (
+    taskId: number,
+    isComplete: boolean | undefined
+  ) => {
+    if (isComplete === undefined) return;
+    dispatch(taskSelected({ id: taskId }));
+    if (isComplete) {
       setOpenUndoTaskModal(true);
     } else {
       setOpenTransactionModal(true);
@@ -31,160 +59,67 @@ export const TaskCard = ({ setTransactions, setTasks, tasks }: TaskCardI) => {
   };
 
   const handleDeleteTask = (id: number | undefined) => {
-    if (!id) {
-      return;
-    }
-    TaskService.deleteTask(id).then(({ data }) => {
-      setTasks((prevState: Task[]) =>
-        prevState.filter((task) => task.id !== data.id)
-      );
-      setSelectedTask(undefined);
+    if (!id) return;
+    try {
+      dispatch(deleteTask(id));
+      dispatch(taskSelected({ id: undefined }));
       setOpenDeleteTaskModal(false);
-    });
-  };
-
-  const handleUndoTask = (id: number | undefined) => {
-    if (!id) {
-      return;
+    } catch (error) {
+      console.log(error);
     }
-    TaskService.undoTask(id)
-      .then(({ data }) => {
-        setTasks((prevState: Task[]) => [
-          ...prevState.map((currentTask) => {
-            if (currentTask.id === data?.task?.id) {
-              currentTask.isComplete = data?.task?.isComplete || false;
-              return currentTask;
-            }
-            return currentTask;
-          }),
-        ]);
-        TransactionService.getTransactions()
-          .then(({ data }) => {
-            setTransactions(data);
-          })
-          .catch((err) => {
-            console.log(err.response);
-          });
-        setSelectedTask(undefined);
-        setOpenUndoTaskModal(false);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
   };
 
-  // const handleSave = (
-  //   type: TransactionModalType,
-  //   values: TransactionFormType
-  // ) => {
-  //   switch (type) {
-  //     case "add":
-  //       if (!values.id) {
-  //         return;
-  //       }
-  //       TaskService.completeTask(
-  //         values.id,
-  //         values.title,
-  //         +values.amount,
-  //         values.description,
-  //         values.date
-  //       ).then(async ({ data }) => {
-  //         setSelectedTask(undefined);
-  //         setTasks((prevState: Task[]) => [
-  //           ...prevState.map((currentTask) => {
-  //             if (currentTask.id === values.id) {
-  //               currentTask.isComplete = data?.task?.isComplete || true;
-  //               currentTask.transactions = [data?.transaction];
-  //               return currentTask;
-  //             }
-  //             return currentTask;
-  //           }),
-  //         ]);
-  //         const response = await TransactionService.getTransactions();
-  //         setTransactions(response.data);
-  //         setOpenTransactionModal(false);
-  //       });
+  const handleUndoTask = async (id: number | undefined) => {
+    if (!id) return;
+    try {
+      await dispatch(undoTask(id)).unwrap();
+      dispatch(taskSelected({ id: undefined }));
+      setOpenUndoTaskModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  //       return;
-
-  //     case "edit":
-  //       if (!values.id) {
-  //         return;
-  //       }
-  //       TransactionService.editTransaction(values as Transaction, values.id)
-  //         .then(async (_) => {
-  //           setSelectedTask(undefined);
-  //           const { data } = await TransactionService.getTransactions();
-  //           setTransactions(data);
-  //           setOpenTransactionModal(false);
-  //         })
-  //         .catch((err) => {
-  //           console.log(err.response);
-  //         });
-  //       return;
-
-  //     default:
-  //       break;
-  //   }
-  // };
-
-  const handleCancel = () => {
-    setSelectedTask(undefined);
+  const handleCancelTransactionModal = () => {
+    dispatch(taskSelected({ id: undefined }));
     setOpenTransactionModal(false);
   };
 
-  // const handleDelete = (id: number) => {
-  //   TransactionService.deleteTransaction(id)
-  //     .then(async (response) => {
-  //       setTasks((prevState: Task[]) => [
-  //         ...prevState.map((currentTask) => {
-  //           if (currentTask.id === response.data.task.id) {
-  //             currentTask.isComplete = response.data.task.isComplete || false;
-  //             currentTask.transactions = [];
-  //             return currentTask;
-  //           }
-  //           return currentTask;
-  //         }),
-  //       ]);
-  //       const { data } = await TransactionService.getTransactions();
+  const handleCancelTaskModal = () => {
+    dispatch(taskSelected({ id: undefined }));
+    setOpenTaskModal(false);
+  };
 
-  //       setTransactions(data);
-  //       setOpenTransactionModal(false);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.response);
-  //     });
-  // };
+  const handleCancelDeleteModal = () => {
+    dispatch(taskSelected({ id: undefined }));
+    setOpenDeleteTaskModal(false);
+  };
 
-  const handleTextClick = (task: Task) => {
-    setSelectedTask(task);
+  const handleTextClick = (transaction: Transaction) => {
+    dispatch(transactionSelected({ transaction }));
     setOpenTransactionModal(true);
   };
 
-  const handleDeleteClick = (task: Task) => {
-    setSelectedTask(task);
+  const handleDeleteClick = (taskId: number) => {
+    dispatch(taskSelected({ id: taskId }));
     setOpenDeleteTaskModal(true);
   };
 
-  const handleEditClick = (task: Task) => {
-    setSelectedTask(task);
+  const handleEditClick = (taskId: number) => {
+    dispatch(taskSelected({ id: taskId }));
     setOpenTaskModal(true);
   };
 
   return (
     <>
       {openTaskModal ? (
-        <TaskModal
-          onCancel={setOpenTaskModal}
-          setTasks={setTasks}
-          task={selectedTask}
-        />
+        <TaskModal onCancel={handleCancelTaskModal} taskId={selectedTaskId} />
       ) : null}
       {openDeleteTaskModal ? (
         <ConfirmModal
-          text={`Are you sure you want to delete ${selectedTask?.title} ?`}
-          onCancel={setOpenDeleteTaskModal}
-          onSubmit={() => handleDeleteTask(selectedTask?.id)}
+          text={`Are you sure you want to delete?`}
+          onCancel={handleCancelDeleteModal}
+          onSubmit={() => handleDeleteTask(selectedTaskId)}
         />
       ) : null}
       {openUndoTaskModal ? (
@@ -192,11 +127,15 @@ export const TaskCard = ({ setTransactions, setTasks, tasks }: TaskCardI) => {
           text="Undoing the task will also delete previously created transaction. Do
         you want to continue?"
           onCancel={setOpenUndoTaskModal}
-          onSubmit={() => handleUndoTask(selectedTask?.id)}
+          onSubmit={() => handleUndoTask(selectedTaskId)}
         />
       ) : null}
       {openTransactionModal ? (
-        <TransactionModal onCancel={handleCancel} />
+        <TransactionModal
+          transaction={selectedTransactionId}
+          taskId={selectedTaskId}
+          onCancel={handleCancelTransactionModal}
+        />
       ) : null}
 
       <BaseCard
@@ -212,40 +151,22 @@ export const TaskCard = ({ setTransactions, setTasks, tasks }: TaskCardI) => {
           </button>
         }
       >
-        <div className="flex text-sm w-full h-full">
-          <div className="w-1/2 px-1 flex flex-col border-r border-primary h-full">
-            <span className="text-base font-medium mb-1">Incomplete</span>
-            <div className="overflow-y-auto h-full">
-              {tasks
-                .filter((task) => !task.isComplete)
-                .map((incompleteTask) => (
-                  <TaskItem
-                    key={incompleteTask.id}
-                    task={incompleteTask}
-                    onCheckboxClick={handleCheckboxClick}
-                    onEditClick={handleEditClick}
-                    onDeleteClick={handleDeleteClick}
-                  />
-                ))}
-            </div>
-          </div>
-          <div className="w-1/2 px-1 flex flex-col border-l border-primary h-full">
-            <span className="text-base font-medium mb-1">Complete</span>
-            <div className="overflow-y-auto h-full">
-              {tasks
-                .filter((task) => task.isComplete)
-                .map((completeTask) => (
-                  <TaskItem
-                    key={completeTask.id}
-                    task={completeTask}
-                    onTextClick={handleTextClick}
-                    onCheckboxClick={handleCheckboxClick}
-                    onEditClick={handleEditClick}
-                    onDeleteClick={handleDeleteClick}
-                  />
-                ))}
-            </div>
-          </div>
+        <div className="flex text-sm w-full divide-x divide-primary h-full">
+          <Tasks
+            title="Incomplete"
+            taskIds={incompleteTaskIds}
+            onEditClick={handleEditClick}
+            onCheckboxClick={handleCheckboxClick}
+            onDeleteClick={handleDeleteClick}
+          />
+          <Tasks
+            title="Complete"
+            taskIds={completedTaskIds}
+            onEditClick={handleEditClick}
+            onCheckboxClick={handleCheckboxClick}
+            onTextClick={handleTextClick}
+            onDeleteClick={handleDeleteClick}
+          />
         </div>
       </BaseCard>
     </>

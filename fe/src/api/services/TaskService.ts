@@ -31,6 +31,8 @@ export const TaskService = {
   },
 
   deleteTask: async (id: number) => {
+    console.log(id);
+
     return await apiClient.delete(`${BASE_SERVICE_URL}/${id}`);
   },
 

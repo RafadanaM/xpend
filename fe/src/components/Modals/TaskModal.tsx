@@ -1,74 +1,67 @@
-import { FormEvent, useState } from "react";
 import { ReactComponent as CloseIcon } from "../../assets/close.svg";
 import FormInput from "../Forms/FormInput";
 import { taskInputs } from "../../utils/formInputs";
-import { TaskService } from "../../api/services/TaskService";
-import Task from "../../interfaces/task.interface";
 import BaseModal from "./BaseModal";
 import useForm from "../../utils/useForm";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  addNewTask,
+  selectTaskById,
+  updateTask,
+} from "../../features/tasksSlice";
+import { useState } from "react";
+import ModalButton from "../Buttons/ModalButton";
 
-interface TaskModalI {
-  onCancel: Function;
-  setTasks: Function;
-  task: Task | undefined;
-}
-
-type TaskModalType = {
+type TaskFormModalType = {
   title: string;
   description: string;
   amount: number;
 };
 
-export const TaskModal = ({ onCancel, setTasks, task }: TaskModalI) => {
-  const handleCallback = () => {
-    if (task) {
-      TaskService.editTask(
-        formData.title,
-        formData.description,
-        +formData.amount,
-        task.id
-      ).then(({ data }) => {
-        setTasks((prevState: Task[]) =>
-          prevState.map((task) => {
-            if (task.id === data.id) {
-              return { ...data, transacations: task.transactions };
-            }
-            return task;
-          })
-        );
-      });
-    } else {
-      TaskService.createTask(
-        formData.title,
-        formData.description,
-        +formData.amount
-      )
-        .then(({ data }) => {
-          setTasks((prevState: Task[]) => [...prevState, data]);
-        })
-        .catch((err) => {
-          console.log(err.response);
-        });
+interface TaskModalI {
+  onCancel: Function;
+  taskId: number | undefined;
+}
+
+export const TaskModal = ({ onCancel, taskId }: TaskModalI) => {
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const selectedTask = useAppSelector((state) =>
+    taskId ? selectTaskById(state, taskId) : undefined
+  );
+
+  const handleCallback = async () => {
+    try {
+      setLoading(true);
+      if (selectedTask) {
+        dispatch(updateTask({ id: selectedTask.id, ...formData }));
+      } else {
+        await dispatch(addNewTask(formData)).unwrap();
+      }
+      setLoading(false);
+      onCancel();
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
-    onCancel(false);
   };
 
   const { formData, focused, handleFocus, handleChange, onSubmit } =
-    useForm<TaskModalType>(
+    useForm<TaskFormModalType>(
       {
-        title: task ? task.title : "",
-        description: task ? task.description : "",
-        amount: task ? task.amount : 0,
+        title: selectedTask ? selectedTask.title : "",
+        description: selectedTask ? selectedTask.description : "",
+        amount: selectedTask ? selectedTask.amount : 0,
       },
       handleCallback
     );
 
-  let valueKeys = Object.keys(formData) as (keyof TaskModalType)[];
+  let valueKeys = Object.keys(formData) as (keyof TaskFormModalType)[];
 
   return (
-    <BaseModal onCancel={() => onCancel}>
+    <BaseModal onCancel={() => onCancel()}>
       <div className="py-2 w-full border-b-2 px-8 font-semibold text-xl border-accent-grey flex justify-between">
-        <span>{task ? "Edit Task" : "New Task"}</span>
+        <span>{selectedTask ? "Edit Task" : "New Task"}</span>
         <CloseIcon
           className="-mx-4 w-4 h-4 cursor-pointer"
           onClick={() => onCancel(false)}
@@ -88,19 +81,17 @@ export const TaskModal = ({ onCancel, setTasks, task }: TaskModalI) => {
             />
           ))}
           <div className="flex items-center justify-between mb-3 gap-x-4">
-            <button
-              className="w-full bg-red-600 hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            <ModalButton
+              color="cancel"
+              disabled={loading}
+              onClick={() => onCancel()}
               type="button"
-              onClick={() => onCancel(false)}
             >
               Cancel
-            </button>
-            <button
-              className="w-full bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
-            >
+            </ModalButton>
+            <ModalButton color="normal" disabled={loading} type="submit">
               Save
-            </button>
+            </ModalButton>
           </div>
         </form>
       </div>

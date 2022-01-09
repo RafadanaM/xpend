@@ -7,6 +7,25 @@ export const transactionDateFormat: Intl.DateTimeFormatOptions = {
   minute: "numeric",
 };
 
+export const getCorrectDate = (date: string) => {
+  const newDate = new Date(date);
+  newDate.setTime(newDate.getTime() - newDate.getTimezoneOffset() * 60 * 1000);
+  return newDate;
+};
+
+export const isMonthYearSameWithCurrent = (firstDate: Date) => {
+  const currentDate = new Date();
+  currentDate.setTime(
+    currentDate.getTime() - currentDate.getTimezoneOffset() * 60 * 1000
+  );
+  console.log(currentDate, currentDate.getHours());
+
+  return (
+    currentDate.getMonth() === firstDate.getMonth() &&
+    currentDate.getFullYear() === firstDate.getFullYear()
+  );
+};
+
 export const formatDate = (
   stringDate: string,
   options?: Intl.DateTimeFormatOptions | undefined
@@ -27,10 +46,13 @@ const addLeadingZero = (value: number) => {
 };
 
 export const formatToInput = (stringDate: string): string => {
+  console.log(stringDate);
+
   const date = new Date(stringDate);
+  console.log(date);
 
   return `${date.getFullYear()}-${addLeadingZero(
-    date.getMonth()
+    date.getMonth() + 1
   )}-${addLeadingZero(date.getDate())}T${addLeadingZero(
     date.getHours()
   )}:${addLeadingZero(date.getMinutes())}`;

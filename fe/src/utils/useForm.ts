@@ -15,12 +15,16 @@ const useForm = <T>(value: T, callback: () => void) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const resetForm = () => {
+    setFormData(value);
+  };
+
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     callback();
   };
 
-  return { formData, focused, handleFocus, handleChange, onSubmit };
+  return { formData, focused, handleFocus, handleChange, onSubmit, resetForm };
 };
 
 export default useForm;

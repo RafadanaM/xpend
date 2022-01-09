@@ -8,6 +8,7 @@ import authMiddleware from '../../middlewares/auth.middleware';
 import RequestWithUser from '../../interfaces/requestWithUser.interface';
 import NotFoundException from '../../exceptions/NotFoundException';
 import ParamDto from '../../shared/param.dto';
+import timeZoneDTO from './timeZone.dto';
 
 class TransactionsController implements Controller {
   public path: string = '/transactions';
@@ -22,7 +23,12 @@ class TransactionsController implements Controller {
   private initRoutes() {
     this.router.get('', authMiddleware, this.getTransactionsByUser);
     this.router.get('/search', authMiddleware, this.getTransactionsWithSearch);
-    this.router.get('/summary', authMiddleware, this.getThisMonthTransactions);
+    this.router.post(
+      '/summary',
+      authMiddleware,
+      validationMiddleware(timeZoneDTO, RequestTypes.BODY),
+      this.getThisMonthTransactions
+    );
     this.router.get(
       '/:id',
       authMiddleware,
@@ -114,10 +120,8 @@ class TransactionsController implements Controller {
       if (!req.user) {
         throw new NotFoundException();
       }
-      const now = new Date();
-      now.setHours(now.getHours() + 7);
-      const thisMonth = now.toISOString().substring(0, 7);
-      res.send(await this.transactionsService.getThisMonthTransactions(thisMonth, req.user));
+      const { timeZone }: timeZoneDTO = req.body;
+      res.send(await this.transactionsService.getThisMonthTransactions(timeZone, req.user));
     } catch (error) {
       next(error);
     }

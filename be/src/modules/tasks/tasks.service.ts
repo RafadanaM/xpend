@@ -100,8 +100,9 @@ class TasksService {
       throw new NotFoundException();
     }
     this.isOwned(task.user.id, user.id);
+
     if (task.isComplete) {
-      const transaction = await this.transactionsRepository.findOne({
+      let transaction = await this.transactionsRepository.findOne({
         where: { task: { id: taskId } },
         order: { created: 'DESC' },
       });
@@ -114,6 +115,8 @@ class TasksService {
       // else just toggle the task to false
       if (this.isMonthYearEqual(transaction.created, task.updated)) {
         await this.transactionsRepository.delete({ id: transaction.id });
+      } else {
+        transaction = undefined;
       }
       await this.taskRepository.update({ id: taskId }, { isComplete: false });
       const updatedTask = await this.taskRepository.findOne({

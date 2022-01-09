@@ -1,6 +1,8 @@
-import { getRepository } from 'typeorm';
+import { endOfMonth, startOfMonth } from 'date-fns';
+import { Between, getRepository } from 'typeorm';
 import ForbiddenException from '../../exceptions/ForbiddenException';
 import NotFoundException from '../../exceptions/NotFoundException';
+import { EditTransactionResponse, TransactionSummaryResponse } from '../../interfaces/response.interface';
 import Tasks from '../tasks/tasks.entity';
 import Users from '../users/users.entity';
 import createTransactionDto from './transactions.dto';
@@ -17,6 +19,7 @@ class TransactionsService {
   }
 
   public async createTransaction(transactionsData: createTransactionDto, user: Users): Promise<Transactions> {
+    console.log(transactionsData);
     const newTransaction = this.transactionsRepository.create({ ...transactionsData, user: user });
     await this.transactionsRepository.save(newTransaction);
     return newTransaction;
@@ -58,30 +61,51 @@ class TransactionsService {
     return transactions;
   }
 
-  public async getThisMonthTransactions(thisMonth: string, user: Users): Promise<Transactions[]> {
+  public async getThisMonthTransactions(timeZone: number, user: Users): Promise<TransactionSummaryResponse> {
+    //not so sure about this
+    const currentDate = new Date();
+    currentDate.setTime(currentDate.getTime() - timeZone);
+    const startMonth = startOfMonth(currentDate);
+    const endMonth = endOfMonth(currentDate);
+    startMonth.setTime(startMonth.getTime() - timeZone);
+    endMonth.setTime(endMonth.getTime() - timeZone);
+
     let transactions = await this.transactionsRepository.find({
       relations: ['user'],
-      where: { user: { id: user.id } },
+      where: { user: { id: user.id }, date: Between(startMonth, endMonth) },
     });
-    transactions = transactions.filter((transaction) => {
-      const transactionDate = transaction.date;
-      transactionDate.setHours(transactionDate.getHours() + 7);
-      const transactionMonth = transactionDate.toISOString().substring(0, 7);
-      return transactionMonth === thisMonth;
+    let gained = 0;
+    let spent = 0;
+    const totalTransactions = transactions.length;
+    // const reducer = (previousValue: number, currentValue: number) => previousValue + currentValue;
+    transactions.forEach((transaction) => {
+      if (transaction.amount >= 0) {
+        gained += transaction.amount;
+      } else {
+        spent -= transaction.amount;
+      }
     });
-    return transactions;
+
+    return { gained, spent, totalTransactions };
   }
 
-  public async editTransaction(id: number, data: Partial<createTransactionDto>, user: Users): Promise<Transactions> {
-    let transaction = await this.transactionsRepository.findOne({ relations: ['user'], where: { id: id } });
+  public async editTransaction(
+    id: number,
+    data: Partial<createTransactionDto>,
+    user: Users
+  ): Promise<EditTransactionResponse> {
+    const transaction = await this.transactionsRepository.findOne({ relations: ['user'], where: { id: id } });
     if (!transaction) {
       throw new NotFoundException();
     }
     this.isOwned(transaction.user.id, user.id);
     const updatedData: Partial<createTransactionDto> = { ...data };
     await this.transactionsRepository.update({ id }, { ...updatedData });
-    transaction = await this.transactionsRepository.findOneOrFail({ relations: ['user'], where: { id: id } });
-    return transaction;
+    const updatedTransaction = await this.transactionsRepository.findOneOrFail({
+      relations: ['user'],
+      where: { id: id },
+    });
+    return { prevTransaction: transaction, updatedTransaction };
   }
 
   public async deleteTransaction(id: number, user: Users): Promise<Transactions> {

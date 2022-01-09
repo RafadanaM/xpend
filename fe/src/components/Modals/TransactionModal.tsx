@@ -1,5 +1,12 @@
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { ReactComponent as CloseIcon } from "../../assets/close.svg";
+import { completeTask, selectTaskById } from "../../features/tasksSlice";
+import {
+  addNewTransaction,
+  deleteTransaction,
+  updateTransaction,
+} from "../../features/transactionsSlice";
 import Transaction from "../../interfaces/transaction.interface";
 import {
   // formatDate,
@@ -20,37 +27,117 @@ export type TransactionFormType = {
   date: string;
 };
 interface AddTransactionModalI {
-  transaction?: Transaction;
   onCancel: Function;
+  taskId?: number | undefined;
+  transaction?: Transaction | undefined;
 }
 
 export const TransactionModal = ({
   onCancel,
   transaction,
+  taskId,
 }: AddTransactionModalI) => {
+  const dispatch = useAppDispatch();
   const [isEdit, setIsEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const selectedTask = useAppSelector((state) =>
+    taskId ? selectTaskById(state, taskId) : undefined
+  );
 
-  const handleCallback = () => {
-    console.log("run");
+  const handleCallback = async () => {
+    setLoading(true);
+
+    try {
+      if (transaction) {
+        // update
+        await dispatch(
+          updateTransaction({
+            id: transaction.id,
+            transaction: {
+              title: formData.title,
+              description: formData.description,
+              date: formData.date,
+              amount: +formData.amount,
+            },
+          })
+        ).unwrap();
+      } else if (selectedTask) {
+        // complete tAsk
+        await dispatch(
+          completeTask({
+            taskId: selectedTask.id,
+            transactionData: {
+              title: formData.title,
+              description: formData.description,
+              date: formData.date,
+              amount: formData.amount,
+            },
+          })
+        ).unwrap();
+      } else {
+        //create new
+        await dispatch(
+          addNewTransaction({
+            title: formData.title,
+            description: formData.description,
+            date: formData.date,
+            amount: formData.amount,
+          })
+        ).unwrap();
+      }
+      setLoading(false);
+      onCancel();
+    } catch (error: any) {
+      console.log(error?.response);
+      setLoading(false);
+    }
 
     //onSave(type, formData);
   };
 
-  const { formData, focused, handleFocus, handleChange, onSubmit } =
+  const { formData, focused, handleFocus, handleChange, onSubmit, resetForm } =
     useForm<TransactionFormType>(
       {
-        title: transaction ? transaction.title : "",
-        description: transaction ? transaction.description : "",
-        amount: transaction ? transaction.amount : 0,
+        title: transaction
+          ? transaction.title
+          : selectedTask
+          ? selectedTask.title
+          : "",
+        description: transaction
+          ? transaction.description
+          : selectedTask
+          ? selectedTask.description
+          : "",
+        amount: transaction
+          ? transaction.amount
+          : selectedTask
+          ? selectedTask.amount
+          : 0,
         date: formatToInput(
-          transaction ? transaction.date : new Date().toDateString()
+          transaction ? transaction.date : new Date().toString()
         ),
-        id: transaction?.id,
+        id: transaction ? transaction.id : undefined,
       },
       handleCallback
     );
 
-  const handleDelete = (id: number) => {};
+  const handleDelete = (id: number) => {
+    //NOT COMPLETE
+    try {
+      setLoading(true);
+      dispatch(deleteTransaction(id)).unwrap();
+      setLoading(false);
+      onCancel();
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    resetForm();
+    setIsEdit(false);
+  };
 
   let valueKeys = Object.keys(formData) as (keyof TransactionFormType)[];
 
@@ -83,7 +170,7 @@ export const TransactionModal = ({
                 onBlur={() => handleFocus(index)}
                 focused={focused[index]}
                 labelStyle="font-medium"
-                disabled={!isEdit}
+                disabled={!isEdit && transaction !== undefined}
               />
             );
           })}
@@ -92,18 +179,20 @@ export const TransactionModal = ({
             {transaction ? (
               <>
                 <ModalButton
+                  disabled={loading}
                   type="button"
                   color="cancel"
                   onClick={() =>
-                    isEdit ? setIsEdit(false) : handleDelete(transaction.id)
+                    isEdit ? handleCancelEdit() : handleDelete(transaction.id)
                   }
                 >
                   {isEdit ? "Cancel" : "Delete"}
                 </ModalButton>
                 {isEdit ? (
-                  <ModalButton>Save</ModalButton>
+                  <ModalButton disabled={loading}>Save</ModalButton>
                 ) : (
                   <ModalButton
+                    disabled={loading}
                     type="button"
                     onClick={(e) => {
                       e.preventDefault();
@@ -116,7 +205,7 @@ export const TransactionModal = ({
               </>
             ) : (
               <>
-                <ModalButton>Create</ModalButton>
+                <ModalButton disabled={loading}>Create</ModalButton>
               </>
             )}
           </div>
