@@ -32,13 +32,13 @@ export const Filter = ({ setSearch }: FilterI) => {
 
   let searchKeys = Object.keys(searchValues) as (keyof SearchFormType)[];
   return (
-    <div className="bg-primary rounded px-2 py-1 col-span-2 w-full">
+    <div className=" bg-gradient-to-t from-primary to-blue-500 rounded-lg px-2 py-1 col-span-2 w-full">
       <form
         className="flex-1 md:flex flex-wrap items-center w-full gap-1"
         onSubmit={(e) => handleSubmitSearch(e)}
       >
         <div className="flex">
-          <label className="mt-2 text-xs font-medium md:mt-0 md:text-base">
+          <label className="mt-2 text-xs text-white font-medium md:mt-0 md:text-base">
             Search:{" "}
           </label>
           <div className="flex flex-grow justify-end md:hidden">
@@ -71,13 +71,13 @@ export const Filter = ({ setSearch }: FilterI) => {
         </div>
         <div className="hidden md:flex flex-grow md:flex-grow-0 justify-end ">
           <button
-            className="p-2 bg-accent-orange text-xs md:text-base text-white rounded my-auto hover:bg-opacity-75"
+            className="px-2 py-1.5 bg-accent-orange text-xs md:text-sm text-white rounded my-auto hover:bg-opacity-75"
             type="submit"
           >
             Search
           </button>
           <button
-            className="ml-2 p-2 bg-accent-orange text-xs md:text-base text-white rounded my-auto hover:bg-opacity-75"
+            className="ml-2 px-2 py-1.5 bg-accent-orange text-xs md:text-sm text-white rounded my-auto hover:bg-opacity-75"
             type="button"
             onClick={handleCancel}
           >
