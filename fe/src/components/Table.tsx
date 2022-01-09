@@ -43,7 +43,7 @@ export const Table = ({ onRowClick }: TableI) => {
             {transactions.map((transaction) => (
               <tr
                 key={transaction.id}
-                className="text-2xs border bg-white border-primary md:text-sm h-11 cursor-pointer rounded-md hover:bg-gray-300 row-shadow"
+                className="text-2xs border bg-white border-primary md:text-sm h-11 cursor-pointer rounded-md hover:bg-primary hover:bg-opacity-10 row-shadow"
                 onClick={() => onRowClick(transaction)}
               >
                 <td className="px-2 rounded-l-md">{transaction.title}</td>
