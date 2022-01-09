@@ -1,16 +1,15 @@
 import { FormEvent, useState } from "react";
-// import { sortEnum } from "../enums";
 import { SearchFormType } from "../pages/Home";
 import { searchInputs } from "../utils/formInputs";
 import FormInput from "./Forms/FormInput";
-// import RadioInput from "./RadioInput";
+import { ReactComponent as SearchIcon } from "../assets/search.svg";
+
 
 interface FilterI {
   setSearch: Function;
 }
 
 export const Filter = ({ setSearch }: FilterI) => {
-  // const [selectedShow, setSelectedShow] = useState(sortEnum.THIS_MONTH);
   const [searchValues, setSearchValues] = useState<SearchFormType>({
     searchText: "",
     searchDate: "",
@@ -38,9 +37,7 @@ export const Filter = ({ setSearch }: FilterI) => {
         onSubmit={(e) => handleSubmitSearch(e)}
       >
         <div className="flex">
-          <label className="mt-2 text-xs text-white font-medium md:mt-0 md:text-base">
-            Search:{" "}
-          </label>
+          <SearchIcon  className="text-white w-7 h-5" />
           <div className="flex flex-grow justify-end md:hidden">
             <button
               className="py-1 px-2 bg-accent-orange text-xs text-white rounded my-auto hover:bg-opacity-75"
