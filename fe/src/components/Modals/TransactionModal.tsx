@@ -189,7 +189,9 @@ export const TransactionModal = ({
                   {isEdit ? "Cancel" : "Delete"}
                 </ModalButton>
                 {isEdit ? (
-                  <ModalButton disabled={loading}>Save</ModalButton>
+                  <ModalButton color="success" disabled={loading}>
+                    Save
+                  </ModalButton>
                 ) : (
                   <ModalButton
                     disabled={loading}

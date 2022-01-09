@@ -32,7 +32,7 @@ export const Filter = ({ setSearch }: FilterI) => {
 
   let searchKeys = Object.keys(searchValues) as (keyof SearchFormType)[];
   return (
-    <div className="bg-secondary rounded px-2 py-1 col-span-2 w-full">
+    <div className="bg-primary rounded px-2 py-1 col-span-2 w-full">
       <form
         className="flex-1 md:flex flex-wrap items-center w-full gap-1"
         onSubmit={(e) => handleSubmitSearch(e)}

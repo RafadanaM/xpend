@@ -21,7 +21,7 @@ const ModalButton = ({ children, color, ...rest }: ModalButtonI) => {
 
   return (
     <button
-      className={`${selectedColor()} flex-1 px-2 py-1 text-white hover:bg-opacity-75`}
+      className={`${selectedColor()} rounded flex-1 px-2 py-1 text-white hover:bg-opacity-75`}
       {...rest}
     >
       {children}
