@@ -24,6 +24,7 @@ export type TransactionFormType = {
   id?: number;
   title: string;
   description: string;
+  type: string;
   amount: number;
   date: string;
 };
@@ -109,6 +110,13 @@ export const TransactionModal = ({
           : selectedTask
           ? selectedTask.description
           : "",
+        type: transaction
+          ? transaction.amount > 0
+            ? "gain"
+            : "spending"
+          // : selectedTask
+          // ? selectedTask.type
+          : "gain",
         amount: transaction
           ? transaction.amount
           : selectedTask

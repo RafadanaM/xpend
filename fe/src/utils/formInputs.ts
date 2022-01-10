@@ -17,6 +17,15 @@ export const transactionInputs = [
   },
   {
     id: "2",
+    name: "type",
+    type: "radio",
+    placeholder: "gain",
+    label: "Type",
+    errorMessage: "Amount must be a number!",
+    options: ["gain","spending"],
+  },
+  {
+    id: "3",
     name: "amount",
     type: "number",
     placeholder: "1000",
@@ -24,7 +33,7 @@ export const transactionInputs = [
     errorMessage: "Amount must be a number!",
   },
   {
-    id: "3",
+    id: "4",
     name: "date",
     type: "datetime-local",
     placeholder: "",

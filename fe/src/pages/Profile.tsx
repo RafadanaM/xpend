@@ -62,13 +62,13 @@ export const Profile = () => {
               </div>
               <div className="flex flex-col md:mb-4 lg:flex-row justify-center lg:justify-between gap-y-5 gap-x-2">
                 <button
-                  className="w-full lg:w-3/12 m-auto lg:m-0 lg:ml-auto max-w-xs bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="w-full lg:w-2/12 m-auto lg:m-0 lg:ml-auto max-w-xs bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   onClick={() => handleOpenModal("profile")}
                 >
                   Edit
                 </button>
                 <button
-                  className="w-full lg:w-3/12 m-auto lg:m-0 lg:mr-auto max-w-xs bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="w-full lg:w-2/12 m-auto lg:m-0 lg:mr-auto max-w-xs bg-accent-orange hover:bg-opacity-90 hover:text-gray-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   onClick={() => handleOpenModal("password")}
                 >
                   Change Password

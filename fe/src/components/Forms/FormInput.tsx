@@ -13,6 +13,7 @@ interface FormInputI {
   inputStyle?: string;
   divStyle?: string;
   required?: boolean;
+  options?: string[];
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onBlur?: React.ChangeEventHandler<HTMLInputElement>;
 }
@@ -32,6 +33,7 @@ const FormInput = ({
   divStyle = "mb-4 w-full ",
   required = true,
   disabled = false,
+  options = ["gain", "spending"],
   onChange,
   onBlur,
 }: FormInputI) => {
@@ -60,6 +62,24 @@ const FormInput = ({
             onBlur as unknown as React.ChangeEventHandler<HTMLTextAreaElement>
           }
         />
+      ) : type === "radio" ? (
+        <div className="flex gap-x-5">
+          {options.map((option) => (
+            <div className="form-check">
+              <input
+                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600  mt-1 mr-2 cursor-pointer"
+                type="radio"
+                name={option}
+                id={option}
+              />
+              <label
+                className="form-check-label inline-block text-gray-800"
+              >
+                {option}
+              </label>
+            </div>
+          ))}
+        </div>
       ) : (
         <input
           disabled={disabled}

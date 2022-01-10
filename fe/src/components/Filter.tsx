@@ -3,6 +3,7 @@ import { SearchFormType } from "../pages/Home";
 import { searchInputs } from "../utils/formInputs";
 import FormInput from "./Forms/FormInput";
 import { ReactComponent as SearchIcon } from "../assets/search.svg";
+import { ReactComponent as ResetIcon } from "../assets/arrow-counterclockwise.svg";
 import { useAppDispatch } from "../app/hooks";
 
 export const Filter = () => {
@@ -65,17 +66,17 @@ export const Filter = () => {
         </div>
         <div className="hidden md:flex flex-grow md:flex-grow-0 justify-end ">
           <button
-            className="px-2 py-1.5 bg-accent-orange text-xs md:text-sm text-white rounded my-auto hover:bg-opacity-75"
+            className="ml-1 px-2 py-2 bg-accent-orange text-xs md:text-sm text-white rounded my-auto hover:bg-opacity-75"
             type="submit"
           >
-            Search
+            <SearchIcon className="h-4" />
           </button>
           <button
-            className="ml-2 px-2 py-1.5 bg-accent-orange text-xs md:text-sm text-white rounded my-auto hover:bg-opacity-75"
+            className="ml-2 px-2 py-2 bg-accent-orange text-xs md:text-sm text-white rounded my-auto hover:bg-opacity-75"
             type="button"
             onClick={handleCancel}
           >
-            Reset
+            <ResetIcon className="h-4" />
           </button>
         </div>
       </form>
