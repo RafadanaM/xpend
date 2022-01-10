@@ -12,6 +12,7 @@ import { updateTask, addNewTask } from "../../features/tasks/tasks.thunks";
 type TaskFormModalType = {
   title: string;
   description: string;
+  type: "income" | "expense";
   amount: number;
 };
 
@@ -48,7 +49,12 @@ export const TaskModal = ({ onCancel, taskId }: TaskModalI) => {
       {
         title: selectedTask ? selectedTask.title : "",
         description: selectedTask ? selectedTask.description : "",
-        amount: selectedTask ? selectedTask.amount : 0,
+        type: selectedTask
+          ? selectedTask.amount > 0
+            ? "income"
+            : "expense"
+          : "income",
+        amount: selectedTask ? Math.abs(selectedTask.amount) : 0,
       },
       handleCallback
     );

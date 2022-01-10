@@ -18,7 +18,6 @@ export const isMonthYearSameWithCurrent = (firstDate: Date) => {
   currentDate.setTime(
     currentDate.getTime() - currentDate.getTimezoneOffset() * 60 * 1000
   );
-  console.log(currentDate, currentDate.getHours());
 
   return (
     currentDate.getMonth() === firstDate.getMonth() &&
@@ -46,10 +45,7 @@ const addLeadingZero = (value: number) => {
 };
 
 export const formatToInput = (stringDate: string): string => {
-  console.log(stringDate);
-
   const date = new Date(stringDate);
-  console.log(date);
 
   return `${date.getFullYear()}-${addLeadingZero(
     date.getMonth() + 1

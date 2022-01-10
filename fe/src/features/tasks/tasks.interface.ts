@@ -4,6 +4,7 @@ import { TransactionDTO } from "../transactions/transactions.interface";
 
 export interface TaskDTO {
   title: string;
+  type?: "income" | "expense";
   amount: number;
   description: string;
 }

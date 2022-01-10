@@ -28,6 +28,10 @@ export const fetchTransactionSummary = createAsyncThunk(
 export const updateTransaction = createAsyncThunk(
   "transactions/updateTransaction",
   async ({ transaction, id }: updateTransactionI, { dispatch }) => {
+    if (transaction.type === "expense") {
+      transaction.amount = +transaction.amount * -1;
+    }
+    delete transaction.type;
     const response = await TransactionService.editTransaction(transaction, id);
     const data: EditTransactionResponse = response.data;
     const { prevTransaction, updatedTransaction } = data;
@@ -69,9 +73,13 @@ export const deleteTransaction = createAsyncThunk(
 export const addNewTransaction = createAsyncThunk(
   "transactions/addNewTransaction",
   async (transaction: TransactionDTO, { dispatch }) => {
+
+    if (transaction.type === "expense") {
+      transaction.amount = +transaction.amount * -1;
+    }
     const response = await TransactionService.createTransaction(
       transaction.title,
-      +transaction.amount,
+      transaction.amount,
       transaction.description,
       transaction.date
     );

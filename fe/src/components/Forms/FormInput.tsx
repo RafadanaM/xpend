@@ -14,7 +14,11 @@ interface FormInputI {
   divStyle?: string;
   required?: boolean;
   options?: string[];
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type?: string,
+    isPositive?: boolean
+  ) => void;
   onBlur?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
@@ -33,7 +37,7 @@ const FormInput = ({
   divStyle = "mb-4 w-full ",
   required = true,
   disabled = false,
-  options = ["gain", "spending"],
+  options,
   onChange,
   onBlur,
 }: FormInputI) => {
@@ -64,17 +68,19 @@ const FormInput = ({
         />
       ) : type === "radio" ? (
         <div className="flex gap-x-5">
-          {options.map((option) => (
-            <div className="form-check">
+          {options && options.map((option) => (
+            <div key={option} className="form-check">
               <input
                 className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600  mt-1 mr-2 cursor-pointer"
                 type="radio"
-                name={option}
+                name={name}
                 id={option}
+                value={option}
+                onChange={onChange}
+                checked={value === option}
+                disabled={disabled}
               />
-              <label
-                className="form-check-label inline-block text-gray-800"
-              >
+              <label className="form-check-label inline-block text-gray-800">
                 {option}
               </label>
             </div>
@@ -91,7 +97,7 @@ const FormInput = ({
           placeholder={placeholder}
           pattern={pattern}
           value={value}
-          onChange={onChange}
+          onChange={(e) => onChange(e, type, true)}
           onBlur={onBlur}
         />
       )}

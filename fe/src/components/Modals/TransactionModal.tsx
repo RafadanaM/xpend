@@ -24,7 +24,7 @@ export type TransactionFormType = {
   id?: number;
   title: string;
   description: string;
-  type: string;
+  type: "income" | "expense";
   amount: number;
   date: string;
 };
@@ -59,6 +59,7 @@ export const TransactionModal = ({
               title: formData.title,
               description: formData.description,
               date: formData.date,
+              type: formData.type,
               amount: +formData.amount,
             },
           })
@@ -72,6 +73,7 @@ export const TransactionModal = ({
               title: formData.title,
               description: formData.description,
               date: formData.date,
+              type: formData.type,
               amount: formData.amount,
             },
           })
@@ -83,6 +85,7 @@ export const TransactionModal = ({
             title: formData.title,
             description: formData.description,
             date: formData.date,
+            type: formData.type,
             amount: formData.amount,
           })
         ).unwrap();
@@ -112,16 +115,20 @@ export const TransactionModal = ({
           : "",
         type: transaction
           ? transaction.amount > 0
-            ? "gain"
-            : "spending"
-          // : selectedTask
-          // ? selectedTask.type
-          : "gain",
-        amount: transaction
-          ? transaction.amount
+            ? "income"
+            : "expense"
           : selectedTask
-          ? selectedTask.amount
-          : 0,
+          ? selectedTask.amount > 0
+            ? "income"
+            : "expense"
+          : "income",
+        amount: Math.abs(
+          transaction
+            ? transaction.amount
+            : selectedTask
+            ? selectedTask.amount
+            : 0
+        ),
         date: formatToInput(
           transaction ? transaction.date : new Date().toString()
         ),

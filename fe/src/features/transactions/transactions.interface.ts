@@ -8,6 +8,7 @@ export interface TransactionSelectedPayload {
 
 export interface TransactionDTO {
   title: string;
+  type?: "income" | "expense";
   amount: number;
   description: string;
   date: string;

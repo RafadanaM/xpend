@@ -11,8 +11,16 @@ const useForm = <T>(value: T, callback: () => void) => {
     setFocused([...focused]);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, type?: string, isPositive?: boolean) => {
+    if (isPositive && type === "number") {
+      if (+e.target.value > 0 || e.target.value.length === 0) {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+      } else {
+        setFormData({ ...formData, [e.target.name]: 1 });
+      }
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
 
   const resetForm = () => {

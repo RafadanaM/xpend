@@ -22,10 +22,14 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
 export const addNewTask = createAsyncThunk(
   "tasks/addNewTasks",
   async (taskData: TaskDTO) => {
+    let amount = +taskData.amount;
+    if (taskData.type === "expense") {
+      amount = amount * -1;
+    }
     const response = await TaskService.createTask(
       taskData.title,
       taskData.description,
-      +taskData.amount
+      amount
     );
     return response.data as Task;
   }
@@ -34,6 +38,9 @@ export const addNewTask = createAsyncThunk(
 export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async (editTaskData: EditTaskData) => {
+    if (editTaskData.type === "expense") {
+      editTaskData.amount = +editTaskData.amount * -1;
+    }
     const response = await TaskService.editTask(
       editTaskData.title,
       editTaskData.description,
@@ -56,10 +63,13 @@ export const completeTask = createAsyncThunk(
   "tasks/completeTask",
   async (completeTaskData: CompleteTaskData, { dispatch }) => {
     const { taskId, transactionData } = completeTaskData;
+    if (transactionData.type === "expense") {
+      transactionData.amount = +transactionData.amount * -1;
+    }
     const response = await TaskService.completeTask(
       taskId,
       transactionData.title,
-      +transactionData.amount,
+      transactionData.amount,
       transactionData.description,
       transactionData.date
     );

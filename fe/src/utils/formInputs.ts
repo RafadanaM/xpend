@@ -19,10 +19,9 @@ export const transactionInputs = [
     id: "2",
     name: "type",
     type: "radio",
-    placeholder: "gain",
+    placeholder: "income",
     label: "Type",
-    errorMessage: "Amount must be a number!",
-    options: ["gain","spending"],
+    options: ["income","expense"],
   },
   {
     id: "3",
@@ -166,6 +165,14 @@ export const taskInputs = [
   },
   {
     id: "2",
+    name: "type",
+    type: "radio",
+    placeholder: "income",
+    label: "Type",
+    options: ["income","expense"],
+  },
+  {
+    id: "3",
     name: "amount",
     type: "number",
     placeholder: "1000",
