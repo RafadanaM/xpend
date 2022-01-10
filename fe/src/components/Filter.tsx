@@ -3,26 +3,23 @@ import { SearchFormType } from "../pages/Home";
 import { searchInputs } from "../utils/formInputs";
 import FormInput from "./Forms/FormInput";
 import { ReactComponent as SearchIcon } from "../assets/search.svg";
+import { useAppDispatch } from "../app/hooks";
 
-
-interface FilterI {
-  setSearch: Function;
-}
-
-export const Filter = ({ setSearch }: FilterI) => {
+export const Filter = () => {
   const [searchValues, setSearchValues] = useState<SearchFormType>({
     searchText: "",
     searchDate: "",
   });
 
+  const dispatch = useAppDispatch();
+
   const handleSubmitSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSearch(searchValues);
+    dispatch(fetchTransactions(searchValues));
   };
 
   const handleCancel = () => {
     setSearchValues({ searchText: "", searchDate: "" });
-    setSearch({ searchText: "", searchDate: "" });
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +34,7 @@ export const Filter = ({ setSearch }: FilterI) => {
         onSubmit={(e) => handleSubmitSearch(e)}
       >
         <div className="flex">
-          <SearchIcon  className="text-white w-7 h-5" />
+          <SearchIcon className="text-white w-7 h-5" />
           <div className="flex flex-grow justify-end md:hidden">
             <button
               className="py-1 px-2 bg-accent-orange text-xs text-white rounded my-auto hover:bg-opacity-75"
@@ -85,3 +82,6 @@ export const Filter = ({ setSearch }: FilterI) => {
     </div>
   );
 };
+function fetchTransactions(searchValues: SearchFormType): any {
+  throw new Error("Function not implemented.");
+}

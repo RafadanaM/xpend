@@ -4,13 +4,10 @@ import { taskInputs } from "../../utils/formInputs";
 import BaseModal from "./BaseModal";
 import useForm from "../../utils/useForm";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  addNewTask,
-  selectTaskById,
-  updateTask,
-} from "../../features/tasksSlice";
+import { selectTaskById } from "../../features/tasks/tasksSlice";
 import { useState } from "react";
 import ModalButton from "../Buttons/ModalButton";
+import { updateTask, addNewTask } from "../../features/tasks/tasks.thunks";
 
 type TaskFormModalType = {
   title: string;

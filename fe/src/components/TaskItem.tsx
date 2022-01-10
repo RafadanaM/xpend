@@ -7,7 +7,7 @@ import { ReactComponent as DownIcon } from "../assets/down.svg";
 import { useRef, useState } from "react";
 import useOutsideAlerter from "../utils/useOutsideAlerter";
 import { useAppSelector } from "../app/hooks";
-import { selectTaskById } from "../features/tasksSlice";
+import { selectTaskById } from "../features/tasks/tasksSlice";
 import Transaction from "../interfaces/transaction.interface";
 
 interface TaskItemI {

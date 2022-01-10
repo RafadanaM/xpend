@@ -1,53 +1,23 @@
 import {
-  createAsyncThunk,
   createEntityAdapter,
   createSelector,
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { TaskService } from "../api/services/TaskService";
-import { RootState } from "../app/store";
-import ExtraState from "../interfaces/extraState.interface";
-import Task from "../interfaces/task.interface";
-import Transaction from "../interfaces/transaction.interface";
+
+import { RootState } from "../../app/store";
+import ExtraState from "../../interfaces/extraState.interface";
+import Task from "../../interfaces/task.interface";
+import { deleteTransaction } from "../transactions/transaction.thunks";
+import { TaskSelectedPayload } from "./tasks.interface";
 import {
-  getCorrectDate,
-  isMonthYearSameWithCurrent,
-} from "../utils/formatDate";
-import {
-  deleteTransaction,
-  fetchTransactionSummary,
-  TransactionDTO,
-} from "./transactionsSlice";
-
-export interface TaskDTO {
-  title: string;
-  amount: number;
-  description: string;
-}
-
-interface TaskSelectedPayload {
-  id: number | undefined;
-}
-
-interface CompleteTaskData {
-  taskId: number;
-  transactionData: TransactionDTO;
-}
-
-interface EditTaskData extends TaskDTO {
-  id: number;
-}
-
-interface CompleteTaskResponse {
-  task: Task;
-  transaction: Transaction;
-}
-
-interface UndoTaskResponse {
-  task: Task;
-  transaction: Transaction | undefined;
-}
+  fetchTasks,
+  addNewTask,
+  completeTask,
+  updateTask,
+  deleteTask,
+  undoTask,
+} from "./tasks.thunks";
 
 const tasksAdapter = createEntityAdapter<Task>({
   sortComparer: (a, b) => a.created.localeCompare(b.created),
@@ -58,78 +28,6 @@ const initialState = tasksAdapter.getInitialState<ExtraState>({
   error: null,
   selectedId: undefined,
 });
-
-export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
-  const response = await TaskService.getTasks();
-  return response.data as Task[];
-});
-
-export const addNewTask = createAsyncThunk(
-  "tasks/addNewTasks",
-  async (taskData: TaskDTO) => {
-    const response = await TaskService.createTask(
-      taskData.title,
-      taskData.description,
-      +taskData.amount
-    );
-    return response.data as Task;
-  }
-);
-
-export const updateTask = createAsyncThunk(
-  "tasks/updateTask",
-  async (editTaskData: EditTaskData) => {
-    const response = await TaskService.editTask(
-      editTaskData.title,
-      editTaskData.description,
-      +editTaskData.amount,
-      editTaskData.id
-    );
-    return response.data as Task;
-  }
-);
-
-export const deleteTask = createAsyncThunk(
-  "tasks/deleteTask",
-  async (id: number) => {
-    const response = await TaskService.deleteTask(id);
-    return response.data as Task;
-  }
-);
-
-export const completeTask = createAsyncThunk(
-  "tasks/completeTask",
-  async (completeTaskData: CompleteTaskData, { dispatch }) => {
-    const { taskId, transactionData } = completeTaskData;
-    const response = await TaskService.completeTask(
-      taskId,
-      transactionData.title,
-      +transactionData.amount,
-      transactionData.description,
-      transactionData.date
-    );
-    const data: CompleteTaskResponse = response.data;
-    if (isMonthYearSameWithCurrent(getCorrectDate(data.transaction.date))) {
-      dispatch(fetchTransactionSummary());
-    }
-    return data;
-  }
-);
-
-export const undoTask = createAsyncThunk(
-  "tasks/undoTask",
-  async (id: number, { dispatch }) => {
-    const response = await TaskService.undoTask(id);
-    const data: UndoTaskResponse = response.data;
-    if (
-      data.transaction &&
-      isMonthYearSameWithCurrent(getCorrectDate(data.transaction.date))
-    ) {
-      dispatch(fetchTransactionSummary());
-    }
-    return data;
-  }
-);
 
 const tasksSlice = createSlice({
   name: "tasks",

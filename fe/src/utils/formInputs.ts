@@ -138,7 +138,6 @@ export const editProfileInputs = [
   },
 ];
 
-
 export const taskInputs = [
   {
     id: "0",
@@ -163,7 +162,7 @@ export const taskInputs = [
     placeholder: "1000",
     label: "Amount",
     errorMessage: "Amount must be a number!",
-  }
+  },
 ];
 
 export const searchInputs = [
@@ -172,7 +171,7 @@ export const searchInputs = [
     name: "searchText",
     type: "text",
     placeholder: "Title or description",
-    notRequired: true,
+    required: false,
     inputStyle:
       "appearance-none border rounded w-full px-2 py-1 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline text-xs md:text-sm",
     divStyle: "mb-2 md:flex-grow",
@@ -182,7 +181,7 @@ export const searchInputs = [
     name: "searchDate",
     type: "month",
     placeholder: "",
-    notRequired: true,
+    required: false,
     inputStyle:
       "appearance-none border rounded w-full px-2 py-1 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline text-xs md:text-sm",
     divStyle: "mb-2",

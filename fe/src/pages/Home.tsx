@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../app/hooks";
 import { SummaryCard } from "../components/Cards/SummaryCard";
@@ -9,7 +9,7 @@ import { Table } from "../components/Table";
 import {
   getSelectedTransaction,
   transactionSelected,
-} from "../features/transactionsSlice";
+} from "../features/transactions/transactionsSlice";
 import Transaction from "../interfaces/transaction.interface";
 
 export type SearchFormType = {
@@ -21,14 +21,6 @@ export const Home = () => {
   const dispatch = useAppDispatch();
   const selectedTransaction = useSelector(getSelectedTransaction);
   const [openTransactionModal, setOpenTransactionModal] = useState(false);
-  const [search, setSearch] = useState<SearchFormType>({
-    searchText: "",
-    searchDate: "",
-  });
-
-  useEffect(() => {
-    // for adding search
-  }, [search]);
 
   const handleOpenDetailTransactionModal = (transaction: Transaction) => {
     dispatch(transactionSelected({ transaction }));
@@ -60,7 +52,7 @@ export const Home = () => {
           Add Transaction
         </button>
 
-        <Filter setSearch={setSearch} />
+        <Filter />
 
         <button
           className="h-6 mb-2 md:h-8 w-28 col-start-2 bg-accent-orange text-white text-xs rounded md:hidden ml-auto my-auto mr-1 md:mr-0 md:my-0 md:mt-auto hover:bg-opacity-75"

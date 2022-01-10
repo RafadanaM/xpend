@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { ReactComponent as Loading } from "../assets/loading.svg";
+import { fetchTransactions } from "../features/transactions/transaction.thunks";
 import {
-  fetchTransactions,
   getTransactionsStatus,
   selectAllTransactions,
-} from "../features/transactionsSlice";
+} from "../features/transactions/transactionsSlice";
 import Transaction from "../interfaces/transaction.interface";
 import { formatDate, transactionDateFormat } from "../utils/formatDate";
 

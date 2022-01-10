@@ -1,4 +1,4 @@
-import { TransactionDTO } from "../../features/transactionsSlice";
+import { TransactionDTO } from "../../features/transactions/transactions.interface";
 import { SearchFormType } from "../../pages/Home";
 import apiClient from "../ApiClient";
 
@@ -7,24 +7,9 @@ export const TransactionService = {
   getTransactions: async (
     search: SearchFormType = { searchText: "", searchDate: "" }
   ) => {
-    if (search.searchText !== "") {
-      if (search.searchDate !== "") {
-        return await apiClient.get(
-          `${BASE_SERVICE_URL}/search?search=${search.searchText}&date=${search.searchDate}`
-        );
-      } else {
-        return await apiClient.get(
-          `${BASE_SERVICE_URL}/search?search=${search.searchText}`
-        );
-      }
-    } else {
-      if (search.searchDate !== "") {
-        return await apiClient.get(
-          `${BASE_SERVICE_URL}/search?date=${search.searchDate}`
-        );
-      }
-      return await apiClient.get(`${BASE_SERVICE_URL}`);
-    }
+    return await apiClient.get(
+      `${BASE_SERVICE_URL}/?name=${search.searchText}&date=${search.searchDate}`
+    );
   },
 
   getThisMonthTransactions: async (timeZone: number) => {
@@ -39,6 +24,8 @@ export const TransactionService = {
     description: string,
     date: string
   ) => {
+    console.log(date);
+
     return await apiClient.post(`${BASE_SERVICE_URL}`, {
       title,
       amount,

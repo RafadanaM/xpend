@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { fetchTransactionSummary } from "../../features/transactions/transaction.thunks";
 import {
-  fetchTransactionSummary,
   getGained,
   getSpent,
-} from "../../features/transactionsSlice";
+} from "../../features/transactions/transactionsSlice";
 import BaseCard from "./BaseCard";
 
 export const SummaryCard = () => {

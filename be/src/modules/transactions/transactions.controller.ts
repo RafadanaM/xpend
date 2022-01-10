@@ -9,6 +9,7 @@ import RequestWithUser from '../../interfaces/requestWithUser.interface';
 import NotFoundException from '../../exceptions/NotFoundException';
 import ParamDto from '../../shared/param.dto';
 import timeZoneDTO from './timeZone.dto';
+import SearchDTO from './search.dto';
 
 class TransactionsController implements Controller {
   public path: string = '/transactions';
@@ -21,8 +22,12 @@ class TransactionsController implements Controller {
   }
 
   private initRoutes() {
-    this.router.get('', authMiddleware, this.getTransactionsByUser);
-    this.router.get('/search', authMiddleware, this.getTransactionsWithSearch);
+    this.router.get(
+      '',
+      authMiddleware,
+      validationMiddleware(SearchDTO, RequestTypes.QUERY),
+      this.getTransactionsByUser
+    );
     this.router.post(
       '/summary',
       authMiddleware,
@@ -75,7 +80,10 @@ class TransactionsController implements Controller {
       if (!req.user) {
         throw new NotFoundException();
       }
-      res.send(await this.transactionsService.getTransactionsByUser(req.user));
+      console.log(req.query);
+      //idk how to properly type it except this casting thing
+      const queries = req.query as unknown as SearchDTO;
+      res.send(await this.transactionsService.getTransactionsByUser(req.user, queries.name, queries.date));
     } catch (error) {
       next(error);
     }
@@ -92,24 +100,6 @@ class TransactionsController implements Controller {
       }
       const transactionId = parseInt(req.params.id);
       res.send(await this.transactionsService.getTransactionsByTransactionId(transactionId, req.user));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  private getTransactionsWithSearch = async (
-    req: RequestWithUser,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
-      // const search = req.params.search;
-      const search = req.query.search || '';
-      const date = req.query.date || '';
-      res.send(await this.transactionsService.getTransactionsWithSearch(search, date, req.user));
     } catch (error) {
       next(error);
     }

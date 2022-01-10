@@ -1,8 +1,8 @@
-import { endOfMonth, startOfMonth } from 'date-fns';
-import { Between, getRepository } from 'typeorm';
+import { Between, getRepository, ILike } from 'typeorm';
 import ForbiddenException from '../../exceptions/ForbiddenException';
 import NotFoundException from '../../exceptions/NotFoundException';
 import { EditTransactionResponse, TransactionSummaryResponse } from '../../interfaces/response.interface';
+import getCorrectedStartEndMonth from '../../utils/getCorrectedStartEndMonth';
 import Tasks from '../tasks/tasks.entity';
 import Users from '../users/users.entity';
 import createTransactionDto from './transactions.dto';
@@ -29,7 +29,36 @@ class TransactionsService {
     return await this.transactionsRepository.find();
   }
 
-  public async getTransactionsByUser(user: Users): Promise<Transactions[]> {
+  public async getTransactionsByUser(user: Users, name: string, date: string): Promise<Transactions[]> {
+    if (name !== '' && date !== '') {
+      const inputDate = new Date(date);
+      const { startMonth, endMonth } = getCorrectedStartEndMonth(inputDate);
+      return await this.transactionsRepository.find({
+        relations: ['user'],
+        where: [
+          { title: ILike(`%${name}%`), date: Between(startMonth, endMonth), user: { id: user.id } },
+          { description: ILike(`%${name}%`), date: Between(startMonth, endMonth), user: { id: user.id } },
+        ],
+      });
+    }
+
+    if (name !== '')
+      return await this.transactionsRepository.find({
+        relations: ['user'],
+        where: [
+          { title: ILike(`%${name}%`), user: { id: user.id } },
+          { description: ILike(`%${name}%`), user: { id: user.id } },
+        ],
+      });
+    if (date !== '') {
+      const inputDate = new Date(date);
+      const { startMonth, endMonth } = getCorrectedStartEndMonth(inputDate);
+      return await this.transactionsRepository.find({
+        relations: ['user'],
+        where: { date: Between(startMonth, endMonth), user: { id: user.id } },
+      });
+    }
+
     return await this.transactionsRepository.find({ relations: ['user'], where: { user: { id: user.id } } });
   }
 
@@ -42,33 +71,10 @@ class TransactionsService {
     return transaction;
   }
 
-  public async getTransactionsWithSearch(search: any, date: any, user: Users): Promise<Transactions[]> {
-    let transactions = await this.transactionsRepository.find({
-      relations: ['user'],
-      where: { user: { id: user.id } },
-    });
-    if (search !== '') {
-      transactions = transactions.filter((transaction) => {
-        return transaction.title.includes(search) || transaction.description.includes(search);
-      });
-    }
-    if (date !== '') {
-      transactions = transactions.filter((transaction) => {
-        const transactionDate = transaction.date.toISOString().substring(0, 7);
-        return transactionDate === date;
-      });
-    }
-    return transactions;
-  }
-
   public async getThisMonthTransactions(timeZone: number, user: Users): Promise<TransactionSummaryResponse> {
     //not so sure about this
-    const currentDate = new Date();
-    currentDate.setTime(currentDate.getTime() - timeZone);
-    const startMonth = startOfMonth(currentDate);
-    const endMonth = endOfMonth(currentDate);
-    startMonth.setTime(startMonth.getTime() - timeZone);
-    endMonth.setTime(endMonth.getTime() - timeZone);
+    const date = new Date();
+    const { startMonth, endMonth } = getCorrectedStartEndMonth(date, timeZone);
 
     let transactions = await this.transactionsRepository.find({
       relations: ['user'],
@@ -77,7 +83,7 @@ class TransactionsService {
     let gained = 0;
     let spent = 0;
     const totalTransactions = transactions.length;
-    // const reducer = (previousValue: number, currentValue: number) => previousValue + currentValue;
+
     transactions.forEach((transaction) => {
       if (transaction.amount >= 0) {
         gained += transaction.amount;

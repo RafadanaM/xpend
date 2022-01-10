@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { ReactComponent as CloseIcon } from "../../assets/close.svg";
-import { completeTask, selectTaskById } from "../../features/tasksSlice";
+import { completeTask } from "../../features/tasks/tasks.thunks";
+import { selectTaskById } from "../../features/tasks/tasksSlice";
 import {
+  updateTransaction,
   addNewTransaction,
   deleteTransaction,
-  updateTransaction,
-} from "../../features/transactionsSlice";
+} from "../../features/transactions/transaction.thunks";
 import Transaction from "../../interfaces/transaction.interface";
 import {
   // formatDate,

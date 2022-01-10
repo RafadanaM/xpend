@@ -6,20 +6,22 @@ import ConfirmModal from "../Modals/ConfirmModal";
 import BaseCard from "./BaseCard";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  deleteTask,
-  fetchTasks,
   getSelectedTaskId,
   getTasksStatus,
   selectTasksIdsByCompleteness,
   taskSelected,
-  undoTask,
-} from "../../features/tasksSlice";
+} from "../../features/tasks/tasksSlice";
 import Tasks from "../Tasks";
 import {
   getSelectedTransaction,
   transactionSelected,
-} from "../../features/transactionsSlice";
+} from "../../features/transactions/transactionsSlice";
 import Transaction from "../../interfaces/transaction.interface";
+import {
+  fetchTasks,
+  deleteTask,
+  undoTask,
+} from "../../features/tasks/tasks.thunks";
 export const TaskCard = () => {
   const [openTransactionModal, setOpenTransactionModal] =
     useState<boolean>(false);
