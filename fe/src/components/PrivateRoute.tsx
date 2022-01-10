@@ -17,7 +17,7 @@ const PrivateRoute = () => {
   });
 
   return user ? (
-    <Container>
+    <Container className="flex-grow">
       <Outlet />
     </Container>
   ) : (

@@ -51,6 +51,7 @@ export const updateTransaction = createAsyncThunk(
 export const fetchTransactions = createAsyncThunk(
   "transactions/fetchTransactions",
   async (search: SearchFormType = { searchText: "", searchDate: "" }) => {
+    console.log(search);
     const response = await TransactionService.getTransactions(search);
     return response.data as Transaction[];
   }
@@ -73,7 +74,6 @@ export const deleteTransaction = createAsyncThunk(
 export const addNewTransaction = createAsyncThunk(
   "transactions/addNewTransaction",
   async (transaction: TransactionDTO, { dispatch }) => {
-
     if (transaction.type === "expense") {
       transaction.amount = +transaction.amount * -1;
     }

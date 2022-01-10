@@ -1,10 +1,11 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { SearchFormType } from "../pages/Home";
 import { searchInputs } from "../utils/formInputs";
 import FormInput from "./Forms/FormInput";
 import { ReactComponent as SearchIcon } from "../assets/search.svg";
 import { ReactComponent as ResetIcon } from "../assets/arrow-counterclockwise.svg";
 import { useAppDispatch } from "../app/hooks";
+import { fetchTransactions } from "../features/transactions/transaction.thunks";
 
 export const Filter = () => {
   const [searchValues, setSearchValues] = useState<SearchFormType>({
@@ -26,6 +27,10 @@ export const Filter = () => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValues({ ...searchValues, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    dispatch(fetchTransactions(searchValues));
+  }, [searchValues, dispatch]);
 
   let searchKeys = Object.keys(searchValues) as (keyof SearchFormType)[];
   return (
@@ -83,6 +88,3 @@ export const Filter = () => {
     </div>
   );
 };
-function fetchTransactions(searchValues: SearchFormType): any {
-  throw new Error("Function not implemented.");
-}

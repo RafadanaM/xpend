@@ -16,7 +16,7 @@ export const Profile = () => {
   const [page, setPage] = useState("profile");
 
   const handleOpenModal = (page: string) => {
-    setopenEditProfileModal(true)
+    setopenEditProfileModal(true);
     setPage(page);
   };
 
@@ -28,12 +28,20 @@ export const Profile = () => {
   return (
     <>
       {openEditProfileModal && page === "profile" ? (
-        <EditProfileModal page={"profile"} changeOpen={setopenEditProfileModal} user={user} />
+        <EditProfileModal
+          page={"profile"}
+          changeOpen={setopenEditProfileModal}
+          user={user}
+        />
       ) : openEditProfileModal && page === "password" ? (
-        <EditProfileModal page={"password"} changeOpen={setopenEditProfileModal} user={user} />
+        <EditProfileModal
+          page={"password"}
+          changeOpen={setopenEditProfileModal}
+          user={user}
+        />
       ) : null}
-      <div className="flex-col h-full justify-center items-center m-auto py-5 px-6 md:px-10">
-        <div className="w-full h-full p-6 rounded-lg md:shadow-2xl">
+      <div className="flex flex-col justify-center items-center my-auto py-5 px-6 md:px-10">
+        <div className="w-full bg-white h-full p-6 rounded-lg md:shadow-2xl">
           <div className=" mt-8 w-full ">
             <div className="bg-gray-500 w-36 h-36 rounded-full mx-auto mb-6"></div>
             <div className="flex-col">

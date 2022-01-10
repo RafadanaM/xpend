@@ -22,7 +22,7 @@
   }
 
   footer {
-    @apply mt-auto;
+    @apply z-50;
   }
 
   @screen xl {
