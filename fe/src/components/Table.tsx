@@ -17,13 +17,13 @@ export const Table = ({ onRowClick }: TableI) => {
 
   return (
     <div className="h-full col-span-2">
-      <table className="table-fixed w-full border-separate table-space">
+      <table className="table-fixed w-full md:border-separate md:table-space">
         <thead className="bg-gradient-to-t border-0 from-primary to-blue-500 h-12 ">
-          <tr className="text-xs md:text-base font-medium text-white rounded-md head-shadow">
-            <th className="w-1/5 rounded-l-md">Title</th>
+          <tr className="text-xs md:text-base font-medium text-white md:rounded-md head-shadow">
+            <th className="w-1/5 md:rounded-l-md">Title</th>
             <th className="">Description</th>
             <th className="w-1/6">Amount</th>
-            <th className="w-1/6 rounded-r-md">Date</th>
+            <th className="w-1/6 md:rounded-r-md">Date</th>
           </tr>
         </thead>
         <tbody>
@@ -46,10 +46,10 @@ export const Table = ({ onRowClick }: TableI) => {
               transactions.map((transaction) => (
                 <tr
                   key={transaction.id}
-                  className="text-2xs border bg-white border-primary md:text-sm h-11 cursor-pointer rounded-md hover:bg-primary hover:bg-opacity-10 row-shadow"
+                  className="text-2xs border bg-white border-primary md:text-sm h-11 cursor-pointer md:rounded-md hover:bg-primary hover:bg-opacity-10 md:row-shadow"
                   onClick={() => onRowClick(transaction)}
                 >
-                  <td className="px-2 rounded-l-md">{transaction.title}</td>
+                  <td className="px-2 md:rounded-l-md">{transaction.title}</td>
                   <td className="truncate md:line-clamp-none px-2 ">
                     {transaction.description}
                   </td>
@@ -57,7 +57,7 @@ export const Table = ({ onRowClick }: TableI) => {
                     {`Rp. ${transaction.amount}`}
                   </td>
                   <td
-                    className={`text-3xs md:text-sm text-center px-1 rounded-r-md border-r-8  ${
+                    className={`text-3xs md:text-sm text-center px-1 md:rounded-r-md border-r-8  ${
                       transaction.amount >= 0
                         ? "border-green-500"
                         : "border-red-500"

@@ -51,7 +51,6 @@ export const updateTransaction = createAsyncThunk(
 export const fetchTransactions = createAsyncThunk(
   "transactions/fetchTransactions",
   async (search: SearchFormType = { searchText: "", searchDate: "" }) => {
-    console.log(search);
     const response = await TransactionService.getTransactions(search);
     return response.data as Transaction[];
   }
