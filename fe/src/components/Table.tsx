@@ -1,11 +1,11 @@
 import { useAppSelector } from "../app/hooks";
-import { ReactComponent as Loading } from "../assets/loading.svg";
 import {
   getTransactionsStatus,
   selectAllTransactions,
 } from "../features/transactions/transactionsSlice";
 import Transaction from "../interfaces/transaction.interface";
 import { formatDate, transactionDateFormat } from "../utils/formatDate";
+import Loading from "./Loading";
 
 interface TableI {
   onRowClick: (transaction: Transaction) => void;
@@ -30,7 +30,7 @@ export const Table = ({ onRowClick }: TableI) => {
           {status === "loading" && (
             <tr className="">
               <td colSpan={4}>
-                <Loading className="text-primary animate-spin mx-auto w-14 h-14" />
+                <Loading />
               </td>
             </tr>
           )}

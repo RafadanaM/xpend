@@ -1,3 +1,4 @@
+
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 function colorWithOpacity(variableName) {
@@ -14,6 +15,15 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      keyframes: {
+        scale: {
+          '0%, 40%, 100%': {transform: 'scaleY(0.9)'},
+          '20%': {transform: 'scaleY(2.5)'}
+        }
+      },
+      animation: {
+        scale: 'scale 1s infinite ease-in-out'
+      },
       fontFamily: {
         poppins: ['"Poppins"', ...defaultTheme.fontFamily.sans],
         nunito: ['"Nunito Sans"', ...defaultTheme.fontFamily.sans],

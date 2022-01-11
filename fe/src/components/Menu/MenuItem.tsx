@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode } from "react";
+import { ReactNode } from "react";
 import { Link, useMatch } from "react-router-dom";
 
 interface MenuItemI {
@@ -6,7 +6,7 @@ interface MenuItemI {
   title: string;
   isButton?: boolean;
   url?: string;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
+  onClick?: () => void;
 }
 const MenuItem = ({
   icon,
@@ -30,6 +30,7 @@ const MenuItem = ({
         match ? "hidden" : ""
       }`}
       to={url}
+      onClick={onClick}
     >
       {icon}
       <span>{title}</span>
