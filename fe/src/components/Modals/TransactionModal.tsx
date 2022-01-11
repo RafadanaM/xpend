@@ -158,6 +158,7 @@ export const TransactionModal = ({
   let valueKeys = Object.keys(formData) as (keyof TransactionFormType)[];
 
   return (
+
     <BaseModal onCancel={() => onCancel()}>
       <div className="py-2 relative w-full border-b-2 px-8 font-semibold text-xl border-accent-grey flex justify-between">
         <span>
@@ -190,7 +191,6 @@ export const TransactionModal = ({
               />
             );
           })}
-
           <div className="flex items-center gap-x-4 justify-between mt-8">
             {transaction ? (
               <>
