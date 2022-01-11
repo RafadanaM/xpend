@@ -8,7 +8,6 @@ import cors from 'cors';
 import path from 'path';
 import cron from 'node-cron';
 import { getRepository } from 'typeorm';
-import Transactions from './modules/transactions/transactions.entity';
 import Tasks from './modules/tasks/tasks.entity';
 
 class App {

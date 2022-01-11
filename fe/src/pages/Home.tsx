@@ -41,7 +41,7 @@ export const Home = () => {
         />
       ) : null}
 
-      <div className="grid grid-cols-2 h-full md:px-0 md:py-8 gap-x-10 md:gap-y-2 bg-secondary md:bg-white">
+      <div className="grid grid-cols-2 h-full md:px-0 md:py-8 gap-x-10 md:gap-y-2bg-white">
         <SummaryCard />
         <TaskCard />
 
