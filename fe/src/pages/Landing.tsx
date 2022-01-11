@@ -38,7 +38,10 @@ export const Landing = () => {
           {isLogin ? (
             <LoginForm handleChangeForm={setIsLogin} />
           ) : (
-            <RegisterForm handleChangeForm={setIsLogin} handleOpenModal={setOpenSuccessModal}/>
+            <RegisterForm
+              handleChangeForm={setIsLogin}
+              handleOpenModal={setOpenSuccessModal}
+            />
           )}
         </div>
       </div>

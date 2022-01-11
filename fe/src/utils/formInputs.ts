@@ -17,6 +17,14 @@ export const transactionInputs = [
   },
   {
     id: "2",
+    name: "type",
+    type: "radio",
+    placeholder: "income",
+    label: "Type",
+    options: ["income","expense"],
+  },
+  {
+    id: "3",
     name: "amount",
     type: "number",
     placeholder: "1000",
@@ -24,7 +32,7 @@ export const transactionInputs = [
     errorMessage: "Amount must be a number!",
   },
   {
-    id: "3",
+    id: "4",
     name: "date",
     type: "datetime-local",
     placeholder: "",
@@ -138,7 +146,6 @@ export const editProfileInputs = [
   },
 ];
 
-
 export const taskInputs = [
   {
     id: "0",
@@ -158,12 +165,20 @@ export const taskInputs = [
   },
   {
     id: "2",
+    name: "type",
+    type: "radio",
+    placeholder: "income",
+    label: "Type",
+    options: ["income","expense"],
+  },
+  {
+    id: "3",
     name: "amount",
     type: "number",
     placeholder: "1000",
     label: "Amount",
     errorMessage: "Amount must be a number!",
-  }
+  },
 ];
 
 export const searchInputs = [
@@ -172,9 +187,9 @@ export const searchInputs = [
     name: "searchText",
     type: "text",
     placeholder: "Title or description",
-    notRequired: true,
+    required: false,
     inputStyle:
-      "appearance-none border rounded w-full px-3 py-2 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline text-xs md:text-base",
+      "appearance-none border rounded w-full px-2 py-1 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline text-xs md:text-sm",
     divStyle: "mb-2 md:flex-grow",
   },
   {
@@ -182,9 +197,9 @@ export const searchInputs = [
     name: "searchDate",
     type: "month",
     placeholder: "",
-    notRequired: true,
+    required: false,
     inputStyle:
-      "appearance-none border rounded w-full px-3 py-2 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline text-xs md:text-base",
+      "appearance-none border rounded w-full px-2 py-1 leading-tight border-secondary text-gray-700 shadow focus:outline-none focus:shadow-outline text-xs md:text-sm",
     divStyle: "mb-2",
   },
 ];

@@ -1,24 +1,23 @@
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import apiClient from "../api/ApiClient";
 import useAuth from "../utils/useAuth";
 import Container from "./Container";
 
 const PrivateRoute = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  const { user, setUser } = useAuth();
 
   apiClient.interceptors.response.use(undefined, (error) => {
     const status = error?.response?.status;
 
     if (status === 401) {
-      navigate("/");
+      setUser(undefined);
     }
 
     return Promise.reject(error);
   });
 
   return user ? (
-    <Container>
+    <Container className="flex-grow">
       <Outlet />
     </Container>
   ) : (

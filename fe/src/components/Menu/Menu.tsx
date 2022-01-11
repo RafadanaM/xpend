@@ -25,13 +25,13 @@ const Menu = () => {
     >
       <button onClick={toggleOpenModal} className="w-full">
         <Down
-          className={`h-5 w-5 md:w-7 md:h-7 stroke-current stroke-1 mx-auto transition-all duration-200 transform ${
+          className={`h-5 w-5 md:w-7 md:h-7 stroke-current stroke-1 mx-auto transition-all transform ${
             isOpen ? "rotate-180" : "rotate-0"
           }`}
         />
       </button>
 
-      <MenuItems isOpen={isOpen} />
+      <MenuItems isOpen={isOpen} onItemClick={toggleOpenModal} />
     </div>
   );
 };

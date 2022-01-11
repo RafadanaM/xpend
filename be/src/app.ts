@@ -6,6 +6,10 @@ import NotFoundMiddleware from './middlewares/notfound.middleware';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
+import cron from 'node-cron';
+import { getRepository } from 'typeorm';
+import Tasks from './modules/tasks/tasks.entity';
+
 class App {
   public app: express.Application;
 
@@ -20,6 +24,7 @@ class App {
     this.initErrorHandling();
     this.initReact();
     this.initRouteNotFound();
+    this.initCron();
   }
 
   private initMiddlewares() {
@@ -44,6 +49,12 @@ class App {
         res.sendFile(path.join(__dirname + '../../../fe/build/index.html'));
       });
     }
+  }
+
+  private initCron() {
+    cron.schedule('0 0 1 * *', async () => {
+      await getRepository(Tasks).createQueryBuilder().update(Tasks).set({ isComplete: false }).execute();
+    });
   }
 
   private initControllers(controllers: Controller[]) {

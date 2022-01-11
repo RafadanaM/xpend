@@ -1,59 +1,53 @@
-import { FormEvent, useState } from "react";
-// import { sortEnum } from "../enums";
+import { FormEvent, useEffect, useState } from "react";
 import { SearchFormType } from "../pages/Home";
 import { searchInputs } from "../utils/formInputs";
 import FormInput from "./Forms/FormInput";
-// import RadioInput from "./RadioInput";
+import { ReactComponent as SearchIcon } from "../assets/search.svg";
+import { ReactComponent as ResetIcon } from "../assets/arrow-counterclockwise.svg";
+import { useAppDispatch } from "../app/hooks";
+import { fetchTransactions } from "../features/transactions/transaction.thunks";
 
-interface FilterI {
-  setSearch: Function;
-}
-
-export const Filter = ({ setSearch }: FilterI) => {
-  // const [selectedShow, setSelectedShow] = useState(sortEnum.THIS_MONTH);
+export const Filter = () => {
   const [searchValues, setSearchValues] = useState<SearchFormType>({
     searchText: "",
     searchDate: "",
   });
 
+  const dispatch = useAppDispatch();
+
   const handleSubmitSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSearch(searchValues);
+    dispatch(fetchTransactions(searchValues));
   };
 
   const handleCancel = () => {
     setSearchValues({ searchText: "", searchDate: "" });
-    setSearch({ searchText: "", searchDate: "" });
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValues({ ...searchValues, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+    dispatch(fetchTransactions(searchValues));
+  }, [searchValues, dispatch]);
+
   let searchKeys = Object.keys(searchValues) as (keyof SearchFormType)[];
   return (
-    <div className="bg-secondary rounded px-2 py-1 col-span-2 w-full">
+    <div className=" bg-gradient-to-t from-primary to-blue-500 md:rounded-lg px-2 py-2 md:py-1 col-span-2 w-full">
       <form
         className="flex-1 md:flex flex-wrap items-center w-full gap-1"
         onSubmit={(e) => handleSubmitSearch(e)}
       >
         <div className="flex">
-          <label className="mt-2 text-xs font-medium md:mt-0 md:text-base">
-            Search:{" "}
-          </label>
+          <SearchIcon className="text-white w-7 h-5" />
           <div className="flex flex-grow justify-end md:hidden">
-            <button
-              className="py-1 px-2 bg-accent-orange text-xs text-white rounded my-auto hover:bg-opacity-75"
-              type="submit"
-            >
-              Search
-            </button>
             <button
               className="ml-1 py-1 px-2 bg-accent-orange text-xs text-white rounded my-auto hover:bg-opacity-75"
               type="button"
               onClick={handleCancel}
             >
-              Reset
+              <ResetIcon className="h-4" />
             </button>
           </div>
         </div>
@@ -71,17 +65,11 @@ export const Filter = ({ setSearch }: FilterI) => {
         </div>
         <div className="hidden md:flex flex-grow md:flex-grow-0 justify-end ">
           <button
-            className="p-2 bg-accent-orange text-xs md:text-base text-white rounded my-auto hover:bg-opacity-75"
-            type="submit"
-          >
-            Search
-          </button>
-          <button
-            className="ml-2 p-2 bg-accent-orange text-xs md:text-base text-white rounded my-auto hover:bg-opacity-75"
+            className="ml-1 px-2 py-2 bg-accent-orange text-xs md:text-sm text-white rounded my-auto hover:bg-opacity-75"
             type="button"
             onClick={handleCancel}
           >
-            Reset
+            <ResetIcon className="h-4" />
           </button>
         </div>
       </form>

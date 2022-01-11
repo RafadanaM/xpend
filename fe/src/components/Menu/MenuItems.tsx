@@ -5,11 +5,13 @@ import { ReactComponent as HomeIcon } from "../../assets/home.svg";
 import useAuth from "../../utils/useAuth";
 interface MenuItemsI {
   isOpen: boolean;
+  onItemClick: () => void;
 }
 
-const MenuItems = ({ isOpen }: MenuItemsI) => {
+const MenuItems = ({ isOpen, onItemClick }: MenuItemsI) => {
   const { logout } = useAuth();
   const handleLogout = () => {
+    onItemClick();
     logout();
   };
   return (
@@ -23,12 +25,14 @@ const MenuItems = ({ isOpen }: MenuItemsI) => {
         title="Home"
         url="/home"
         isButton={false}
+        onClick={onItemClick}
       />
       <MenuItem
         icon={<ProfileIcon className="w-5 h-5" />}
         title="Profile"
         url="/profile"
         isButton={false}
+        onClick={onItemClick}
       />
       <MenuItem
         icon={<LogoutIcon className="w-5 h-5" />}
