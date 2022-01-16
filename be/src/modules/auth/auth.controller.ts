@@ -20,9 +20,9 @@ class AuthController implements Controller {
     this.router.post('/logout', authMiddleware, this.logout);
   }
 
-  private login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  private login = async (req: Request<{}, {}, LoginDto>, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const loginData: LoginDto = req.body;
+      const loginData = req.body;
       const response = await this.authService.login(loginData);
       res.cookie('access_token', response.token.token, {
         httpOnly: true,
