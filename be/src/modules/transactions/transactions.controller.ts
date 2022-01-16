@@ -1,12 +1,10 @@
-import { Router, Response, NextFunction } from 'express';
+import { Router, Response, NextFunction, Request } from 'express';
 import { RequestTypes } from '../../enums/request.enum';
 import Controller from '../../interfaces/controller.interface';
 import validationMiddleware from '../../middlewares/validation.middleware';
 import createTransactionDto from './transactions.dto';
 import TransactionsService from './transactions.service';
 import authMiddleware from '../../middlewares/auth.middleware';
-import RequestWithUser from '../../interfaces/requestWithUser.interface';
-import NotFoundException from '../../exceptions/NotFoundException';
 import ParamDto from '../../shared/param.dto';
 import timeZoneDTO from './timeZone.dto';
 import SearchDTO from './search.dto';
@@ -61,28 +59,29 @@ class TransactionsController implements Controller {
     );
   }
 
-  private createTransaction = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private createTransaction = async (
+    req: Request<{}, {}, createTransactionDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const transactionData: createTransactionDto = req.body;
-      console.log(transactionData);
+      const transactionData = req.body;
 
-      if (!req.user) {
-        throw new NotFoundException();
-      }
       res.send(await this.transactionsService.createTransaction(transactionData, req.user));
     } catch (error) {
       next(error);
     }
   };
 
-  private getTransactionsByUser = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  // Theres gotta be a better way to type the params & query
+  private getTransactionsByUser = async (
+    req: Request<{}, {}, {}, { name: string; date: string }>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
       console.log(req.query);
-      //idk how to properly type it except this casting thing
-      const queries = req.query as unknown as SearchDTO;
+      const queries = req.query;
       res.send(await this.transactionsService.getTransactionsByUser(req.user, queries.name, queries.date));
     } catch (error) {
       next(error);
@@ -90,53 +89,53 @@ class TransactionsController implements Controller {
   };
 
   private getTransactionsByTransactionId = async (
-    req: RequestWithUser,
+    req: Request<{ id: string }>,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
-      const transactionId = parseInt(req.params.id);
-      res.send(await this.transactionsService.getTransactionsByTransactionId(transactionId, req.user));
+      const { id } = req.params;
+      res.send(await this.transactionsService.getTransactionsByTransactionId(+id, req.user));
     } catch (error) {
       next(error);
     }
   };
 
-  private getThisMonthTransactions = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private getThisMonthTransactions = async (
+    req: Request<{}, {}, timeZoneDTO>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
-      const { timeZone }: timeZoneDTO = req.body;
+      const { timeZone } = req.body;
       res.send(await this.transactionsService.getThisMonthTransactions(timeZone, req.user));
     } catch (error) {
       next(error);
     }
   };
 
-  private editTransaction = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private editTransaction = async (
+    req: Request<{ id: string }, {}, createTransactionDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
-      const transactionId = parseInt(req.params.id);
-      const data: createTransactionDto = req.body;
-      res.send(await this.transactionsService.editTransaction(transactionId, data, req.user));
+      const { id } = req.params;
+      const data = req.body;
+      res.send(await this.transactionsService.editTransaction(+id, data, req.user));
     } catch (error) {
       next(error);
     }
   };
 
-  private deleteTransaction = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private deleteTransaction = async (
+    req: Request<{ id: string }>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
-      const transactionId = parseInt(req.params.id);
-      res.send(await this.transactionsService.deleteTransaction(transactionId, req.user));
+      const { id } = req.params;
+      res.send(await this.transactionsService.deleteTransaction(+id, req.user));
     } catch (error) {
       next(error);
     }
