@@ -91,8 +91,8 @@ class TasksService {
     throw new HttpException(400, 'Task is already complete');
   }
 
-  public async undoTask(taskId: number, user: Users): Promise<any> {
-    let task = await this.taskRepository.findOne({
+  public async undoTask(taskId: number, user: Users): Promise<{ task: Tasks; transaction: Transactions | undefined }> {
+    const task = await this.taskRepository.findOne({
       relations: ['user'],
       where: { id: taskId, user: { id: user.id } },
     });
@@ -119,11 +119,8 @@ class TasksService {
         transaction = undefined;
       }
       await this.taskRepository.update({ id: taskId }, { isComplete: false });
-      const updatedTask = await this.taskRepository.findOne({
-        where: { id: taskId },
-      });
 
-      return { task: updatedTask, transaction };
+      return { task: { ...task, isComplete: false }, transaction };
     }
     throw new HttpException(400, 'Task is already incomplete');
   }
