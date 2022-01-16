@@ -1,8 +1,6 @@
-import { NextFunction, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import { RequestTypes } from '../../enums/request.enum';
-import NotFoundException from '../../exceptions/NotFoundException';
 import Controller from '../../interfaces/controller.interface';
-import RequestWithUser from '../../interfaces/requestWithUser.interface';
 import authMiddleware from '../../middlewares/auth.middleware';
 import validationMiddleware from '../../middlewares/validation.middleware';
 import ParamDto from '../../shared/param.dto';
@@ -41,34 +39,24 @@ class TasksController implements Controller {
     this.router.post('/:id/undo', authMiddleware, validationMiddleware(ParamDto, RequestTypes.PARAMS), this.undoTask);
   }
 
-  private getTask = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private getTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
       res.send(await this.taskService.getTasksByUserId(req.user));
     } catch (error) {
       next(error);
     }
   };
 
-  private createTask = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private createTask = async (req: Request<{}, {}, taskDto>, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const taskData: taskDto = req.body;
-      if (!req.user) {
-        throw new NotFoundException();
-      }
-      res.send(await this.taskService.createTask(taskData, req.user));
+      res.send(await this.taskService.createTask(req.body, req.user));
     } catch (error) {
       next(error);
     }
   };
 
-  private deleteTask = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private deleteTask = async (req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
       const { id } = req.params;
       res.send(await this.taskService.deleteTask(+id, req.user));
     } catch (error) {
@@ -76,12 +64,14 @@ class TasksController implements Controller {
     }
   };
 
-  private updateTask = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private updateTask = async (
+    req: Request<{ id: string }, {}, Partial<taskDto>>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const taskData: Partial<taskDto> = req.body;
-      if (!req.user) {
-        throw new NotFoundException();
-      }
+      const taskData = req.body;
+
       const { id } = req.params;
       res.send(await this.taskService.editTask(+id, taskData, req.user));
     } catch (error) {
@@ -89,25 +79,24 @@ class TasksController implements Controller {
     }
   };
 
-  private completeTask = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private completeTask = async (
+    req: Request<{ id: string }, {}, createTransactionDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const transactionData: createTransactionDto = req.body;
+      const transactionData = req.body;
       const { id } = req.params;
-      if (!req.user) {
-        throw new NotFoundException();
-      }
       res.send(await this.taskService.completeTask(+id, req.user, transactionData));
     } catch (error) {
       next(error);
     }
   };
 
-  private undoTask = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private undoTask = async (req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
-      if (!req.user) {
-        throw new NotFoundException();
-      }
+
       res.send(await this.taskService.undoTask(+id, req.user));
     } catch (error) {
       next(error);

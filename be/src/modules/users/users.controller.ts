@@ -1,8 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { RequestTypes } from '../../enums/request.enum';
-import NotFoundException from '../../exceptions/NotFoundException';
 import Controller from '../../interfaces/controller.interface';
-import RequestWithUser from '../../interfaces/requestWithUser.interface';
 import authMiddleware from '../../middlewares/auth.middleware';
 import validationMiddleware from '../../middlewares/validation.middleware';
 import editUserDto from './editUser.dto';
@@ -25,32 +23,30 @@ class UsersController implements Controller {
     this.router.patch('', authMiddleware, validationMiddleware(editUserDto, RequestTypes.BODY, true), this.editProfile);
   }
 
-  private createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  private createUser = async (
+    req: Request<{}, {}, createUserDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const userData: createUserDto = req.body;
+      const userData = req.body;
       res.send({ message: await this.usersService.createUser(userData) });
     } catch (error) {
       next(error);
     }
   };
 
-  private getUsers = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
       res.send(await this.usersService.getUsers(req.user));
     } catch (error) {
       next(error);
     }
   };
 
-  private editProfile = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private editProfile = async (req: Request<{}, {}, editUserDto>, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
-      const data: editUserDto = req.body;
+      const data = req.body;
       res.send(await this.usersService.editProfile(data, req.user));
     } catch (error) {
       next(error);
