@@ -1,13 +1,12 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { getRepository } from 'typeorm';
-import RequestWithUser from '../interfaces/requestWithUser.interface';
 import Users from '../modules/users/users.entity';
 import jwt, { VerifyOptions } from 'jsonwebtoken';
 import DataTokenStored from '../interfaces/datatokenstored.interface';
 import InvalidTokenException from '../exceptions/InvalidTokenException';
 import MissingTokenException from '../exceptions/MissingTokenException';
 
-async function authMiddleware(request: RequestWithUser, _: Response, next: NextFunction) {
+async function authMiddleware(request: Request, _: Response, next: NextFunction) {
   const cookies = request.cookies;
   const userRepository = getRepository(Users);
   if (cookies && cookies.access_token) {

@@ -1,4 +1,4 @@
-import { NextFunction, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import { RequestTypes } from '../../enums/request.enum';
 import NotFoundException from '../../exceptions/NotFoundException';
 import Controller from '../../interfaces/controller.interface';
@@ -41,11 +41,8 @@ class TasksController implements Controller {
     this.router.post('/:id/undo', authMiddleware, validationMiddleware(ParamDto, RequestTypes.PARAMS), this.undoTask);
   }
 
-  private getTask = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  private getTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (!req.user) {
-        throw new NotFoundException();
-      }
       res.send(await this.taskService.getTasksByUserId(req.user));
     } catch (error) {
       next(error);
