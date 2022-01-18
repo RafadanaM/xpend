@@ -19,7 +19,7 @@ class editUserDto {
   @MinLength(6)
   @MaxLength(20)
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'password too weak' })
-  public new_password: string;
+  public new_password?: string;
 
   @IsString()
   @MinLength(6)

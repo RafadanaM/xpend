@@ -18,12 +18,11 @@ class UsersService {
     }
     if (await this.usersRepository.findOne({ email: userData.email })) {
       throw new EmailAlreadyExistException(userData.email);
-    } else {
-      const hashedPassword: string = await bcrypt.hash(userData.password, 10);
-      const newUser = this.usersRepository.create({ ...userData, password: hashedPassword });
-      await this.usersRepository.save(newUser);
-      return 'Register Success';
     }
+    const hashedPassword: string = await bcrypt.hash(userData.password, 10);
+    const newUser = this.usersRepository.create({ ...userData, password: hashedPassword });
+    await this.usersRepository.save(newUser);
+    return 'Register Success';
   }
 
   public async getUsers(user: Users): Promise<Users> {
@@ -50,7 +49,7 @@ class UsersService {
     let currentUser = await this.getUserWithpassword(user.email);
     const updatedProfile: Partial<editUserDto> = { ...data };
     const userUsingNewEmail = await this.usersRepository.findOne({ email: data.email });
-    if (userUsingNewEmail && userUsingNewEmail.id !== currentUser?.id) {
+    if (userUsingNewEmail && userUsingNewEmail.id !== currentUser.id) {
       throw new EmailAlreadyExistException(data.email);
     }
     if (data.new_password) {
@@ -62,11 +61,11 @@ class UsersService {
       delete updatedProfile.confirm_password;
       delete updatedProfile.previous_password;
       delete updatedProfile.new_password;
-      await this.usersRepository.update({ id: currentUser?.id }, { ...updatedProfile, password: hashedPassword });
+      await this.usersRepository.update({ id: currentUser.id }, { ...updatedProfile, password: hashedPassword });
     } else {
-      await this.usersRepository.update({ id: currentUser?.id }, { ...updatedProfile });
+      await this.usersRepository.update({ id: currentUser.id }, { ...updatedProfile });
     }
-    currentUser = await this.usersRepository.findOneOrFail({ where: { id: currentUser?.id } });
+    currentUser = await this.usersRepository.findOneOrFail({ where: { id: currentUser.id } });
 
     return currentUser;
   }
