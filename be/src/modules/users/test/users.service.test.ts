@@ -9,6 +9,7 @@ import NotFoundException from '../../../exceptions/NotFoundException';
 import editUserDto from '../editUser.dto';
 import WrongCredentialsException from '../../../exceptions/WrongCredentialsException';
 import PreviousPasswordDoesNotMatchException from '../../../exceptions/PreviousPasswordDoesNotMatch';
+import { Connection } from 'typeorm';
 let createUserData: createUserDto;
 let userResult: Users;
 
@@ -44,6 +45,12 @@ jest.mock('typeorm', () => ({
   OneToMany: jest.fn(),
   getRepository: jest.fn(),
   createConnection: jest.fn(),
+  getConnection: jest.fn().mockImplementation(
+    () =>
+      ({
+        isConnected: true,
+      } as Connection)
+  ),
 }));
 describe('The UsersService', () => {
   describe('when creating a user', () => {
