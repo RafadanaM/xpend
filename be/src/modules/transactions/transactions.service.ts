@@ -19,14 +19,9 @@ class TransactionsService {
   }
 
   public async createTransaction(transactionsData: createTransactionDto, user: Users): Promise<Transactions> {
-    console.log(transactionsData);
     const newTransaction = this.transactionsRepository.create({ ...transactionsData, user: user });
     await this.transactionsRepository.save(newTransaction);
     return newTransaction;
-  }
-
-  public async getTransactions(): Promise<Transactions[]> {
-    return await this.transactionsRepository.find();
   }
 
   public async getTransactionsByUser(user: Users, name: string, date: string): Promise<Transactions[]> {
@@ -107,11 +102,11 @@ class TransactionsService {
     this.isOwned(transaction.user.id, user.id);
     const updatedData: Partial<createTransactionDto> = { ...data };
     await this.transactionsRepository.update({ id }, { ...updatedData });
-    const updatedTransaction = await this.transactionsRepository.findOneOrFail({
-      relations: ['user'],
-      where: { id: id },
-    });
-    return { prevTransaction: transaction, updatedTransaction };
+    // const updatedTransaction = await this.transactionsRepository.findOneOrFail({
+    //   relations: ['user'],
+    //   where: { id: id },
+    // });
+    return { prevTransaction: transaction, updatedTransaction: { ...transaction, ...updatedData } };
   }
 
   public async deleteTransaction(id: number, user: Users): Promise<Transactions> {
@@ -123,11 +118,7 @@ class TransactionsService {
     // if transaction has task check if the task created and toggle update has the same month and year
     // if yes then toggle the task to false then delete the transaction
     // else just delete the transaction
-    console.log(transaction);
-
     if (transaction.task) {
-      console.log(transaction.task);
-
       const transactionCreated = new Date(transaction.created.getFullYear(), transaction.created.getMonth());
       const taskModified = new Date(transaction.task.updated.getFullYear(), transaction.task.updated.getMonth());
       if (transactionCreated.getTime() === taskModified.getTime()) {
