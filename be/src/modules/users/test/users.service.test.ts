@@ -43,6 +43,7 @@ jest.mock('typeorm', () => ({
   ManyToOne: jest.fn(),
   OneToMany: jest.fn(),
   getRepository: jest.fn(),
+  createConnection: jest.fn(),
 }));
 describe('The UsersService', () => {
   describe('when creating a user', () => {
