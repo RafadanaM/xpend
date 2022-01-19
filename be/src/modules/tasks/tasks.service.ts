@@ -38,25 +38,15 @@ class TasksService {
           where: { task: { id: task.id } },
           order: { created: 'DESC' },
         });
-        if (!transaction) {
-          task.transactions = [];
-        } else {
+        if (transaction && task.isComplete) {
           task.transactions = [transaction];
+        } else {
+          task.transactions = [];
         }
 
         return task;
       })
     );
-  }
-
-  public async getTaskById(taskId: number, user: Users): Promise<Tasks> {
-    const task = await this.taskRepository.findOne({ relations: ['user'], where: { id: taskId } });
-    if (!task) {
-      throw new NotFoundException();
-    }
-    this.isOwned(task.user.id, user.id);
-
-    return task;
   }
 
   public async createTask(taskData: taskDto, user: Users): Promise<Tasks> {
@@ -130,11 +120,10 @@ class TasksService {
       relations: ['user'],
       where: { id: taskId, user: { id: user.id } },
     });
+
     if (!task) {
       throw new NotFoundException();
     }
-
-    this.isOwned(task.user.id, user.id);
 
     await this.taskRepository.delete({ id: taskId });
     return task;

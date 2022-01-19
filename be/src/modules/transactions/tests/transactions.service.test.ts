@@ -100,58 +100,6 @@ describe('The TransactionsService', () => {
     });
   });
 
-  describe('When getting a transaction by id', () => {
-    describe('if transaction does not exists', () => {
-      it('should throw NotFoundException', async () => {
-        jest.spyOn(typeorm, 'getRepository').mockImplementation(() => {
-          const original = jest.requireActual('typeorm');
-          return {
-            ...original,
-            findOne: jest.fn().mockResolvedValueOnce(undefined),
-          };
-        });
-        const transactionsService = new TransactionsService();
-        await expect(
-          transactionsService.getTransactionsByTransactionId(transactionData.id, user)
-        ).rejects.toMatchObject(new NotFoundException());
-      });
-    });
-
-    describe('if transaction exists', () => {
-      describe('if transaction is not owned by user', () => {
-        it('should throw NotFoundException', async () => {
-          jest.spyOn(typeorm, 'getRepository').mockImplementation(() => {
-            const original = jest.requireActual('typeorm');
-            return {
-              ...original,
-              findOne: jest.fn().mockResolvedValueOnce(transactionData),
-            };
-          });
-          const transactionsService = new TransactionsService();
-          await expect(
-            transactionsService.getTransactionsByTransactionId(transactionData.id, { ...user, id: 2 })
-          ).rejects.toMatchObject(new ForbiddenException());
-        });
-      });
-
-      describe('if transaction is owned by user', () => {
-        it('should return transaction', async () => {
-          jest.spyOn(typeorm, 'getRepository').mockImplementation(() => {
-            const original = jest.requireActual('typeorm');
-            return {
-              ...original,
-              findOne: jest.fn().mockResolvedValueOnce(transactionData),
-            };
-          });
-          const transactionsService = new TransactionsService();
-          await expect(transactionsService.getTransactionsByTransactionId(transactionData.id, user)).resolves.toBe(
-            transactionData
-          );
-        });
-      });
-    });
-  });
-
   describe('When getting current month transaction', () => {
     it('should return totalTransactions, gained, and spent', async () => {
       jest.spyOn(typeorm, 'getRepository').mockImplementation(() => {

@@ -32,12 +32,6 @@ class TransactionsController implements Controller {
       validationMiddleware(timeZoneDTO, RequestTypes.BODY),
       this.getThisMonthTransactions
     );
-    this.router.get(
-      '/:id',
-      authMiddleware,
-      validationMiddleware(ParamDto, RequestTypes.PARAMS),
-      this.getTransactionsByTransactionId
-    );
     this.router.post(
       '',
       authMiddleware,
@@ -83,19 +77,6 @@ class TransactionsController implements Controller {
       console.log(req.query);
       const queries = req.query;
       res.send(await this.transactionsService.getTransactionsByUser(req.user, queries.name, queries.date));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  private getTransactionsByTransactionId = async (
-    req: Request<{ id: string }>,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    try {
-      const { id } = req.params;
-      res.send(await this.transactionsService.getTransactionsByTransactionId(+id, req.user));
     } catch (error) {
       next(error);
     }

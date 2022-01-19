@@ -57,15 +57,6 @@ class TransactionsService {
     return await this.transactionsRepository.find({ relations: ['user'], where: { user: { id: user.id } } });
   }
 
-  public async getTransactionsByTransactionId(id: number, user: Users): Promise<Transactions> {
-    const transaction = await this.transactionsRepository.findOne({ relations: ['user'], where: { id: id } });
-    if (!transaction) {
-      throw new NotFoundException();
-    }
-    this.isOwned(transaction.user.id, user.id);
-    return transaction;
-  }
-
   public async getThisMonthTransactions(timeZone: number, user: Users): Promise<TransactionSummaryResponse> {
     //not so sure about this
     const date = new Date();
