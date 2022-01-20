@@ -1,6 +1,6 @@
 import { getRepository } from 'typeorm';
+import BadRequestException from '../../exceptions/BadRequestException';
 import ForbiddenException from '../../exceptions/ForbiddenException';
-import HttpException from '../../exceptions/HttpException';
 import NotFoundException from '../../exceptions/NotFoundException';
 import createTransactionDto from '../transactions/transactions.dto';
 import Transactions from '../transactions/transactions.entity';
@@ -56,32 +56,6 @@ class TasksService {
   }
 
   public async completeTask(taskId: number, user: Users, transactionData: createTransactionDto): Promise<any> {
-    let task = await this.taskRepository.findOne({
-      relations: ['user'],
-      where: { id: taskId, user: { id: user.id } },
-    });
-    if (!task) {
-      throw new NotFoundException();
-    }
-    this.isOwned(task.user.id, user.id);
-    //should be a database transaction
-
-    //check if task is completed
-    if (!task.isComplete) {
-      // create new transaction then toggle the task to true
-      const newTransaction = this.transactionsRepository.create({ ...transactionData, user: user, task: task });
-      await this.transactionsRepository.save(newTransaction);
-      await this.taskRepository.update({ id: taskId }, { isComplete: true });
-      delete newTransaction.task;
-      const updatedTask = await this.taskRepository.findOne({
-        where: { id: taskId },
-      });
-      return { task: updatedTask, transaction: newTransaction };
-    }
-    throw new HttpException(400, 'Task is already complete');
-  }
-
-  public async undoTask(taskId: number, user: Users): Promise<{ task: Tasks; transaction: Transactions | undefined }> {
     const task = await this.taskRepository.findOne({
       relations: ['user'],
       where: { id: taskId, user: { id: user.id } },
@@ -91,28 +65,54 @@ class TasksService {
     }
     this.isOwned(task.user.id, user.id);
 
+    //check if task is completed
     if (task.isComplete) {
-      let transaction = await this.transactionsRepository.findOne({
-        where: { task: { id: taskId } },
-        order: { created: 'DESC' },
-      });
-      if (!transaction) {
-        console.log('Transaction');
-        throw new NotFoundException();
-      }
-      // check if the task created and toggle update has the same month and year
-      // if true, then delete the corresponsing transaction then toggle task to false
-      // else just toggle the task to false
-      if (this.isMonthYearEqual(transaction.created, task.updated)) {
-        await this.transactionsRepository.delete({ id: transaction.id });
-      } else {
-        transaction = undefined;
-      }
-      await this.taskRepository.update({ id: taskId }, { isComplete: false });
-
-      return { task: { ...task, isComplete: false }, transaction };
+      throw new BadRequestException('Task is already complete');
     }
-    throw new HttpException(400, 'Task is already incomplete');
+
+    //should be a database transaction
+    // create new transaction then toggle the task to true
+    const newTransaction = this.transactionsRepository.create({ ...transactionData, user: user, task: task });
+    const transaction = await this.transactionsRepository.save(newTransaction);
+    await this.taskRepository.update({ id: taskId }, { isComplete: true });
+    delete newTransaction.task;
+
+    return { task: { ...task, isComplete: true }, transaction };
+  }
+
+  public async undoTask(taskId: number, user: Users): Promise<{ task: Tasks; transaction: Transactions | undefined }> {
+    const task = await this.taskRepository.findOne({
+      relations: ['user'],
+      where: { id: taskId, user: { id: user.id } },
+    });
+
+    if (!task) {
+      throw new NotFoundException();
+    }
+
+    if (!task.isComplete) {
+      throw new BadRequestException('Task is already incomplete');
+    }
+    let transaction = await this.transactionsRepository.findOne({
+      where: { task: { id: taskId } },
+      order: { created: 'DESC' },
+    });
+
+    //I CANT TEST THIS, JEST MOCK ALWAYS RETURNS TASKDATA INSTEAD OF UNDEFINED WTFFFFFFFFF!!!!!!!!!!!!!!!!!!!!!!!!
+    if (!transaction) {
+      throw new NotFoundException();
+    }
+    // check if the task created and toggle update has the same month and year
+    // if true, then delete the corresponsing transaction then toggle task to false
+    // else just toggle the task to false
+    if (this.isMonthYearEqual(transaction.created, task.updated)) {
+      await this.transactionsRepository.delete({ id: transaction.id });
+    } else {
+      transaction = undefined;
+    }
+    await this.taskRepository.update({ id: taskId }, { isComplete: false });
+
+    return { task: { ...task, isComplete: false }, transaction };
   }
 
   public async deleteTask(taskId: number, user: Users): Promise<Tasks> {
@@ -130,14 +130,13 @@ class TasksService {
   }
 
   public async editTask(id: number, data: Partial<taskDto>, user: Users): Promise<Tasks> {
-    let task = await this.taskRepository.findOne({ relations: ['user'], where: { id: id } });
+    let task = await this.taskRepository.findOne({ relations: ['user'], where: { id: id, user: { id: user.id } } });
     if (!task) {
       throw new NotFoundException();
     }
-    this.isOwned(task.user.id, user.id);
     const updatedData: Partial<taskDto> = { ...data };
     await this.taskRepository.update({ id }, { ...updatedData });
-    return await this.taskRepository.findOneOrFail({ where: { id: id } });
+    return { ...task, ...data };
   }
 }
 
