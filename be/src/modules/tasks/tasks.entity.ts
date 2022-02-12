@@ -21,7 +21,7 @@ class Tasks {
   @Column()
   public description: string;
 
-  @Column()
+  @Column({ nullable: true, type: 'float' })
   public amount: number;
 
   @Column({ default: false })

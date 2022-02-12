@@ -68,23 +68,24 @@ const FormInput = ({
         />
       ) : type === "radio" ? (
         <div className="flex gap-x-5">
-          {options && options.map((option) => (
-            <div key={option} className="form-check">
-              <input
-                className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600  mt-1 mr-2 cursor-pointer"
-                type="radio"
-                name={name}
-                id={option}
-                value={option}
-                onChange={onChange}
-                checked={value === option}
-                disabled={disabled}
-              />
-              <label className="form-check-label inline-block text-gray-800">
-                {option}
-              </label>
-            </div>
-          ))}
+          {options &&
+            options.map((option) => (
+              <div key={option} className="form-check">
+                <input
+                  className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600  mt-1 mr-2 cursor-pointer"
+                  type="radio"
+                  name={name}
+                  id={option}
+                  value={option}
+                  onChange={onChange}
+                  checked={value === option}
+                  disabled={disabled}
+                />
+                <label className="form-check-label inline-block text-gray-800">
+                  {option}
+                </label>
+              </div>
+            ))}
         </div>
       ) : (
         <input
@@ -92,6 +93,8 @@ const FormInput = ({
           required={required}
           className={inputStyle}
           id={id}
+          min={0}
+          step={"any"}
           type={type}
           name={name}
           placeholder={placeholder}

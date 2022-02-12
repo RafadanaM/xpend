@@ -13,7 +13,7 @@ class Transactions {
   @Column()
   public description: string;
 
-  @Column()
+  @Column({ nullable: true, type: 'float' })
   public amount: number;
 
   @Column()

@@ -80,7 +80,6 @@ class TransactionsController implements Controller {
     next: NextFunction
   ): Promise<void> => {
     try {
-      console.log(req.query);
       const queries = req.query;
       res.send(await this.transactionsService.getTransactionsByUser(req.user, queries.name, queries.date));
     } catch (error) {

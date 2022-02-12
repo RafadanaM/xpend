@@ -3,7 +3,7 @@
       "src/**/*.ts"
     ],
     "execMap": {
-        "ts": "ts-node"
+        "ts": "node ./node_modules/ts-node/dist/bin.js"
     },
     "ignore": [
       "src/**/*.spec.ts"
