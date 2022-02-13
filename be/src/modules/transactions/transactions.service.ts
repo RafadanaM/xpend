@@ -39,6 +39,7 @@ class TransactionsService {
           { title: ILike(`%${name}%`), date: Between(startMonth, endMonth), user: { id: user.id } },
           { description: ILike(`%${name}%`), date: Between(startMonth, endMonth), user: { id: user.id } },
         ],
+        order: { date: 'DESC' },
       });
     }
 
@@ -49,6 +50,7 @@ class TransactionsService {
           { title: ILike(`%${name}%`), user: { id: user.id } },
           { description: ILike(`%${name}%`), user: { id: user.id } },
         ],
+        order: { date: 'DESC' },
       });
     if (date !== '') {
       const inputDate = new Date(date);
@@ -56,10 +58,15 @@ class TransactionsService {
       return await this.transactionsRepository.find({
         relations: ['user'],
         where: { date: Between(startMonth, endMonth), user: { id: user.id } },
+        order: { date: 'DESC' },
       });
     }
 
-    return await this.transactionsRepository.find({ relations: ['user'], where: { user: { id: user.id } } });
+    return await this.transactionsRepository.find({
+      relations: ['user'],
+      where: { user: { id: user.id } },
+      order: { date: 'DESC' },
+    });
   }
 
   public async getTransactionsByTransactionId(id: number, user: Users): Promise<Transactions> {

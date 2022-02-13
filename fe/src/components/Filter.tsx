@@ -12,6 +12,7 @@ export const Filter = () => {
     searchText: "",
     searchDate: "",
   });
+  const [timer, setTimer] = useState<null | NodeJS.Timeout>(null);
 
   const dispatch = useAppDispatch();
 
@@ -26,11 +27,21 @@ export const Filter = () => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValues({ ...searchValues, [e.target.name]: e.target.value });
+    if (timer) {
+      clearTimeout(timer);
+    }
+    const newTimer = setTimeout(() => {
+      dispatch(
+        fetchTransactions({ ...searchValues, [e.target.name]: e.target.value })
+      );
+    }, 500);
+
+    setTimer(newTimer);
   };
 
   useEffect(() => {
-    dispatch(fetchTransactions(searchValues));
-  }, [searchValues, dispatch]);
+    dispatch(fetchTransactions());
+  }, [dispatch]);
 
   let searchKeys = Object.keys(searchValues) as (keyof SearchFormType)[];
   return (
