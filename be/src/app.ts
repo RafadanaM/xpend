@@ -1,11 +1,10 @@
-import express, { Response } from 'express';
+import express from 'express';
 import morgan from 'morgan';
 import Controller from './interfaces/controller.interface';
 import errorMiddleware from './middlewares/error.middleware';
 import NotFoundMiddleware from './middlewares/notfound.middleware';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import path from 'path';
 import cron from 'node-cron';
 import { getRepository } from 'typeorm';
 import Tasks from './modules/tasks/tasks.entity';
@@ -22,7 +21,6 @@ class App {
     this.initMiddlewares();
     this.initControllers(controllers);
     this.initErrorHandling();
-    this.initReact();
     this.initRouteNotFound();
     this.initCron();
   }
@@ -41,16 +39,6 @@ class App {
     this.app.use(morgan(process.env.NODE_ENV === 'dev' ? 'dev' : 'short'));
   }
 
-  private initReact() {
-    if (process.env.NODE_ENV === 'prod') {
-      console.log(__dirname);
-      this.app.use(express.static(path.join(__dirname, '../../fe/build')));
-      this.app.get('*', (_, res: Response) => {
-        res.sendFile(path.join(__dirname + '../../../fe/build/index.html'));
-      });
-    }
-  }
-
   private initCron() {
     cron.schedule('0 0 1 * *', async () => {
       await getRepository(Tasks).createQueryBuilder().update(Tasks).set({ isComplete: false }).execute();
@@ -60,7 +48,6 @@ class App {
   private initControllers(controllers: Controller[]) {
     controllers.forEach((controller) => {
       console.log(controller.path);
-
       this.app.use(`/api${controller.path}`, controller.router);
     });
   }

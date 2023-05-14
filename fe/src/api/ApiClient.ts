@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 const apiClient: AxiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: `${process.env.REACT_APP_BASE_URL}/api`,
   responseType: "json",
   withCredentials: true,
 });
