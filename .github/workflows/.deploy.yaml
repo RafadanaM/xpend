@@ -37,7 +37,7 @@ jobs:
           script: |
             # CONSTANTS
             PARENT_DIR="/home/${{ secrets.HOST_USERNAME }}/apps"
-            APP_NAME="gat"
+            APP_NAME="xpend"
             APP_DIR="$PARENT_DIR/$APP_NAME"
             REPO_URL="https://github.com/${{ secrets.REPO_USERNAME }}/${{ secrets.REPO_NAME }}.git"
 
