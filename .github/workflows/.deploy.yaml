@@ -1,0 +1,71 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker compose build --build-arg APP_VERSION=${{ github.sha }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker Image
+        run: docker compose push
+
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.HOST_PRIVATE_KEY }}
+          script: |
+            # CONSTANTS
+            PARENT_DIR="/home/${{ secrets.HOST_USERNAME }}/apps"
+            APP_NAME="gat"
+            APP_DIR="$PARENT_DIR/$APP_NAME"
+            REPO_URL="https://github.com/${{ secrets.REPO_USERNAME }}/${{ secrets.REPO_NAME }}.git"
+
+            # GET SOURCE CODE 
+            mkdir -p $PARENT_DIR || exit 1
+
+            if [ ! -d "$APP_DIR/.git" ]; then
+              echo "Source not found, cloning repository for $APP_NAME"
+              git clone $REPO_URL $APP_DIR || exit 1
+            else
+              echo "Source found, pulling latest changes for $APP_NAME"
+              cd $APP_DIR || exit 1
+              git pull || exit 1
+            fi
+
+            # DEPLOY
+            cd $APP_DIR || exit 1
+
+            echo "Pulling latest Docker Image..."
+            docker compose pull || exit 1
+
+            echo "Stopping and removing outdated containers..."
+            docker compose down || exit 1
+
+            echo "Starting up containers with the latest images..."
+            docker compose up -d || exit 1
+
+            echo "Cleaning up unused Docker images and containers..."
+            docker system prune -f
+
+            echo "Deployment Complete"
