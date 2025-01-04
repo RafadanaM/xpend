@@ -19,6 +19,7 @@ class App {
     this.port = port;
 
     this.initMiddlewares();
+    this.initHealthcheck();
     this.initControllers(controllers);
     this.initErrorHandling();
     this.initRouteNotFound();
@@ -47,8 +48,16 @@ class App {
 
   private initControllers(controllers: Controller[]) {
     controllers.forEach((controller) => {
-      console.log(controller.path);
       this.app.use(`/api${controller.path}`, controller.router);
+    });
+  }
+
+  private initHealthcheck() {
+    this.app.get('/healthcheck', (_req, res) => {
+      res.send({
+        status: 'OK',
+        version: process.env.APP_VERSION || 'Version Not Specified',
+      });
     });
   }
 

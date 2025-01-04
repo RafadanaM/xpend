@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start:dev": "nodemon --config nodemon.json src/server.ts ",
+    "start:dev": "nodemon -L --config nodemon.json src/server.ts ",
     "build": "tsc",
     "start": "node ./build/server.js ",
     "test": "echo \"Error: no test specified\" && exit 1",
